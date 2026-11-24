@@ -1,0 +1,19 @@
+{
+  "api_version": 1,
+  "accepted": 3,
+  "duplicates": 1,
+  "gaps": [
+    {
+      "task_id": "rt_01JBZ9B7C8D9E0F1G2H3J4K5M6",
+      "expected_seq": 7
+    }
+  ],
+  "rejected": [
+    {
+      "task_id": "rt_01JBZ9Z9Z9Z9Z9Z9Z9Z9Z9Z9Z9",
+      "seq": 1,
+      "code": "not_found",
+      "message": "task not found"
+    }
+  ]
+}

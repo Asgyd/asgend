@@ -1,0 +1,372 @@
+{
+  "schema_version": 1,
+  "scope": "structural inventory only; not a performance profiler",
+  "source_files_total": 233,
+  "source_lines_total": 70916,
+  "components": {
+    "build_ci_packaging": {
+      "files": 5,
+      "lines": 871
+    },
+    "cli_tui": {
+      "files": 3,
+      "lines": 5764
+    },
+    "control_plane_and_server_tests": {
+      "files": 27,
+      "lines": 5954
+    },
+    "core_runtime_rpc": {
+      "files": 19,
+      "lines": 14905
+    },
+    "flutter_client": {
+      "files": 28,
+      "lines": 6223
+    },
+    "memory_index_retrieval": {
+      "files": 13,
+      "lines": 9978
+    },
+    "native_android": {
+      "files": 31,
+      "lines": 6728
+    },
+    "node_agent": {
+      "files": 18,
+      "lines": 3671
+    },
+    "other": {
+      "files": 1,
+      "lines": 227
+    },
+    "qt_client": {
+      "files": 31,
+      "lines": 5257
+    },
+    "tests_and_contracts": {
+      "files": 54,
+      "lines": 10249
+    },
+    "web_ui": {
+      "files": 3,
+      "lines": 1089
+    }
+  },
+  "largest_source_files": [
+    {
+      "path": "clients/asgend_cli.c",
+      "lines": 3290,
+      "bytes": 165981
+    },
+    {
+      "path": "tests/integration.py",
+      "lines": 3030,
+      "bytes": 204565
+    },
+    {
+      "path": "src/mcp.c",
+      "lines": 2340,
+      "bytes": 120090
+    },
+    {
+      "path": "src/asgend_tui.c",
+      "lines": 2233,
+      "bytes": 104554
+    },
+    {
+      "path": "src/memory/embedding.c",
+      "lines": 2214,
+      "bytes": 138437
+    },
+    {
+      "path": "src/models.c",
+      "lines": 2063,
+      "bytes": 110822
+    },
+    {
+      "path": "src/server.c",
+      "lines": 1827,
+      "bytes": 102620
+    },
+    {
+      "path": "src/memory/extract_pdf.c",
+      "lines": 1544,
+      "bytes": 69625
+    },
+    {
+      "path": "src/memory/index.c",
+      "lines": 1479,
+      "bytes": 98245
+    },
+    {
+      "path": "src/llm.c",
+      "lines": 1367,
+      "bytes": 74355
+    },
+    {
+      "path": "src/db.c",
+      "lines": 1340,
+      "bytes": 73085
+    },
+    {
+      "path": "src/memory/extract.c",
+      "lines": 1246,
+      "bytes": 58564
+    },
+    {
+      "path": "src/orchestrator.c",
+      "lines": 1161,
+      "bytes": 74424
+    },
+    {
+      "path": "src/memory/pipeline.c",
+      "lines": 1086,
+      "bytes": 57937
+    },
+    {
+      "path": "clients/asgend_flutter/lib/main.dart",
+      "lines": 935,
+      "bytes": 55153
+    },
+    {
+      "path": "tests/contracts/test_contracts.py",
+      "lines": 881,
+      "bytes": 42691
+    },
+    {
+      "path": "clients/asgend_android/app/src/main/kotlin/org/asgend/nativeclient/ui/remote/NativeRemoteViewModel.kt",
+      "lines": 840,
+      "bytes": 43478
+    },
+    {
+      "path": "clients/asgend_qt/src/core/controlplaneadapter.cpp",
+      "lines": 759,
+      "bytes": 31896
+    },
+    {
+      "path": "src/memory/extract_ooxml.c",
+      "lines": 752,
+      "bytes": 35167
+    },
+    {
+      "path": "ui/app.js",
+      "lines": 747,
+      "bytes": 74577
+    }
+  ],
+  "ctest": {
+    "registered_tests": 48,
+    "test_names": [
+      "integration",
+      "node_agent_c_core_e2e",
+      "release_gate_smoke",
+      "performance_inventory",
+      "performance_benchmark_methodology",
+      "performance_load_probe_smoke",
+      "release_workflow_coverage",
+      "client_workflow_contract_triggers",
+      "client_workflow_test_coverage",
+      "core_rpc_contract_inventory",
+      "core_rpc_runtime_contract",
+      "core_rpc_state_transitions",
+      "core_artifacts",
+      "core_db_atomicity",
+      "core_db_fault_injection",
+      "core_shutdown_idle_client",
+      "core_config_strings",
+      "core_config_safe_update",
+      "core_provider_error_privacy",
+      "core_llm_sse_watchdog",
+      "core_http_status_mapping",
+      "core_mcp_launcher_smoke",
+      "ui_asset_upgrade",
+      "tui_library_smoke",
+      "tui_terminal_layout",
+      "cli_terminal_layout",
+      "cli_stream_state_contract",
+      "cli_watch_reliability",
+      "cli_rpc_timeout_contract",
+      "cli_preview_stream_state_contract",
+      "cli_secret_input_contract",
+      "cli_stream_event_contract",
+      "cli_session_contract",
+      "cli_orchestrator_group_contract",
+      "tui_visual_contract",
+      "memory_index_smoke",
+      "memory_pipeline_smoke",
+      "memory_embedding_smoke",
+      "memory_graph_smoke",
+      "memory_chunk_query_smoke",
+      "memory_rerank_smoke",
+      "memory_query_plan_smoke",
+      "retrieval_quality_smoke",
+      "query_plan_eval_smoke",
+      "memory_ann_smoke",
+      "memory_gc_smoke",
+      "memory_pdf_smoke",
+      "memory_ooxml_smoke"
+    ],
+    "explicit_timeouts": {
+      "performance_load_probe_smoke": 15,
+      "performance_benchmark_methodology": 10,
+      "performance_inventory": 10,
+      "core_rpc_runtime_contract": 45,
+      "core_rpc_state_transitions": 75,
+      "core_db_fault_injection": 10,
+      "core_config_safe_update": 20,
+      "core_llm_sse_watchdog": 90,
+      "core_mcp_launcher_smoke": 60,
+      "integration": 300,
+      "node_agent_c_core_e2e": 30,
+      "cli_stream_event_contract": 40
+    },
+    "default_timeout_seconds": 60,
+    "effective_timeouts_seconds": {
+      "integration": 300,
+      "node_agent_c_core_e2e": 30,
+      "release_gate_smoke": 60,
+      "performance_inventory": 10,
+      "performance_benchmark_methodology": 10,
+      "performance_load_probe_smoke": 15,
+      "release_workflow_coverage": 60,
+      "client_workflow_contract_triggers": 60,
+      "client_workflow_test_coverage": 60,
+      "core_rpc_contract_inventory": 60,
+      "core_rpc_runtime_contract": 45,
+      "core_rpc_state_transitions": 75,
+      "core_artifacts": 60,
+      "core_db_atomicity": 60,
+      "core_db_fault_injection": 10,
+      "core_shutdown_idle_client": 60,
+      "core_config_strings": 60,
+      "core_config_safe_update": 20,
+      "core_provider_error_privacy": 60,
+      "core_llm_sse_watchdog": 90,
+      "core_http_status_mapping": 60,
+      "core_mcp_launcher_smoke": 60,
+      "ui_asset_upgrade": 60,
+      "tui_library_smoke": 60,
+      "tui_terminal_layout": 60,
+      "cli_terminal_layout": 60,
+      "cli_stream_state_contract": 60,
+      "cli_watch_reliability": 60,
+      "cli_rpc_timeout_contract": 60,
+      "cli_preview_stream_state_contract": 60,
+      "cli_secret_input_contract": 60,
+      "cli_stream_event_contract": 40,
+      "cli_session_contract": 60,
+      "cli_orchestrator_group_contract": 60,
+      "tui_visual_contract": 60,
+      "memory_index_smoke": 60,
+      "memory_pipeline_smoke": 60,
+      "memory_embedding_smoke": 60,
+      "memory_graph_smoke": 60,
+      "memory_chunk_query_smoke": 60,
+      "memory_rerank_smoke": 60,
+      "memory_query_plan_smoke": 60,
+      "retrieval_quality_smoke": 60,
+      "query_plan_eval_smoke": 60,
+      "memory_ann_smoke": 60,
+      "memory_gc_smoke": 60,
+      "memory_pdf_smoke": 60,
+      "memory_ooxml_smoke": 60
+    },
+    "tests_without_explicit_timeout": [
+      "cli_orchestrator_group_contract",
+      "cli_preview_stream_state_contract",
+      "cli_rpc_timeout_contract",
+      "cli_secret_input_contract",
+      "cli_session_contract",
+      "cli_stream_state_contract",
+      "cli_terminal_layout",
+      "cli_watch_reliability",
+      "client_workflow_contract_triggers",
+      "client_workflow_test_coverage",
+      "core_artifacts",
+      "core_config_strings",
+      "core_db_atomicity",
+      "core_http_status_mapping",
+      "core_provider_error_privacy",
+      "core_rpc_contract_inventory",
+      "core_shutdown_idle_client",
+      "memory_ann_smoke",
+      "memory_chunk_query_smoke",
+      "memory_embedding_smoke",
+      "memory_gc_smoke",
+      "memory_graph_smoke",
+      "memory_index_smoke",
+      "memory_ooxml_smoke",
+      "memory_pdf_smoke",
+      "memory_pipeline_smoke",
+      "memory_query_plan_smoke",
+      "memory_rerank_smoke",
+      "query_plan_eval_smoke",
+      "release_gate_smoke",
+      "release_workflow_coverage",
+      "retrieval_quality_smoke",
+      "tui_library_smoke",
+      "tui_terminal_layout",
+      "tui_visual_contract",
+      "ui_asset_upgrade"
+    ],
+    "tests_without_effective_timeout": []
+  },
+  "workflows": {
+    "control-plane-node-e2e.yml": {
+      "job_count": 5,
+      "timeouts_minutes": [
+        10,
+        15,
+        10,
+        20,
+        20
+      ],
+      "has_ctest": true,
+      "has_flutter_test": false,
+      "has_gradle_test": false,
+      "has_qt_ctest": false
+    },
+    "flutter-android.yml": {
+      "job_count": 1,
+      "timeouts_minutes": [
+        40
+      ],
+      "has_ctest": true,
+      "has_flutter_test": true,
+      "has_gradle_test": false,
+      "has_qt_ctest": false
+    },
+    "native-android.yml": {
+      "job_count": 1,
+      "timeouts_minutes": [
+        35
+      ],
+      "has_ctest": true,
+      "has_flutter_test": false,
+      "has_gradle_test": true,
+      "has_qt_ctest": false
+    },
+    "qt-client.yml": {
+      "job_count": 1,
+      "timeouts_minutes": [
+        30
+      ],
+      "has_ctest": true,
+      "has_flutter_test": false,
+      "has_gradle_test": false,
+      "has_qt_ctest": true
+    },
+    "release-gate.yml": {
+      "job_count": 6,
+      "timeouts_minutes": [
+        5,
+        2
+      ],
+      "has_ctest": false,
+      "has_flutter_test": false,
+      "has_gradle_test": false,
+      "has_qt_ctest": false
+    }
+  }
+}

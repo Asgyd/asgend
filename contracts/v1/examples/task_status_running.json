@@ -1,0 +1,23 @@
+{
+  "api_version": 1,
+  "task_id": "rt_01JBZ9A0B1C2D3E4F5G6H7J8K9",
+  "workspace_id": "ws_01JBZ8K6X3M4N5P6Q7R8S9T0VW",
+  "node_id": "node_01JBZ8N1A2B3C4D5E6F7G8H9JK",
+  "core_task_id": "k3v9q2m7xa",
+  "title": "Write a C11 ring buffer with unit tests",
+  "agent": "generalist",
+  "session_id": "demo",
+  "priority": 5,
+  "state": "running",
+  "question": null,
+  "attempts": 1,
+  "created_at": "2026-10-21T10:00:00.000Z",
+  "updated_at": "2026-10-21T10:00:05.000Z",
+  "last_event_id": 1006,
+  "stale": false,
+  "idempotency_key": "qt-7f3c2a10-submit",
+  "result_summary": null,
+  "error": null,
+  "delivery_expires_at": null,
+  "last_seq": 2
+}

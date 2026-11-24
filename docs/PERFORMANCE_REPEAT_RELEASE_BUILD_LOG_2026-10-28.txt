@@ -1,0 +1,12 @@
+-- Configuring done (4.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /mnt/data/asgend-performance-next-work/build
+configure_wall_seconds=4.06 max_rss_kib=95392
+[  4%] Built target asgend_tui
+[ 34%] Built target asgend_memory
+[ 43%] Built target test-core-db-faults
+[ 48%] Built target asgend-cli
+[ 53%] Built target test-asgend-tui
+[ 95%] Built target agent-orchestrator
+[100%] Built target asgend-memory
+build_wall_seconds=0.10 max_rss_kib=9728

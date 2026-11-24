@@ -1,0 +1,424 @@
+{
+  "all_passed": true,
+  "all_test_records_present": true,
+  "command": "ctest --test-dir build-stage34 --output-on-failure -j1",
+  "ctest_total_time_seconds": 274.73,
+  "exit_code": 0,
+  "failed_or_unrun": 0,
+  "passed": 58,
+  "registered_test_count": 58,
+  "schema_version": 1,
+  "stage": 34,
+  "suite": "Release CTest",
+  "summary_failed_count": 0,
+  "summary_percent_passed": 100,
+  "summary_total_count": 58,
+  "tests": [
+    {
+      "duration_seconds": 133.39,
+      "name": "integration",
+      "number": 1,
+      "sequence": 1,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 1.09,
+      "name": "node_agent_c_core_e2e",
+      "number": 2,
+      "sequence": 2,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.77,
+      "name": "release_gate_smoke",
+      "number": 3,
+      "sequence": 3,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.77,
+      "name": "performance_inventory",
+      "number": 4,
+      "sequence": 4,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.71,
+      "name": "performance_benchmark_methodology",
+      "number": 5,
+      "sequence": 5,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 1.29,
+      "name": "performance_load_probe_smoke",
+      "number": 6,
+      "sequence": 6,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 3.46,
+      "name": "performance_core_rpc_lifecycle_smoke",
+      "number": 7,
+      "sequence": 7,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 1.8,
+      "name": "performance_sqlite_artifacts_smoke",
+      "number": 8,
+      "sequence": 8,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 1.55,
+      "name": "performance_task_list_sql_ab_smoke",
+      "number": 9,
+      "sequence": 9,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 1.93,
+      "name": "performance_task_list_index_cost_smoke",
+      "number": 10,
+      "sequence": 10,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.78,
+      "name": "release_workflow_coverage",
+      "number": 11,
+      "sequence": 11,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.93,
+      "name": "client_workflow_contract_triggers",
+      "number": 12,
+      "sequence": 12,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.88,
+      "name": "client_workflow_test_coverage",
+      "number": 13,
+      "sequence": 13,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.84,
+      "name": "core_rpc_contract_inventory",
+      "number": 14,
+      "sequence": 14,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.91,
+      "name": "core_rpc_runtime_contract",
+      "number": 15,
+      "sequence": 15,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 6.78,
+      "name": "core_rpc_state_transitions",
+      "number": 16,
+      "sequence": 16,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 1.02,
+      "name": "core_artifacts",
+      "number": 17,
+      "sequence": 17,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.82,
+      "name": "core_db_atomicity",
+      "number": 18,
+      "sequence": 18,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.09,
+      "name": "core_db_fault_injection",
+      "number": 19,
+      "sequence": 19,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.93,
+      "name": "performance_task_list_c_api_smoke",
+      "number": 20,
+      "sequence": 20,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.73,
+      "name": "core_shutdown_idle_client",
+      "number": 21,
+      "sequence": 21,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.72,
+      "name": "core_config_strings",
+      "number": 22,
+      "sequence": 22,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.75,
+      "name": "core_config_safe_update",
+      "number": 23,
+      "sequence": 23,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 4.34,
+      "name": "core_provider_error_privacy",
+      "number": 24,
+      "sequence": 24,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 39.79,
+      "name": "core_llm_sse_watchdog",
+      "number": 25,
+      "sequence": 25,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.97,
+      "name": "core_http_status_mapping",
+      "number": 26,
+      "sequence": 26,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 20.47,
+      "name": "core_mcp_launcher_smoke",
+      "number": 27,
+      "sequence": 27,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.69,
+      "name": "ui_asset_upgrade",
+      "number": 28,
+      "sequence": 28,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.0,
+      "name": "tui_library_smoke",
+      "number": 29,
+      "sequence": 29,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.71,
+      "name": "tui_terminal_layout",
+      "number": 30,
+      "sequence": 30,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.67,
+      "name": "cli_terminal_layout",
+      "number": 31,
+      "sequence": 31,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.66,
+      "name": "cli_stream_state_contract",
+      "number": 32,
+      "sequence": 32,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.78,
+      "name": "cli_watch_reliability",
+      "number": 33,
+      "sequence": 33,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.65,
+      "name": "cli_rpc_timeout_contract",
+      "number": 34,
+      "sequence": 34,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.73,
+      "name": "cli_preview_stream_state_contract",
+      "number": 35,
+      "sequence": 35,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.76,
+      "name": "cli_secret_input_contract",
+      "number": 36,
+      "sequence": 36,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 3.82,
+      "name": "cli_stream_event_contract",
+      "number": 37,
+      "sequence": 37,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.9,
+      "name": "cli_session_contract",
+      "number": 38,
+      "sequence": 38,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.78,
+      "name": "cli_orchestrator_group_contract",
+      "number": 39,
+      "sequence": 39,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.79,
+      "name": "tui_visual_contract",
+      "number": 40,
+      "sequence": 40,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 1.26,
+      "name": "memory_index_smoke",
+      "number": 41,
+      "sequence": 41,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 1.93,
+      "name": "memory_pipeline_smoke",
+      "number": 42,
+      "sequence": 42,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 1.72,
+      "name": "memory_embedding_smoke",
+      "number": 43,
+      "sequence": 43,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.8,
+      "name": "memory_graph_smoke",
+      "number": 44,
+      "sequence": 44,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.98,
+      "name": "memory_chunk_query_smoke",
+      "number": 45,
+      "sequence": 45,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 1.44,
+      "name": "memory_rerank_smoke",
+      "number": 46,
+      "sequence": 46,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 1.37,
+      "name": "memory_query_plan_smoke",
+      "number": 47,
+      "sequence": 47,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 1.62,
+      "name": "retrieval_quality_smoke",
+      "number": 48,
+      "sequence": 48,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 1.99,
+      "name": "query_plan_eval_smoke",
+      "number": 49,
+      "sequence": 49,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 4.54,
+      "name": "memory_ann_smoke",
+      "number": 50,
+      "sequence": 50,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.84,
+      "name": "memory_gc_smoke",
+      "number": 51,
+      "sequence": 51,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.75,
+      "name": "memory_pdf_smoke",
+      "number": 52,
+      "sequence": 52,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.92,
+      "name": "memory_ooxml_smoke",
+      "number": 53,
+      "sequence": 53,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 1.75,
+      "name": "performance_memory_scan_timeout_guard",
+      "number": 54,
+      "sequence": 54,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 0.96,
+      "name": "performance_memory_extractors_benchmark_smoke",
+      "number": 55,
+      "sequence": 55,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 1.45,
+      "name": "performance_memory_embedding_benchmark_smoke",
+      "number": 56,
+      "sequence": 56,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 8.83,
+      "name": "performance_memory_ann_quality_benchmark_smoke",
+      "number": 57,
+      "sequence": 57,
+      "status": "Passed"
+    },
+    {
+      "duration_seconds": 1.1,
+      "name": "performance_memory_ann_quality_verifier_smoke",
+      "number": 58,
+      "sequence": 58,
+      "status": "Passed"
+    }
+  ]
+}

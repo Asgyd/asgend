@@ -1,0 +1,29 @@
+{
+  "description": "Machine-readable state machines of ASGEND Remote API v1 (normative prose: docs/API_CONTRACT.md §3). 'new' = object does not exist yet. 'by': user = user/client API call, node = Execution Node call (ack, events, snapshot), server = Control Plane timer/decision. A transition whose from == to is a no-op and never emits state_changed. Anything not listed is rejected: user API -> 409 conflict, node events -> rejected[] with code conflict.",
+  "task": {
+    "states": [ "pending_delivery", "delivered", "queued", "running", "waiting_input", "completed", "completed_without_model", "failed", "cancelled", "delivery_failed" ],
+    "terminal": [ "completed", "completed_without_model", "failed", "cancelled", "delivery_failed" ],
+    "transitions": [
+      { "id": "T1", "from": [ "new" ], "to": [ "pending_delivery" ], "by": "user", "trigger": "POST /v1/workspaces/{ws}/tasks creates the task and its submit command" },
+      { "id": "T2", "from": [ "pending_delivery" ], "to": [ "delivered" ], "by": "node", "trigger": "ack outcome=accepted of the submit command (sets core_task_id)" },
+      { "id": "T3", "from": [ "pending_delivery" ], "to": [ "delivery_failed" ], "by": "node", "trigger": "ack outcome=rejected of the submit command" },
+      { "id": "T4", "from": [ "pending_delivery" ], "to": [ "delivery_failed" ], "by": "server", "trigger": "submit command expired (TTL) or node revoked" },
+      { "id": "T5", "from": [ "delivered", "queued", "running", "waiting_input" ], "to": [ "queued", "running", "waiting_input", "completed", "completed_without_model", "failed", "cancelled" ], "by": "node", "trigger": "node event state_changed or snapshot; intermediate states may be skipped" },
+      { "id": "T6", "from": [ "failed" ], "to": [ "queued", "running", "waiting_input", "completed", "completed_without_model", "cancelled" ], "by": "node", "trigger": "core retry_task after an acked retry command (event or snapshot)" },
+      { "id": "T7", "from": [ "delivery_failed" ], "to": [ "pending_delivery" ], "by": "user", "trigger": "POST /v1/tasks/{task}/retry creates a new submit command with the original payload" }
+    ]
+  },
+  "command": {
+    "states": [ "pending", "leased", "acked", "rejected", "expired" ],
+    "terminal": [ "acked", "rejected", "expired" ],
+    "transitions": [
+      { "id": "C1", "from": [ "new" ], "to": [ "pending" ], "by": "user", "trigger": "submit/answer/cancel/retry API call (outbox insert in the same transaction)" },
+      { "id": "C2", "from": [ "pending" ], "to": [ "leased" ], "by": "node", "trigger": "POST /v1/node/commands/lease (new lease_id, delivery_attempts + 1)" },
+      { "id": "C3", "from": [ "leased" ], "to": [ "pending" ], "by": "server", "trigger": "lease expired without ack -> redelivery" },
+      { "id": "C4", "from": [ "leased" ], "to": [ "acked" ], "by": "node", "trigger": "ack outcome=accepted with the current lease_id" },
+      { "id": "C5", "from": [ "leased" ], "to": [ "rejected" ], "by": "node", "trigger": "ack outcome=rejected with the current lease_id" },
+      { "id": "C6", "from": [ "pending" ], "to": [ "expired" ], "by": "server", "trigger": "expires_at passed, node revoked, or the task became delivery_failed" },
+      { "id": "C7", "from": [ "leased" ], "to": [ "expired" ], "by": "server", "trigger": "node revoked (immediately, lease ignored)" }
+    ]
+  }
+}

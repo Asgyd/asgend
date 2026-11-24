@@ -1,0 +1,6 @@
+{
+  "node_id": "node_01JBZ8N1A2B3C4D5E6F7G8H9JK",
+  "task": "x",
+  "idempotency_key": "key-12345678",
+  "ttl_seconds": 5
+}

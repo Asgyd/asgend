@@ -1,0 +1,27 @@
+name: asgend_client
+description: Cross-platform desktop and Android client for the ASGEND orchestration core.
+publish_to: none
+version: 1.0.0+2
+environment:
+  sdk: '>=3.5.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  crypto: ^3.0.6
+  # Keep this version on the Gradle 8.10 / AGP 8.7 toolchain pinned below.
+  flutter_file_dialog: 3.0.2
+  flutter_secure_storage: ^9.2.2
+  http: ^1.2.2
+  path_provider: ^2.1.4
+  # 6.4.0 retains Dart 3.0 compatibility required by the Dart 3.5 project floor.
+  audioplayers: ^6.4.0
+  # 6.2.1 supports the Dart 3.5 minimum pinned for this client.
+  record: ^6.2.1
+  share_plus: ^11.0.0
+  shared_preferences: ^2.3.2
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+flutter:
+  uses-material-design: true

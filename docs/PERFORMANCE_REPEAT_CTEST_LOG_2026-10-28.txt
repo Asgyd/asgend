@@ -1,0 +1,104 @@
+Internal ctest changing into directory: /mnt/data/asgend-performance-next-work/build
+Test project /mnt/data/asgend-performance-next-work/build
+      Start  1: integration
+ 1/49 Test  #1: integration ............................   Passed  133.84 sec
+      Start  2: node_agent_c_core_e2e
+ 2/49 Test  #2: node_agent_c_core_e2e ..................   Passed    0.94 sec
+      Start  3: release_gate_smoke
+ 3/49 Test  #3: release_gate_smoke .....................   Passed    0.64 sec
+      Start  4: performance_inventory
+ 4/49 Test  #4: performance_inventory ..................   Passed    0.69 sec
+      Start  5: performance_benchmark_methodology
+ 5/49 Test  #5: performance_benchmark_methodology ......   Passed    0.65 sec
+      Start  6: performance_load_probe_smoke
+ 6/49 Test  #6: performance_load_probe_smoke ...........   Passed    1.22 sec
+      Start  7: performance_core_rpc_lifecycle_smoke
+ 7/49 Test  #7: performance_core_rpc_lifecycle_smoke ...   Passed    3.52 sec
+      Start  8: release_workflow_coverage
+ 8/49 Test  #8: release_workflow_coverage ..............   Passed    1.04 sec
+      Start  9: client_workflow_contract_triggers
+ 9/49 Test  #9: client_workflow_contract_triggers ......   Passed    0.82 sec
+      Start 10: client_workflow_test_coverage
+10/49 Test #10: client_workflow_test_coverage ..........   Passed    0.74 sec
+      Start 11: core_rpc_contract_inventory
+11/49 Test #11: core_rpc_contract_inventory ............   Passed    0.69 sec
+      Start 12: core_rpc_runtime_contract
+12/49 Test #12: core_rpc_runtime_contract ..............   Passed    0.77 sec
+      Start 13: core_rpc_state_transitions
+13/49 Test #13: core_rpc_state_transitions .............   Passed    6.41 sec
+      Start 14: core_artifacts
+14/49 Test #14: core_artifacts .........................   Passed    0.89 sec
+      Start 15: core_db_atomicity
+15/49 Test #15: core_db_atomicity ......................   Passed    0.73 sec
+      Start 16: core_db_fault_injection
+16/49 Test #16: core_db_fault_injection ................   Passed    0.08 sec
+      Start 17: core_shutdown_idle_client
+17/49 Test #17: core_shutdown_idle_client ..............   Passed    0.73 sec
+      Start 18: core_config_strings
+18/49 Test #18: core_config_strings ....................   Passed    0.68 sec
+      Start 19: core_config_safe_update
+19/49 Test #19: core_config_safe_update ................   Passed    0.72 sec
+      Start 20: core_provider_error_privacy
+20/49 Test #20: core_provider_error_privacy ............   Passed    4.26 sec
+      Start 21: core_llm_sse_watchdog
+21/49 Test #21: core_llm_sse_watchdog ..................   Passed   39.70 sec
+      Start 22: core_http_status_mapping
+22/49 Test #22: core_http_status_mapping ...............   Passed    0.80 sec
+      Start 23: core_mcp_launcher_smoke
+23/49 Test #23: core_mcp_launcher_smoke ................   Passed   20.07 sec
+      Start 24: ui_asset_upgrade
+24/49 Test #24: ui_asset_upgrade .......................   Passed    0.69 sec
+      Start 25: tui_library_smoke
+25/49 Test #25: tui_library_smoke ......................   Passed    0.00 sec
+      Start 26: tui_terminal_layout
+26/49 Test #26: tui_terminal_layout ....................   Passed    0.68 sec
+      Start 27: cli_terminal_layout
+27/49 Test #27: cli_terminal_layout ....................   Passed    0.68 sec
+      Start 28: cli_stream_state_contract
+28/49 Test #28: cli_stream_state_contract ..............   Passed    0.67 sec
+      Start 29: cli_watch_reliability
+29/49 Test #29: cli_watch_reliability ..................   Passed    0.70 sec
+      Start 30: cli_rpc_timeout_contract
+30/49 Test #30: cli_rpc_timeout_contract ...............   Passed    0.63 sec
+      Start 31: cli_preview_stream_state_contract
+31/49 Test #31: cli_preview_stream_state_contract ......   Passed    0.70 sec
+      Start 32: cli_secret_input_contract
+32/49 Test #32: cli_secret_input_contract ..............   Passed    0.70 sec
+      Start 33: cli_stream_event_contract
+33/49 Test #33: cli_stream_event_contract ..............   Passed    3.43 sec
+      Start 34: cli_session_contract
+34/49 Test #34: cli_session_contract ...................   Passed    0.68 sec
+      Start 35: cli_orchestrator_group_contract
+35/49 Test #35: cli_orchestrator_group_contract ........   Passed    0.74 sec
+      Start 36: tui_visual_contract
+36/49 Test #36: tui_visual_contract ....................   Passed    0.61 sec
+      Start 37: memory_index_smoke
+37/49 Test #37: memory_index_smoke .....................   Passed    1.03 sec
+      Start 38: memory_pipeline_smoke
+38/49 Test #38: memory_pipeline_smoke ..................   Passed    1.81 sec
+      Start 39: memory_embedding_smoke
+39/49 Test #39: memory_embedding_smoke .................   Passed    1.60 sec
+      Start 40: memory_graph_smoke
+40/49 Test #40: memory_graph_smoke .....................   Passed    0.76 sec
+      Start 41: memory_chunk_query_smoke
+41/49 Test #41: memory_chunk_query_smoke ...............   Passed    0.73 sec
+      Start 42: memory_rerank_smoke
+42/49 Test #42: memory_rerank_smoke ....................   Passed    1.25 sec
+      Start 43: memory_query_plan_smoke
+43/49 Test #43: memory_query_plan_smoke ................   Passed    1.23 sec
+      Start 44: retrieval_quality_smoke
+44/49 Test #44: retrieval_quality_smoke ................   Passed    1.48 sec
+      Start 45: query_plan_eval_smoke
+45/49 Test #45: query_plan_eval_smoke ..................   Passed    1.90 sec
+      Start 46: memory_ann_smoke
+46/49 Test #46: memory_ann_smoke .......................   Passed    4.15 sec
+      Start 47: memory_gc_smoke
+47/49 Test #47: memory_gc_smoke ........................   Passed    0.88 sec
+      Start 48: memory_pdf_smoke
+48/49 Test #48: memory_pdf_smoke .......................   Passed    0.85 sec
+      Start 49: memory_ooxml_smoke
+49/49 Test #49: memory_ooxml_smoke .....................   Passed    0.86 sec
+
+100% tests passed, 0 tests failed out of 49
+
+Total Test time (real) = 250.11 sec

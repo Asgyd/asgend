@@ -1,0 +1,20 @@
+{
+  "product_version": "1.0.0",
+  "candidate_version": "1.0.0",
+  "release_channel": "stable",
+  "release_approved": true,
+  "components": {
+    "core": "1.0.0",
+    "control_plane": "1.0.0",
+    "api": "1.0.0",
+    "qt_client": "1.0.0",
+    "flutter_client": "1.0.0+2"
+  },
+  "version_sources": {
+    "core": "CMakeLists.txt: project(agent_orchestrator_c VERSION)",
+    "control_plane": "server/asgend_cp/__init__.py and server/deploy/compose.yaml",
+    "api": "contracts/v1/openapi.yaml",
+    "qt_client": "clients/asgend_qt/CMakeLists.txt and packaging/linux/org.asgend.QtClient.metainfo.xml",
+    "flutter_client": "clients/asgend_flutter/pubspec.yaml"
+  }
+}

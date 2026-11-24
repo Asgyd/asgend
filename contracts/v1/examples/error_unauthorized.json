@@ -1,0 +1,9 @@
+{
+  "api_version": 1,
+  "error": {
+    "code": "unauthorized",
+    "message": "missing, invalid or revoked token",
+    "request_id": "req-01JBZ9F6G7H8",
+    "details": {}
+  }
+}

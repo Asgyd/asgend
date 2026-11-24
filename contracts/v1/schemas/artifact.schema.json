@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://asgend.invalid/contracts/v1/schemas/artifact.schema.json",
+  "title": "Artifact",
+  "description": "Artifact metadata (CONTRACT_SKETCH §5). Bytes live in blob storage, never in the database. An available artifact is immutable: a new upload with the same name creates a new artifact_id. Clients verify the downloaded bytes against sha256.",
+  "type": "object",
+  "required": [ "artifact_id", "task_id", "workspace_id", "node_id", "name", "mime", "size", "sha256", "state", "created_at", "expires_at" ],
+  "properties": {
+    "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+    "artifact_id": { "$ref": "common.schema.json#/$defs/artifact_id" },
+    "task_id": { "$ref": "common.schema.json#/$defs/task_id" },
+    "workspace_id": { "$ref": "common.schema.json#/$defs/workspace_id" },
+    "node_id": { "$ref": "common.schema.json#/$defs/node_id" },
+    "name": { "$ref": "common.schema.json#/$defs/artifact_name" },
+    "mime": { "$ref": "common.schema.json#/$defs/mime" },
+    "size": { "$ref": "common.schema.json#/$defs/artifact_size" },
+    "sha256": { "$ref": "common.schema.json#/$defs/sha256" },
+    "state": { "$ref": "common.schema.json#/$defs/artifact_state" },
+    "created_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "expires_at": { "description": "Retention deadline; null = kept until the task is deleted.", "$ref": "common.schema.json#/$defs/timestamp_or_null" }
+  },
+  "$defs": {
+    "response": {
+      "description": "Artifact as a single-entity response body.",
+      "allOf": [ { "$ref": "#" }, { "required": [ "api_version" ] } ]
+    }
+  }
+}

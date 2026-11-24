@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "task_id": "rt_01JBZ9A0B1C2D3E4F5G6H7J8K9",
+      "seq": 5,
+      "type": "state_changed",
+      "occurred_at": "2026-10-21T10:00:50.000Z",
+      "payload": {
+        "state": "delivered"
+      }
+    }
+  ]
+}

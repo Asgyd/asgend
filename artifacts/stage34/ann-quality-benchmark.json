@@ -1,0 +1,839 @@
+{
+  "acceptance": {
+    "all_queries_maximum_ann_candidate_ratio": {
+      "actual_maximum": 0.050192,
+      "maximum": 0.15,
+      "pass": true
+    },
+    "all_queries_minimum_ann_candidates": {
+      "actual_minimum": 165,
+      "minimum": 32,
+      "pass": true
+    },
+    "mean_ann_mrr_at_5": {
+      "actual": 1.0,
+      "minimum": 0.9,
+      "pass": true
+    },
+    "mean_ann_ndcg_at_5": {
+      "actual": 1.0,
+      "minimum": 0.9,
+      "pass": true
+    },
+    "mean_ann_recall_at_5": {
+      "actual": 1.0,
+      "minimum": 0.9,
+      "pass": true
+    },
+    "mean_exact_recall_at_5": {
+      "actual": 1.0,
+      "minimum": 0.95,
+      "pass": true
+    },
+    "median_ann_candidate_ratio": {
+      "actual": 0.040962,
+      "maximum": 0.15,
+      "pass": true
+    },
+    "request_accounting": {
+      "actual": 96,
+      "expected": 96,
+      "pass": true
+    },
+    "sqlite_integrity": {
+      "actual": "ok",
+      "pass": true
+    }
+  },
+  "acceptance_criteria_source": "tests/fixtures/ann_quality_judged_dataset.json; frozen before results were measured",
+  "aggregate": {
+    "ann": {
+      "hits@5": 4.0,
+      "mrr@5": 1.0,
+      "ndcg@5": 1.0,
+      "precision@5": 0.8,
+      "recall@5": 1.0
+    },
+    "exact": {
+      "hits@5": 4.0,
+      "mrr@5": 1.0,
+      "ndcg@5": 1.0,
+      "precision@5": 0.8,
+      "recall@5": 1.0
+    },
+    "mean_ann_relevant_overlap_with_exact_at_k": 1.0,
+    "median_ann_latency_ms": 55.712,
+    "median_candidate_ratio": 0.040962,
+    "median_exact_latency_ms": 274.43,
+    "median_paired_exact_over_ann": 5.1343,
+    "p95_ann_latency_ms": 79.443,
+    "p95_exact_latency_ms": 346.179
+  },
+  "ann_signatures_missing": 0,
+  "benchmark": "asgend-memory-labelled-ann-quality-v1",
+  "binary_sha256": "1e905049d9bfe3210cf216970c4907c77767780ea71e3ff9e5fe4c5d2aea7ff1",
+  "corpus_manifest_rows": 5200,
+  "corpus_manifest_sha256": "2ca3ba6a08ca36e35f7a38e95f75df142f919bd1edd968cad85490a1eb41dec8",
+  "dataset_id": "asgend-ann-judged-synthetic-v1",
+  "dataset_sha256": "730e4427822fd4965516d611099437275c990f76c952f45f53962255fd6bec81",
+  "dimensions": 128,
+  "distractor_vectors": 5168,
+  "document_vectors": 5200,
+  "embedding_endpoint": "local 127.0.0.1 loopback mock; no API key or external network",
+  "embedding_requests_expected": 96,
+  "embedding_requests_observed": 96,
+  "harness_sha256": "39012ba7116eaa4e941cb5e3bef4b646c5f880291186db62525c3a23afab5d2f",
+  "indexed_vectors": 5200,
+  "judged_query_count": 8,
+  "latency_scope": "end-to-end asgend-memory CLI wall latency including process startup, loopback embedding HTTP, probe setup and SQLite search; not pure kernel latency",
+  "live_provider_used": false,
+  "measured_mode_queries": 80,
+  "measured_pairs_per_query": 5,
+  "model_id": "asgend-ann-quality-fixture-v1",
+  "notes": "Rank metrics use binary judged paths. Exact cosine is a retrieval comparison baseline, not the label oracle; relevance labels are the separate dataset paths. Synthetic geometry is intentionally clusterable and does not establish real-world semantic quality.",
+  "queries": [
+    {
+      "ann": {
+        "chunk_ann_candidates": 0,
+        "chunk_vector_count": 0,
+        "document_ann_candidates": 245,
+        "document_ann_used": true,
+        "document_vector_count": 5200,
+        "latency_ms": {
+          "count": 5,
+          "max": 62.317,
+          "median": 55.839,
+          "min": 49.607,
+          "p95_nearest_rank": 62.317
+        },
+        "median_paired_exact_over_ann": 5.2633,
+        "metrics": {
+          "hits@5": 4.0,
+          "mrr@5": 1.0,
+          "ndcg@5": 1.0,
+          "precision@5": 0.8,
+          "recall@5": 1.0
+        },
+        "paired_candidate_counts": [
+          245,
+          245,
+          245,
+          245,
+          245
+        ],
+        "ranked_paths": [
+          "judged/topic-00/document-02.md",
+          "judged/topic-00/document-01.md",
+          "judged/topic-00/document-00.md",
+          "judged/topic-00/document-03.md",
+          "distractors/document-00226.md"
+        ],
+        "raw_latency_samples_ms": [
+          49.60673699997642,
+          49.932526999896254,
+          56.42940500001714,
+          55.838663000031374,
+          62.31716400009191
+        ],
+        "vector_search": "ann_lsh16"
+      },
+      "ann_relevant_overlap_with_exact_at_k": 1.0,
+      "exact": {
+        "chunk_ann_candidates": 0,
+        "chunk_vector_count": 0,
+        "document_ann_candidates": 0,
+        "document_ann_used": false,
+        "document_vector_count": 5200,
+        "latency_ms": {
+          "count": 5,
+          "max": 326.686,
+          "median": 306.439,
+          "min": 247.202,
+          "p95_nearest_rank": 326.686
+        },
+        "metrics": {
+          "hits@5": 4.0,
+          "mrr@5": 1.0,
+          "ndcg@5": 1.0,
+          "precision@5": 0.8,
+          "recall@5": 1.0
+        },
+        "ranked_paths": [
+          "judged/topic-00/document-02.md",
+          "judged/topic-00/document-01.md",
+          "judged/topic-00/document-00.md",
+          "judged/topic-00/document-03.md",
+          "judged/topic-04/document-01.md"
+        ],
+        "raw_latency_samples_ms": [
+          247.201753000013,
+          262.81043400001636,
+          316.8456519999836,
+          306.43853899994156,
+          326.68600800002423
+        ],
+        "vector_search": "exact_cosine"
+      },
+      "id": "topic-00",
+      "k": 5,
+      "query": "veltronic zephyr quux 00",
+      "relevant_paths": [
+        "judged/topic-00/document-00.md",
+        "judged/topic-00/document-01.md",
+        "judged/topic-00/document-02.md",
+        "judged/topic-00/document-03.md"
+      ]
+    },
+    {
+      "ann": {
+        "chunk_ann_candidates": 0,
+        "chunk_vector_count": 0,
+        "document_ann_candidates": 165,
+        "document_ann_used": true,
+        "document_vector_count": 5200,
+        "latency_ms": {
+          "count": 5,
+          "max": 57.966,
+          "median": 55.243,
+          "min": 49.05,
+          "p95_nearest_rank": 57.966
+        },
+        "median_paired_exact_over_ann": 5.7046,
+        "metrics": {
+          "hits@5": 4.0,
+          "mrr@5": 1.0,
+          "ndcg@5": 1.0,
+          "precision@5": 0.8,
+          "recall@5": 1.0
+        },
+        "paired_candidate_counts": [
+          165,
+          165,
+          165,
+          165,
+          165
+        ],
+        "ranked_paths": [
+          "judged/topic-01/document-03.md",
+          "judged/topic-01/document-00.md",
+          "judged/topic-01/document-01.md",
+          "judged/topic-01/document-02.md",
+          "judged/topic-05/document-03.md"
+        ],
+        "raw_latency_samples_ms": [
+          55.242689000010614,
+          57.96590800002832,
+          49.05005499995241,
+          54.98521000004075,
+          57.72457899990968
+        ],
+        "vector_search": "ann_lsh16"
+      },
+      "ann_relevant_overlap_with_exact_at_k": 1.0,
+      "exact": {
+        "chunk_ann_candidates": 0,
+        "chunk_vector_count": 0,
+        "document_ann_candidates": 0,
+        "document_ann_used": false,
+        "document_vector_count": 5200,
+        "latency_ms": {
+          "count": 5,
+          "max": 331.481,
+          "median": 313.671,
+          "min": 308.038,
+          "p95_nearest_rank": 331.481
+        },
+        "metrics": {
+          "hits@5": 4.0,
+          "mrr@5": 1.0,
+          "ndcg@5": 1.0,
+          "precision@5": 0.8,
+          "recall@5": 1.0
+        },
+        "ranked_paths": [
+          "judged/topic-01/document-03.md",
+          "judged/topic-01/document-00.md",
+          "judged/topic-01/document-01.md",
+          "judged/topic-01/document-02.md",
+          "judged/topic-04/document-02.md"
+        ],
+        "raw_latency_samples_ms": [
+          331.48078299996087,
+          308.03792199992586,
+          309.3932479999921,
+          313.6711820000073,
+          320.6592459999911
+        ],
+        "vector_search": "exact_cosine"
+      },
+      "id": "topic-01",
+      "k": 5,
+      "query": "veltronic zephyr quux 01",
+      "relevant_paths": [
+        "judged/topic-01/document-00.md",
+        "judged/topic-01/document-01.md",
+        "judged/topic-01/document-02.md",
+        "judged/topic-01/document-03.md"
+      ]
+    },
+    {
+      "ann": {
+        "chunk_ann_candidates": 0,
+        "chunk_vector_count": 0,
+        "document_ann_candidates": 261,
+        "document_ann_used": true,
+        "document_vector_count": 5200,
+        "latency_ms": {
+          "count": 5,
+          "max": 99.185,
+          "median": 79.443,
+          "min": 60.32,
+          "p95_nearest_rank": 99.185
+        },
+        "median_paired_exact_over_ann": 4.4058,
+        "metrics": {
+          "hits@5": 4.0,
+          "mrr@5": 1.0,
+          "ndcg@5": 1.0,
+          "precision@5": 0.8,
+          "recall@5": 1.0
+        },
+        "paired_candidate_counts": [
+          261,
+          261,
+          261,
+          261,
+          261
+        ],
+        "ranked_paths": [
+          "judged/topic-02/document-01.md",
+          "judged/topic-02/document-02.md",
+          "judged/topic-02/document-00.md",
+          "judged/topic-02/document-03.md",
+          "judged/topic-01/document-02.md"
+        ],
+        "raw_latency_samples_ms": [
+          75.1688740000418,
+          60.31980900002054,
+          79.44271200005915,
+          99.1846040000155,
+          81.85699399996338
+        ],
+        "vector_search": "ann_lsh16"
+      },
+      "ann_relevant_overlap_with_exact_at_k": 1.0,
+      "exact": {
+        "chunk_ann_candidates": 0,
+        "chunk_vector_count": 0,
+        "document_ann_candidates": 0,
+        "document_ann_used": false,
+        "document_vector_count": 5200,
+        "latency_ms": {
+          "count": 5,
+          "max": 360.663,
+          "median": 346.179,
+          "min": 340.335,
+          "p95_nearest_rank": 360.663
+        },
+        "metrics": {
+          "hits@5": 4.0,
+          "mrr@5": 1.0,
+          "ndcg@5": 1.0,
+          "precision@5": 0.8,
+          "recall@5": 1.0
+        },
+        "ranked_paths": [
+          "judged/topic-02/document-01.md",
+          "judged/topic-02/document-02.md",
+          "judged/topic-02/document-00.md",
+          "judged/topic-02/document-03.md",
+          "judged/topic-05/document-00.md"
+        ],
+        "raw_latency_samples_ms": [
+          346.1787630000117,
+          340.3347710000162,
+          350.01258299996607,
+          360.66272599998683,
+          342.2623100000237
+        ],
+        "vector_search": "exact_cosine"
+      },
+      "id": "topic-02",
+      "k": 5,
+      "query": "veltronic zephyr quux 02",
+      "relevant_paths": [
+        "judged/topic-02/document-00.md",
+        "judged/topic-02/document-01.md",
+        "judged/topic-02/document-02.md",
+        "judged/topic-02/document-03.md"
+      ]
+    },
+    {
+      "ann": {
+        "chunk_ann_candidates": 0,
+        "chunk_vector_count": 0,
+        "document_ann_candidates": 166,
+        "document_ann_used": true,
+        "document_vector_count": 5200,
+        "latency_ms": {
+          "count": 5,
+          "max": 76.689,
+          "median": 59.105,
+          "min": 58.672,
+          "p95_nearest_rank": 76.689
+        },
+        "median_paired_exact_over_ann": 5.1838,
+        "metrics": {
+          "hits@5": 4.0,
+          "mrr@5": 1.0,
+          "ndcg@5": 1.0,
+          "precision@5": 0.8,
+          "recall@5": 1.0
+        },
+        "paired_candidate_counts": [
+          166,
+          166,
+          166,
+          166,
+          166
+        ],
+        "ranked_paths": [
+          "judged/topic-03/document-03.md",
+          "judged/topic-03/document-00.md",
+          "judged/topic-03/document-01.md",
+          "judged/topic-03/document-02.md",
+          "distractors/document-04559.md"
+        ],
+        "raw_latency_samples_ms": [
+          58.83331699999417,
+          58.671653000033075,
+          59.10465599993131,
+          60.90570200001366,
+          76.68905400009862
+        ],
+        "vector_search": "ann_lsh16"
+      },
+      "ann_relevant_overlap_with_exact_at_k": 1.0,
+      "exact": {
+        "chunk_ann_candidates": 0,
+        "chunk_vector_count": 0,
+        "document_ann_candidates": 0,
+        "document_ann_used": false,
+        "document_vector_count": 5200,
+        "latency_ms": {
+          "count": 5,
+          "max": 315.724,
+          "median": 305.282,
+          "min": 279.471,
+          "p95_nearest_rank": 315.724
+        },
+        "metrics": {
+          "hits@5": 4.0,
+          "mrr@5": 1.0,
+          "ndcg@5": 1.0,
+          "precision@5": 0.8,
+          "recall@5": 1.0
+        },
+        "ranked_paths": [
+          "judged/topic-03/document-03.md",
+          "judged/topic-03/document-00.md",
+          "judged/topic-03/document-01.md",
+          "judged/topic-03/document-02.md",
+          "judged/topic-01/document-00.md"
+        ],
+        "raw_latency_samples_ms": [
+          311.60515499993835,
+          305.2820639999254,
+          298.40929500005586,
+          315.72357200002443,
+          279.4708870000022
+        ],
+        "vector_search": "exact_cosine"
+      },
+      "id": "topic-03",
+      "k": 5,
+      "query": "veltronic zephyr quux 03",
+      "relevant_paths": [
+        "judged/topic-03/document-00.md",
+        "judged/topic-03/document-01.md",
+        "judged/topic-03/document-02.md",
+        "judged/topic-03/document-03.md"
+      ]
+    },
+    {
+      "ann": {
+        "chunk_ann_candidates": 0,
+        "chunk_vector_count": 0,
+        "document_ann_candidates": 173,
+        "document_ann_used": true,
+        "document_vector_count": 5200,
+        "latency_ms": {
+          "count": 5,
+          "max": 61.266,
+          "median": 55.892,
+          "min": 47.877,
+          "p95_nearest_rank": 61.266
+        },
+        "median_paired_exact_over_ann": 4.4735,
+        "metrics": {
+          "hits@5": 4.0,
+          "mrr@5": 1.0,
+          "ndcg@5": 1.0,
+          "precision@5": 0.8,
+          "recall@5": 1.0
+        },
+        "paired_candidate_counts": [
+          173,
+          173,
+          173,
+          173,
+          173
+        ],
+        "ranked_paths": [
+          "judged/topic-04/document-03.md",
+          "judged/topic-04/document-01.md",
+          "judged/topic-04/document-00.md",
+          "judged/topic-04/document-02.md",
+          "judged/topic-01/document-01.md"
+        ],
+        "raw_latency_samples_ms": [
+          47.876834999897255,
+          61.26610299997992,
+          56.62206099998457,
+          50.53996700007701,
+          55.8916689999478
+        ],
+        "vector_search": "ann_lsh16"
+      },
+      "ann_relevant_overlap_with_exact_at_k": 1.0,
+      "exact": {
+        "chunk_ann_candidates": 0,
+        "chunk_vector_count": 0,
+        "document_ann_candidates": 0,
+        "document_ann_used": false,
+        "document_vector_count": 5200,
+        "latency_ms": {
+          "count": 5,
+          "max": 264.51,
+          "median": 257.178,
+          "min": 237.779,
+          "p95_nearest_rank": 264.51
+        },
+        "metrics": {
+          "hits@5": 4.0,
+          "mrr@5": 1.0,
+          "ndcg@5": 1.0,
+          "precision@5": 0.8,
+          "recall@5": 1.0
+        },
+        "ranked_paths": [
+          "judged/topic-04/document-03.md",
+          "judged/topic-04/document-01.md",
+          "judged/topic-04/document-00.md",
+          "judged/topic-04/document-02.md",
+          "judged/topic-03/document-02.md"
+        ],
+        "raw_latency_samples_ms": [
+          264.509885999928,
+          260.7765789999803,
+          253.29940500000703,
+          257.1781970000302,
+          237.77904199994282
+        ],
+        "vector_search": "exact_cosine"
+      },
+      "id": "topic-04",
+      "k": 5,
+      "query": "veltronic zephyr quux 04",
+      "relevant_paths": [
+        "judged/topic-04/document-00.md",
+        "judged/topic-04/document-01.md",
+        "judged/topic-04/document-02.md",
+        "judged/topic-04/document-03.md"
+      ]
+    },
+    {
+      "ann": {
+        "chunk_ann_candidates": 0,
+        "chunk_vector_count": 0,
+        "document_ann_candidates": 205,
+        "document_ann_used": true,
+        "document_vector_count": 5200,
+        "latency_ms": {
+          "count": 5,
+          "max": 78.235,
+          "median": 50.137,
+          "min": 43.955,
+          "p95_nearest_rank": 78.235
+        },
+        "median_paired_exact_over_ann": 5.0849,
+        "metrics": {
+          "hits@5": 4.0,
+          "mrr@5": 1.0,
+          "ndcg@5": 1.0,
+          "precision@5": 0.8,
+          "recall@5": 1.0
+        },
+        "paired_candidate_counts": [
+          205,
+          205,
+          205,
+          205,
+          205
+        ],
+        "ranked_paths": [
+          "judged/topic-05/document-01.md",
+          "judged/topic-05/document-00.md",
+          "judged/topic-05/document-03.md",
+          "judged/topic-05/document-02.md",
+          "distractors/document-04106.md"
+        ],
+        "raw_latency_samples_ms": [
+          50.13723000001846,
+          78.23470800008181,
+          43.95471500004078,
+          51.99998000000505,
+          47.09993899996334
+        ],
+        "vector_search": "ann_lsh16"
+      },
+      "ann_relevant_overlap_with_exact_at_k": 1.0,
+      "exact": {
+        "chunk_ann_candidates": 0,
+        "chunk_vector_count": 0,
+        "document_ann_candidates": 0,
+        "document_ann_used": false,
+        "document_vector_count": 5200,
+        "latency_ms": {
+          "count": 5,
+          "max": 262.378,
+          "median": 235.031,
+          "min": 223.506,
+          "p95_nearest_rank": 262.378
+        },
+        "metrics": {
+          "hits@5": 4.0,
+          "mrr@5": 1.0,
+          "ndcg@5": 1.0,
+          "precision@5": 0.8,
+          "recall@5": 1.0
+        },
+        "ranked_paths": [
+          "judged/topic-05/document-01.md",
+          "judged/topic-05/document-00.md",
+          "judged/topic-05/document-03.md",
+          "judged/topic-05/document-02.md",
+          "judged/topic-06/document-03.md"
+        ],
+        "raw_latency_samples_ms": [
+          262.37812399995164,
+          235.03055699995912,
+          223.50552299997162,
+          228.3259350000435,
+          241.88522500003273
+        ],
+        "vector_search": "exact_cosine"
+      },
+      "id": "topic-05",
+      "k": 5,
+      "query": "veltronic zephyr quux 05",
+      "relevant_paths": [
+        "judged/topic-05/document-00.md",
+        "judged/topic-05/document-01.md",
+        "judged/topic-05/document-02.md",
+        "judged/topic-05/document-03.md"
+      ]
+    },
+    {
+      "ann": {
+        "chunk_ann_candidates": 0,
+        "chunk_vector_count": 0,
+        "document_ann_candidates": 257,
+        "document_ann_used": true,
+        "document_vector_count": 5200,
+        "latency_ms": {
+          "count": 5,
+          "max": 53.052,
+          "median": 48.982,
+          "min": 45.683,
+          "p95_nearest_rank": 53.052
+        },
+        "median_paired_exact_over_ann": 5.323,
+        "metrics": {
+          "hits@5": 4.0,
+          "mrr@5": 1.0,
+          "ndcg@5": 1.0,
+          "precision@5": 0.8,
+          "recall@5": 1.0
+        },
+        "paired_candidate_counts": [
+          257,
+          257,
+          257,
+          257,
+          257
+        ],
+        "ranked_paths": [
+          "judged/topic-06/document-03.md",
+          "judged/topic-06/document-01.md",
+          "judged/topic-06/document-00.md",
+          "judged/topic-06/document-02.md",
+          "judged/topic-02/document-03.md"
+        ],
+        "raw_latency_samples_ms": [
+          45.68260200005625,
+          51.01227900001959,
+          48.981858000047396,
+          53.052426000022024,
+          47.667414999978064
+        ],
+        "vector_search": "ann_lsh16"
+      },
+      "ann_relevant_overlap_with_exact_at_k": 1.0,
+      "exact": {
+        "chunk_ann_candidates": 0,
+        "chunk_vector_count": 0,
+        "document_ann_candidates": 0,
+        "document_ann_used": false,
+        "document_vector_count": 5200,
+        "latency_ms": {
+          "count": 5,
+          "max": 315.141,
+          "median": 260.455,
+          "min": 225.68,
+          "p95_nearest_rank": 315.141
+        },
+        "metrics": {
+          "hits@5": 4.0,
+          "mrr@5": 1.0,
+          "ndcg@5": 1.0,
+          "precision@5": 0.8,
+          "recall@5": 1.0
+        },
+        "ranked_paths": [
+          "judged/topic-06/document-03.md",
+          "judged/topic-06/document-01.md",
+          "judged/topic-06/document-00.md",
+          "judged/topic-06/document-02.md",
+          "judged/topic-05/document-03.md"
+        ],
+        "raw_latency_samples_ms": [
+          260.4553340000848,
+          225.68049500000598,
+          260.72834499996134,
+          232.2196369999574,
+          315.1410840000608
+        ],
+        "vector_search": "exact_cosine"
+      },
+      "id": "topic-06",
+      "k": 5,
+      "query": "veltronic zephyr quux 06",
+      "relevant_paths": [
+        "judged/topic-06/document-00.md",
+        "judged/topic-06/document-01.md",
+        "judged/topic-06/document-02.md",
+        "judged/topic-06/document-03.md"
+      ]
+    },
+    {
+      "ann": {
+        "chunk_ann_candidates": 0,
+        "chunk_vector_count": 0,
+        "document_ann_candidates": 221,
+        "document_ann_used": true,
+        "document_vector_count": 5200,
+        "latency_ms": {
+          "count": 5,
+          "max": 65.388,
+          "median": 49.568,
+          "min": 43.638,
+          "p95_nearest_rank": 65.388
+        },
+        "median_paired_exact_over_ann": 4.4863,
+        "metrics": {
+          "hits@5": 4.0,
+          "mrr@5": 1.0,
+          "ndcg@5": 1.0,
+          "precision@5": 0.8,
+          "recall@5": 1.0
+        },
+        "paired_candidate_counts": [
+          221,
+          221,
+          221,
+          221,
+          221
+        ],
+        "ranked_paths": [
+          "judged/topic-07/document-01.md",
+          "judged/topic-07/document-02.md",
+          "judged/topic-07/document-03.md",
+          "judged/topic-07/document-00.md",
+          "judged/topic-03/document-02.md"
+        ],
+        "raw_latency_samples_ms": [
+          55.58459600001697,
+          65.38830199997392,
+          43.63838799997666,
+          47.19168700000864,
+          49.56844000003002
+        ],
+        "vector_search": "ann_lsh16"
+      },
+      "ann_relevant_overlap_with_exact_at_k": 1.0,
+      "exact": {
+        "chunk_ann_candidates": 0,
+        "chunk_vector_count": 0,
+        "document_ann_candidates": 0,
+        "document_ann_used": false,
+        "document_vector_count": 5200,
+        "latency_ms": {
+          "count": 5,
+          "max": 290.516,
+          "median": 243.666,
+          "min": 222.377,
+          "p95_nearest_rank": 290.516
+        },
+        "metrics": {
+          "hits@5": 4.0,
+          "mrr@5": 1.0,
+          "ndcg@5": 1.0,
+          "precision@5": 0.8,
+          "recall@5": 1.0
+        },
+        "ranked_paths": [
+          "judged/topic-07/document-01.md",
+          "judged/topic-07/document-02.md",
+          "judged/topic-07/document-03.md",
+          "judged/topic-07/document-00.md",
+          "judged/topic-05/document-00.md"
+        ],
+        "raw_latency_samples_ms": [
+          243.66621199999372,
+          269.3890930000862,
+          290.51550300005147,
+          238.83195600001272,
+          222.37738500007254
+        ],
+        "vector_search": "exact_cosine"
+      },
+      "id": "topic-07",
+      "k": 5,
+      "query": "veltronic zephyr quux 07",
+      "relevant_paths": [
+        "judged/topic-07/document-00.md",
+        "judged/topic-07/document-01.md",
+        "judged/topic-07/document-02.md",
+        "judged/topic-07/document-03.md"
+      ]
+    }
+  ],
+  "request_errors": [],
+  "retrieval_algorithm": "random-hyperplane-lsh16-radius4",
+  "schema_version": 9,
+  "sqlite_integrity": "ok",
+  "status": "complete",
+  "synthetic_only": true,
+  "warmup_pairs_per_query": 1
+}

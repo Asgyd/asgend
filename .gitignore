@@ -1,0 +1,11 @@
+# Local build/runtime data
+build*/
+.venv/
+__pycache__/
+*.py[cod]
+backups/*
+!backups/.gitkeep
+server/deploy/.env
+server/deploy/tls/*
+server/deploy/secrets/*
+dist/

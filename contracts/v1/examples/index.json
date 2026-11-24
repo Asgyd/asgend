@@ -1,0 +1,529 @@
+{
+  "description": "Maps every example to the schema it must satisfy. 'schema' is relative to contracts/v1/schemas/ (optionally with a JSON pointer). 'closed': the schema forbids unknown fields (grant-shaping input), so injecting an unknown field must fail. 'map_keys': object keys whose values are maps with a restricted value schema; the unknown-field test does not inject into them.",
+  "map_keys": [
+    "checks"
+  ],
+  "valid": [
+    {
+      "file": "health_response.json",
+      "schema": "requests.schema.json#/$defs/health_response"
+    },
+    {
+      "file": "ready_response.json",
+      "schema": "requests.schema.json#/$defs/ready_response"
+    },
+    {
+      "file": "me_response.json",
+      "schema": "workspace.schema.json#/$defs/me_response"
+    },
+    {
+      "file": "logout_response.json",
+      "schema": "pairing.schema.json#/$defs/logout_response"
+    },
+    {
+      "file": "pairing_code_create_request.json",
+      "schema": "pairing.schema.json#/$defs/pairing_code_create_request",
+      "closed": true
+    },
+    {
+      "file": "pairing_code_response.json",
+      "schema": "pairing.schema.json#/$defs/pairing_code_response"
+    },
+    {
+      "file": "pairing_redeem_request.json",
+      "schema": "pairing.schema.json#/$defs/pairing_redeem_request"
+    },
+    {
+      "file": "pairing_redeem_response.json",
+      "schema": "pairing.schema.json#/$defs/pairing_redeem_response"
+    },
+    {
+      "file": "node_list.json",
+      "schema": "list.schema.json#/$defs/node_list"
+    },
+    {
+      "file": "node_enrollment_create_request.json",
+      "schema": "pairing.schema.json#/$defs/node_enrollment_create_request",
+      "closed": true
+    },
+    {
+      "file": "node_enrollment_create_response.json",
+      "schema": "pairing.schema.json#/$defs/node_enrollment_create_response"
+    },
+    {
+      "file": "node_revoke_response.json",
+      "schema": "node.schema.json#/$defs/response"
+    },
+    {
+      "file": "submit_request.json",
+      "schema": "requests.schema.json#/$defs/submit_task_request"
+    },
+    {
+      "file": "submit_request_minimal.json",
+      "schema": "requests.schema.json#/$defs/submit_task_request"
+    },
+    {
+      "file": "submit_response_task.json",
+      "schema": "remote_task.schema.json#/$defs/response"
+    },
+    {
+      "file": "task_status_running.json",
+      "schema": "remote_task.schema.json#/$defs/response"
+    },
+    {
+      "file": "task_status_waiting_input.json",
+      "schema": "remote_task.schema.json#/$defs/response"
+    },
+    {
+      "file": "task_status_completed.json",
+      "schema": "remote_task.schema.json#/$defs/response"
+    },
+    {
+      "file": "task_list.json",
+      "schema": "list.schema.json#/$defs/task_list"
+    },
+    {
+      "file": "events_page.json",
+      "schema": "list.schema.json#/$defs/event_page"
+    },
+    {
+      "file": "events_page_empty.json",
+      "schema": "list.schema.json#/$defs/event_page"
+    },
+    {
+      "file": "event_answer_submitted.json",
+      "schema": "task_event.schema.json"
+    },
+    {
+      "file": "event_artifact_available.json",
+      "schema": "task_event.schema.json"
+    },
+    {
+      "file": "event_delivery_failed.json",
+      "schema": "task_event.schema.json"
+    },
+    {
+      "file": "answer_request.json",
+      "schema": "requests.schema.json#/$defs/answer_request"
+    },
+    {
+      "file": "answer_response_command.json",
+      "schema": "command_envelope.schema.json#/$defs/response"
+    },
+    {
+      "file": "cancel_request.json",
+      "schema": "requests.schema.json#/$defs/cancel_request"
+    },
+    {
+      "file": "cancel_response_command.json",
+      "schema": "command_envelope.schema.json#/$defs/response"
+    },
+    {
+      "file": "retry_request.json",
+      "schema": "requests.schema.json#/$defs/retry_request"
+    },
+    {
+      "file": "retry_response_command.json",
+      "schema": "command_envelope.schema.json#/$defs/response"
+    },
+    {
+      "file": "retry_delivery_failed_response_command.json",
+      "schema": "command_envelope.schema.json#/$defs/response"
+    },
+    {
+      "file": "command_list.json",
+      "schema": "list.schema.json#/$defs/command_list"
+    },
+    {
+      "file": "artifact_list.json",
+      "schema": "list.schema.json#/$defs/artifact_list"
+    },
+    {
+      "file": "artifact_metadata.json",
+      "schema": "artifact.schema.json#/$defs/response"
+    },
+    {
+      "file": "download_ticket_response.json",
+      "schema": "requests.schema.json#/$defs/download_ticket_response"
+    },
+    {
+      "file": "members_response.json",
+      "schema": "workspace.schema.json#/$defs/members_response"
+    },
+    {
+      "file": "members_put_request.json",
+      "schema": "workspace.schema.json#/$defs/members_put_request",
+      "closed": true
+    },
+    {
+      "file": "audit_page.json",
+      "schema": "list.schema.json#/$defs/audit_page"
+    },
+    {
+      "file": "node_enroll_request.json",
+      "schema": "pairing.schema.json#/$defs/node_enroll_request"
+    },
+    {
+      "file": "node_enroll_response.json",
+      "schema": "pairing.schema.json#/$defs/node_enroll_response"
+    },
+    {
+      "file": "node_token_rotate_response.json",
+      "schema": "pairing.schema.json#/$defs/node_token_rotate_response"
+    },
+    {
+      "file": "node_heartbeat_request.json",
+      "schema": "node_channel.schema.json#/$defs/heartbeat_request"
+    },
+    {
+      "file": "node_heartbeat_response.json",
+      "schema": "node_channel.schema.json#/$defs/heartbeat_response"
+    },
+    {
+      "file": "node_lease_request.json",
+      "schema": "node_channel.schema.json#/$defs/lease_request"
+    },
+    {
+      "file": "node_lease_response.json",
+      "schema": "node_channel.schema.json#/$defs/lease_response"
+    },
+    {
+      "file": "node_lease_response_redelivery.json",
+      "schema": "node_channel.schema.json#/$defs/lease_response"
+    },
+    {
+      "file": "node_ack_request.json",
+      "schema": "node_channel.schema.json#/$defs/ack_request"
+    },
+    {
+      "file": "node_ack_rejected_request.json",
+      "schema": "node_channel.schema.json#/$defs/ack_request"
+    },
+    {
+      "file": "node_ack_response.json",
+      "schema": "command_envelope.schema.json#/$defs/response"
+    },
+    {
+      "file": "node_events_request.json",
+      "schema": "node_channel.schema.json#/$defs/events_request"
+    },
+    {
+      "file": "node_events_response.json",
+      "schema": "node_channel.schema.json#/$defs/events_response"
+    },
+    {
+      "file": "node_snapshot_request.json",
+      "schema": "node_channel.schema.json#/$defs/snapshot_request"
+    },
+    {
+      "file": "node_snapshot_response.json",
+      "schema": "remote_task.schema.json#/$defs/response"
+    },
+    {
+      "file": "node_artifact_init_request.json",
+      "schema": "node_channel.schema.json#/$defs/artifact_init_request"
+    },
+    {
+      "file": "node_artifact_init_response.json",
+      "schema": "node_channel.schema.json#/$defs/artifact_init_response"
+    },
+    {
+      "file": "node_artifact_upload_status.json",
+      "schema": "node_channel.schema.json#/$defs/artifact_upload_status"
+    },
+    {
+      "file": "node_artifact_complete_response.json",
+      "schema": "artifact.schema.json#/$defs/response"
+    },
+    {
+      "file": "error_invalid_request.json",
+      "schema": "error.schema.json"
+    },
+    {
+      "file": "error_unauthorized.json",
+      "schema": "error.schema.json"
+    },
+    {
+      "file": "error_forbidden.json",
+      "schema": "error.schema.json"
+    },
+    {
+      "file": "error_not_found.json",
+      "schema": "error.schema.json"
+    },
+    {
+      "file": "error_conflict_idempotency.json",
+      "schema": "error.schema.json"
+    },
+    {
+      "file": "error_conflict_state.json",
+      "schema": "error.schema.json"
+    },
+    {
+      "file": "error_gone_command_expired.json",
+      "schema": "error.schema.json"
+    },
+    {
+      "file": "error_payload_too_large.json",
+      "schema": "error.schema.json"
+    },
+    {
+      "file": "error_checksum_mismatch.json",
+      "schema": "error.schema.json"
+    },
+    {
+      "file": "error_rate_limited.json",
+      "schema": "error.schema.json"
+    },
+    {
+      "file": "error_quota_exceeded.json",
+      "schema": "error.schema.json"
+    },
+    {
+      "file": "error_unavailable.json",
+      "schema": "error.schema.json"
+    }
+  ],
+  "invalid": [
+    {
+      "file": "invalid/submit_missing_idempotency_key.json",
+      "schema": "requests.schema.json#/$defs/submit_task_request",
+      "reason": "idempotency_key is required"
+    },
+    {
+      "file": "invalid/submit_short_idempotency_key.json",
+      "schema": "requests.schema.json#/$defs/submit_task_request",
+      "reason": "idempotency_key shorter than 8"
+    },
+    {
+      "file": "invalid/submit_priority_out_of_range.json",
+      "schema": "requests.schema.json#/$defs/submit_task_request",
+      "reason": "priority > 9"
+    },
+    {
+      "file": "invalid/submit_ttl_out_of_range.json",
+      "schema": "requests.schema.json#/$defs/submit_task_request",
+      "reason": "ttl_seconds < 10"
+    },
+    {
+      "file": "invalid/submit_empty_task.json",
+      "schema": "requests.schema.json#/$defs/submit_task_request",
+      "reason": "empty task text"
+    },
+    {
+      "file": "invalid/task_unknown_state.json",
+      "schema": "remote_task.schema.json",
+      "reason": "state outside the v1 enum"
+    },
+    {
+      "file": "invalid/task_core_id_as_task_id.json",
+      "schema": "remote_task.schema.json",
+      "reason": "task_id must be rt_ + 26 base32"
+    },
+    {
+      "file": "invalid/task_missing_stale.json",
+      "schema": "remote_task.schema.json",
+      "reason": "required field stale missing"
+    },
+    {
+      "file": "invalid/task_response_missing_api_version.json",
+      "schema": "remote_task.schema.json#/$defs/response",
+      "reason": "single-entity response without api_version"
+    },
+    {
+      "file": "invalid/artifact_name_path_traversal.json",
+      "schema": "artifact.schema.json",
+      "reason": "path separators in artifact name"
+    },
+    {
+      "file": "invalid/artifact_name_dotdot.json",
+      "schema": "artifact.schema.json",
+      "reason": "'..' as artifact name"
+    },
+    {
+      "file": "invalid/artifact_name_backslash.json",
+      "schema": "artifact.schema.json",
+      "reason": "backslash in artifact name"
+    },
+    {
+      "file": "invalid/artifact_name_nul.json",
+      "schema": "artifact.schema.json",
+      "reason": "NUL in artifact name"
+    },
+    {
+      "file": "invalid/artifact_bad_sha256.json",
+      "schema": "artifact.schema.json",
+      "reason": "sha256 must be 64 lowercase hex"
+    },
+    {
+      "file": "invalid/artifact_init_too_large.json",
+      "schema": "node_channel.schema.json#/$defs/artifact_init_request",
+      "reason": "artifact larger than 256 MiB"
+    },
+    {
+      "file": "invalid/artifact_init_bad_mime.json",
+      "schema": "node_channel.schema.json#/$defs/artifact_init_request",
+      "reason": "header injection in mime"
+    },
+    {
+      "file": "invalid/node_event_server_only_type.json",
+      "schema": "node_channel.schema.json#/$defs/events_request",
+      "reason": "node may not send server-only event types"
+    },
+    {
+      "file": "invalid/node_event_server_state.json",
+      "schema": "node_channel.schema.json#/$defs/events_request",
+      "reason": "node may not report server-owned states"
+    },
+    {
+      "file": "invalid/node_event_seq_zero.json",
+      "schema": "node_channel.schema.json#/$defs/events_request",
+      "reason": "seq starts at 1"
+    },
+    {
+      "file": "invalid/node_events_empty_batch.json",
+      "schema": "node_channel.schema.json#/$defs/events_request",
+      "reason": "empty batch"
+    },
+    {
+      "file": "invalid/node_snapshot_server_state.json",
+      "schema": "node_channel.schema.json#/$defs/snapshot_request",
+      "reason": "snapshot reports a server-owned state"
+    },
+    {
+      "file": "invalid/lease_request_max_too_big.json",
+      "schema": "node_channel.schema.json#/$defs/lease_request",
+      "reason": "max > 50"
+    },
+    {
+      "file": "invalid/lease_request_wait_too_long.json",
+      "schema": "node_channel.schema.json#/$defs/lease_request",
+      "reason": "wait_ms > 30000"
+    },
+    {
+      "file": "invalid/ack_rejected_without_error.json",
+      "schema": "node_channel.schema.json#/$defs/ack_request",
+      "reason": "rejected ack needs error"
+    },
+    {
+      "file": "invalid/ack_unknown_outcome.json",
+      "schema": "node_channel.schema.json#/$defs/ack_request",
+      "reason": "unknown outcome"
+    },
+    {
+      "file": "invalid/command_answer_without_text.json",
+      "schema": "command_envelope.schema.json",
+      "reason": "answer payload requires answer"
+    },
+    {
+      "file": "invalid/command_leased_without_lease_id.json",
+      "schema": "command_envelope.schema.json",
+      "reason": "leased command must carry lease_id"
+    },
+    {
+      "file": "invalid/command_unknown_type.json",
+      "schema": "command_envelope.schema.json",
+      "reason": "unknown command type"
+    },
+    {
+      "file": "invalid/pairing_code_create_unknown_field.json",
+      "schema": "pairing.schema.json#/$defs/pairing_code_create_request",
+      "reason": "grant-shaping request is closed"
+    },
+    {
+      "file": "invalid/pairing_code_create_bad_role.json",
+      "schema": "pairing.schema.json#/$defs/pairing_code_create_request",
+      "reason": "unknown role"
+    },
+    {
+      "file": "invalid/pairing_redeem_short_code.json",
+      "schema": "pairing.schema.json#/$defs/pairing_redeem_request",
+      "reason": "code shorter than 8"
+    },
+    {
+      "file": "invalid/members_put_unknown_field.json",
+      "schema": "workspace.schema.json#/$defs/members_put_request",
+      "reason": "closed member binding"
+    },
+    {
+      "file": "invalid/members_put_empty.json",
+      "schema": "workspace.schema.json#/$defs/members_put_request",
+      "reason": "at least one binding"
+    },
+    {
+      "file": "invalid/enrollment_create_unknown_field.json",
+      "schema": "pairing.schema.json#/$defs/node_enrollment_create_request",
+      "reason": "closed enrollment request"
+    },
+    {
+      "file": "invalid/enroll_protocol_version_2.json",
+      "schema": "pairing.schema.json#/$defs/node_enroll_request",
+      "reason": "protocol_version must be 1"
+    },
+    {
+      "file": "invalid/enroll_response_user_token.json",
+      "schema": "pairing.schema.json#/$defs/node_enroll_response",
+      "reason": "node token must have ncp_ prefix"
+    },
+    {
+      "file": "invalid/download_ticket_user_token.json",
+      "schema": "requests.schema.json#/$defs/download_ticket_response",
+      "reason": "ticket must have dlt_ prefix"
+    },
+    {
+      "file": "invalid/download_ticket_absolute_url.json",
+      "schema": "requests.schema.json#/$defs/download_ticket_response",
+      "reason": "url must be a relative /v1/downloads path"
+    },
+    {
+      "file": "invalid/error_unknown_code.json",
+      "schema": "error.schema.json",
+      "reason": "error code outside v1 list"
+    },
+    {
+      "file": "invalid/error_missing_request_id.json",
+      "schema": "error.schema.json",
+      "reason": "request_id required"
+    },
+    {
+      "file": "invalid/error_wrong_api_version.json",
+      "schema": "error.schema.json",
+      "reason": "api_version must be 1"
+    },
+    {
+      "file": "invalid/event_bad_timestamp.json",
+      "schema": "task_event.schema.json",
+      "reason": "not RFC 3339"
+    },
+    {
+      "file": "invalid/event_schema_version_2.json",
+      "schema": "task_event.schema.json",
+      "reason": "schema_version must be 1"
+    },
+    {
+      "file": "invalid/event_server_type_with_seq.json",
+      "schema": "task_event.schema.json",
+      "reason": "server-only event carries seq"
+    },
+    {
+      "file": "invalid/event_question_without_text.json",
+      "schema": "task_event.schema.json",
+      "reason": "question.text required"
+    },
+    {
+      "file": "invalid/event_page_missing_cursor.json",
+      "schema": "list.schema.json#/$defs/event_page",
+      "reason": "last_event_id required"
+    },
+    {
+      "file": "invalid/heartbeat_bad_status.json",
+      "schema": "node_channel.schema.json#/$defs/heartbeat_request",
+      "reason": "heartbeat status is ready|busy|degraded"
+    },
+    {
+      "file": "invalid/node_revoked_with_lease.json",
+      "schema": "node.schema.json",
+      "reason": "revoked node cannot hold a presence lease"
+    }
+  ]
+}

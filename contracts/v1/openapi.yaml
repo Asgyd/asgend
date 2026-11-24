@@ -1,0 +1,2002 @@
+openapi: 3.1.0
+jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
+info:
+  title: ASGEND Remote Control Plane API
+  version: 1.0.0
+  description: Versioned HTTPS API for user/mobile/desktop clients and registered Execution Nodes. The Control Plane
+    stores task projections, commands, events, identity and artifact metadata; it never runs the task orchestrator,
+    models, tools or user workspace code. Normative rules are in `CONTRACT_SKETCH.md` and `docs/API_CONTRACT.md`.
+servers:
+- url: https://control-plane.example.invalid
+  description: Replace with the deployment HTTPS origin. Do not expose the core TCP API directly to the Internet.
+tags:
+- name: System
+  description: Health and operational endpoints.
+- name: Authentication
+  description: User/device credentials, pairing and logout.
+- name: Workspaces
+  description: Workspace membership and configuration.
+- name: Nodes
+  description: Execution Node registration and lifecycle.
+- name: Tasks
+  description: Task submissions, state projection and commands.
+- name: Events
+  description: Cursor-based event reads and reconnect support.
+- name: Artifacts
+  description: Immutable artifact metadata and capability-ticket downloads.
+- name: Node channel
+  description: Authenticated Execution Node heartbeat, commands, event ingest and artifacts.
+- name: Audit
+  description: Workspace audit records.
+paths:
+  /v1/health:
+    get:
+      tags:
+      - System
+      operationId: getHealth
+      summary: Liveness check
+      description: Unauthenticated liveness endpoint. Does not imply that storage is ready.
+      security: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/requests.schema.json#/$defs/health_response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+  /v1/ready:
+    get:
+      tags:
+      - System
+      operationId: getReadiness
+      summary: Readiness check
+      description: Unauthenticated readiness endpoint; returns unavailable when storage or migrations are not ready.
+      security: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/requests.schema.json#/$defs/ready_response
+        '503':
+          $ref: '#/components/responses/Unavailable'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /v1/metrics:
+    get:
+      tags:
+      - System
+      operationId: getMetrics
+      summary: Prometheus metrics
+      description: Metrics use only bounded labels; prompts, secrets and filesystem paths must not be label values.
+      security:
+      - metricsBearer: []
+      responses:
+        '200':
+          description: Prometheus text exposition format.
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            text/plain; version=0.0.4:
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+  /v1/me:
+    get:
+      tags:
+      - Authentication
+      operationId: getCurrentUser
+      summary: Current user and workspace roles
+      description: Current user and workspace roles
+      security:
+      - userBearer: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/workspace.schema.json#/$defs/me_response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+  /v1/auth/logout:
+    post:
+      tags:
+      - Authentication
+      operationId: logout
+      summary: Revoke the presenting user token
+      description: Revoke the presenting user token
+      security:
+      - userBearer: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/pairing.schema.json#/$defs/logout_response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+  /v1/workspaces/{ws}/pairing-codes:
+    post:
+      tags:
+      - Authentication
+      operationId: createPairingCode
+      summary: Create a one-time pairing code
+      description: Create a one-time pairing code
+      security:
+      - userBearer: []
+      responses:
+        '201':
+          description: Pairing code created; expires in 10 minutes.
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/pairing.schema.json#/$defs/pairing_code_response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/WorkspaceID'
+      requestBody:
+        required: true
+        description: Request payload.
+        content:
+          application/json:
+            schema:
+              $ref: schemas/pairing.schema.json#/$defs/pairing_code_create_request
+  /v1/pairing/redeem:
+    post:
+      tags:
+      - Authentication
+      operationId: redeemPairingCode
+      summary: Redeem a pairing code for a user token
+      description: Redeem a pairing code for a user token
+      security: []
+      responses:
+        '201':
+          description: Single-use pairing code redeemed. The returned token is shown only once.
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/pairing.schema.json#/$defs/pairing_redeem_response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      requestBody:
+        required: true
+        description: Request payload.
+        content:
+          application/json:
+            schema:
+              $ref: schemas/pairing.schema.json#/$defs/pairing_redeem_request
+  /v1/workspaces/{ws}/nodes:
+    get:
+      tags:
+      - Nodes
+      operationId: listWorkspaceNodes
+      summary: List execution nodes in a workspace
+      description: List execution nodes in a workspace
+      security:
+      - userBearer: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/list.schema.json#/$defs/node_list
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/WorkspaceID'
+  /v1/workspaces/{ws}/node-enrollments:
+    post:
+      tags:
+      - Nodes
+      operationId: createNodeEnrollment
+      summary: Create a one-time execution-node enrollment
+      description: Create a one-time execution-node enrollment
+      security:
+      - userBearer: []
+      responses:
+        '201':
+          description: Enrollment code created; expires in 15 minutes.
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/pairing.schema.json#/$defs/node_enrollment_create_response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/WorkspaceID'
+      requestBody:
+        required: true
+        description: Request payload.
+        content:
+          application/json:
+            schema:
+              $ref: schemas/pairing.schema.json#/$defs/node_enrollment_create_request
+  /v1/nodes/{node}/revoke:
+    post:
+      tags:
+      - Nodes
+      operationId: revokeNode
+      summary: Revoke an execution node and its credentials
+      description: Revocation invalidates node tokens and expires pending commands for the node.
+      security:
+      - userBearer: []
+      responses:
+        '200':
+          description: The updated node projection.
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/node.schema.json#/$defs/response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/NodeID'
+  /v1/workspaces/{ws}/tasks:
+    post:
+      tags:
+      - Tasks
+      operationId: submitTask
+      summary: Submit a task to an execution node
+      description: Creates a durable submit command; server acceptance is not proof that the execution node has
+        begun work. `idempotency_key` is required.
+      security:
+      - userBearer: []
+      responses:
+        '201':
+          description: Task created. A repeated idempotency key and identical body returns 200 with the original
+            task.
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/remote_task.schema.json#/$defs/response
+        '200':
+          description: Idempotent replay; the original task.
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/remote_task.schema.json#/$defs/response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '413':
+          $ref: '#/components/responses/PayloadTooLarge'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/WorkspaceID'
+      requestBody:
+        required: true
+        description: Request payload.
+        content:
+          application/json:
+            schema:
+              $ref: schemas/requests.schema.json#/$defs/submit_task_request
+    get:
+      tags:
+      - Tasks
+      operationId: listWorkspaceTasks
+      summary: List tasks in a workspace
+      description: List tasks in a workspace
+      security:
+      - userBearer: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/list.schema.json#/$defs/task_list
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/WorkspaceID'
+      - $ref: '#/components/parameters/TaskStateFilter'
+      - $ref: '#/components/parameters/NodeFilter'
+      - $ref: '#/components/parameters/PageLimit200'
+      - $ref: '#/components/parameters/Cursor'
+  /v1/tasks/{task}:
+    get:
+      tags:
+      - Tasks
+      operationId: getTask
+      summary: Get task state
+      description: Get task state
+      security:
+      - userBearer: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/remote_task.schema.json#/$defs/response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/TaskID'
+  /v1/tasks/{task}/events:
+    get:
+      tags:
+      - Events
+      operationId: getTaskEvents
+      summary: Read task events with cursor and long polling
+      description: Returns events with event_id greater than after_event_id. Persist last_event_id and resume from
+        it after reconnect; cursors can be detected as stale after restore.
+      security:
+      - userBearer: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/list.schema.json#/$defs/event_page
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/TaskID'
+      - $ref: '#/components/parameters/AfterEventID'
+      - $ref: '#/components/parameters/EventLimit'
+      - $ref: '#/components/parameters/WaitMs'
+  /v1/workspaces/{ws}/events:
+    get:
+      tags:
+      - Events
+      operationId: getWorkspaceEvents
+      summary: Read workspace events with cursor and long polling
+      description: Read workspace events with cursor and long polling
+      security:
+      - userBearer: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/list.schema.json#/$defs/event_page
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/WorkspaceID'
+      - $ref: '#/components/parameters/AfterEventID'
+      - $ref: '#/components/parameters/EventLimit'
+      - $ref: '#/components/parameters/WaitMs'
+  /v1/tasks/{task}/answer:
+    post:
+      tags:
+      - Tasks
+      operationId: answerTaskQuestion
+      summary: Answer a task waiting for input
+      description: Answer a task waiting for input
+      security:
+      - userBearer: []
+      responses:
+        '202':
+          description: Answer command accepted into the durable outbox; execution is performed by the node.
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/command_envelope.schema.json#/$defs/response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '410':
+          $ref: '#/components/responses/Gone'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/TaskID'
+      requestBody:
+        required: true
+        description: Request payload.
+        content:
+          application/json:
+            schema:
+              $ref: schemas/requests.schema.json#/$defs/answer_request
+  /v1/tasks/{task}/cancel:
+    post:
+      tags:
+      - Tasks
+      operationId: cancelTask
+      summary: Request task cancellation
+      description: Request task cancellation
+      security:
+      - userBearer: []
+      responses:
+        '202':
+          description: Cancel command accepted; the server does not directly stop execution.
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/command_envelope.schema.json#/$defs/response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '410':
+          $ref: '#/components/responses/Gone'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/TaskID'
+      requestBody:
+        required: true
+        description: Request payload.
+        content:
+          application/json:
+            schema:
+              $ref: schemas/requests.schema.json#/$defs/cancel_request
+  /v1/tasks/{task}/retry:
+    post:
+      tags:
+      - Tasks
+      operationId: retryTask
+      summary: Retry a failed or delivery-failed task
+      description: Retry a failed or delivery-failed task
+      security:
+      - userBearer: []
+      responses:
+        '202':
+          description: Retry command accepted into the durable outbox.
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/command_envelope.schema.json#/$defs/response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '410':
+          $ref: '#/components/responses/Gone'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/TaskID'
+      requestBody:
+        required: true
+        description: Request payload.
+        content:
+          application/json:
+            schema:
+              $ref: schemas/requests.schema.json#/$defs/retry_request
+  /v1/tasks/{task}/commands:
+    get:
+      tags:
+      - Tasks
+      operationId: listTaskCommands
+      summary: List commands for a task
+      description: List commands for a task
+      security:
+      - userBearer: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/list.schema.json#/$defs/command_list
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/TaskID'
+  /v1/tasks/{task}/artifacts:
+    get:
+      tags:
+      - Artifacts
+      operationId: listTaskArtifacts
+      summary: List artifacts for a task
+      description: List artifacts for a task
+      security:
+      - userBearer: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/list.schema.json#/$defs/artifact_list
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/TaskID'
+  /v1/artifacts/{art}:
+    get:
+      tags:
+      - Artifacts
+      operationId: getArtifactMetadata
+      summary: Get artifact metadata
+      description: Get artifact metadata
+      security:
+      - userBearer: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/artifact.schema.json#/$defs/response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/ArtifactID'
+  /v1/artifacts/{art}/download-ticket:
+    post:
+      tags:
+      - Artifacts
+      operationId: createArtifactDownloadTicket
+      summary: Create a short-lived artifact download ticket
+      description: Create a short-lived artifact download ticket
+      security:
+      - userBearer: []
+      responses:
+        '201':
+          description: A single-user, single-artifact download ticket; expires after 300 seconds.
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/requests.schema.json#/$defs/download_ticket_response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '410':
+          $ref: '#/components/responses/Gone'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/ArtifactID'
+  /v1/downloads/{ticket}:
+    get:
+      tags:
+      - Artifacts
+      operationId: downloadArtifact
+      summary: Download artifact bytes using a capability ticket
+      description: The ticket is a capability embedded in the URL and is bound to the issuing user and one artifact.
+        OpenAPI has no path-located API-key scheme; the required sensitive path parameter models this credential.
+        Supports a single byte range.
+      security: []
+      responses:
+        '200':
+          description: Full artifact content.
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+            Content-Type:
+              schema:
+                type: string
+              description: Artifact MIME type.
+            Content-Length:
+              schema:
+                type: integer
+                minimum: 0
+            X-Checksum-SHA256:
+              schema:
+                type: string
+                pattern: ^[0-9a-f]{64}$
+            Content-Disposition:
+              schema:
+                type: string
+            Accept-Ranges:
+              schema:
+                type: string
+                const: bytes
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '206':
+          description: Requested byte range.
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+            Content-Range:
+              description: Selected byte range and total artifact size.
+              schema:
+                type: string
+                pattern: ^bytes [0-9]+-[0-9]+/[0-9]+$
+            Content-Type:
+              schema:
+                type: string
+            Content-Length:
+              schema:
+                type: integer
+                minimum: 0
+            X-Checksum-SHA256:
+              schema:
+                type: string
+                pattern: ^[0-9a-f]{64}$
+            Content-Disposition:
+              schema:
+                type: string
+            Accept-Ranges:
+              schema:
+                type: string
+                const: bytes
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '410':
+          $ref: '#/components/responses/Gone'
+        '416':
+          $ref: '#/components/responses/RangeNotSatisfiable'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/DownloadTicket'
+      - $ref: '#/components/parameters/RangeHeader'
+  /v1/workspaces/{ws}/members:
+    get:
+      tags:
+      - Workspaces
+      operationId: getWorkspaceMembers
+      summary: List workspace role bindings
+      description: List workspace role bindings
+      security:
+      - userBearer: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/workspace.schema.json#/$defs/members_response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/WorkspaceID'
+    put:
+      tags:
+      - Workspaces
+      operationId: replaceWorkspaceMembers
+      summary: Replace workspace member role bindings
+      description: Owner-only grant-shaping input. Unknown fields are rejected rather than ignored.
+      security:
+      - userBearer: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/workspace.schema.json#/$defs/members_response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '413':
+          $ref: '#/components/responses/PayloadTooLarge'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/WorkspaceID'
+      requestBody:
+        required: true
+        description: Request payload.
+        content:
+          application/json:
+            schema:
+              $ref: schemas/workspace.schema.json#/$defs/members_put_request
+  /v1/workspaces/{ws}/audit:
+    get:
+      tags:
+      - Audit
+      operationId: listWorkspaceAudit
+      summary: List workspace audit events
+      description: List workspace audit events
+      security:
+      - userBearer: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/list.schema.json#/$defs/audit_page
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/WorkspaceID'
+      - $ref: '#/components/parameters/AuditLimit'
+      - $ref: '#/components/parameters/Cursor'
+  /v1/node/enroll:
+    post:
+      tags:
+      - Node channel
+      operationId: enrollNode
+      summary: Enroll an execution node using a one-time enrollment code
+      description: Enroll an execution node using a one-time enrollment code
+      security: []
+      responses:
+        '201':
+          description: Node token returned once; persist it in the node credential store.
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/pairing.schema.json#/$defs/node_enroll_response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      requestBody:
+        required: true
+        description: Request payload.
+        content:
+          application/json:
+            schema:
+              $ref: schemas/pairing.schema.json#/$defs/node_enroll_request
+  /v1/node/heartbeat:
+    post:
+      tags:
+      - Node channel
+      operationId: nodeHeartbeat
+      summary: Renew node liveness lease
+      description: Renew node liveness lease
+      security:
+      - nodeBearer: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/node_channel.schema.json#/$defs/heartbeat_response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      requestBody:
+        required: true
+        description: Request payload.
+        content:
+          application/json:
+            schema:
+              $ref: schemas/node_channel.schema.json#/$defs/heartbeat_request
+  /v1/node/token/rotate:
+    post:
+      tags:
+      - Node channel
+      operationId: rotateNodeToken
+      summary: Rotate the node credential
+      description: Returns a new node token. The old token has a 60-second grace period.
+      security:
+      - nodeBearer: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/pairing.schema.json#/$defs/node_token_rotate_response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+  /v1/node/commands/lease:
+    post:
+      tags:
+      - Node channel
+      operationId: leaseNodeCommands
+      summary: Lease pending commands for this node
+      description: Commands are delivered at least once. A lost acknowledgment or expired 60-second lease can cause
+        redelivery; nodes must deduplicate by command_id and use core idempotency key `cp:<command_id>`.
+      security:
+      - nodeBearer: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/node_channel.schema.json#/$defs/lease_response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      requestBody:
+        required: true
+        description: Request payload.
+        content:
+          application/json:
+            schema:
+              $ref: schemas/node_channel.schema.json#/$defs/lease_request
+  /v1/node/commands/{cmd}/ack:
+    post:
+      tags:
+      - Node channel
+      operationId: acknowledgeNodeCommand
+      summary: Acknowledge a leased command
+      description: Acknowledge a leased command
+      security:
+      - nodeBearer: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/command_envelope.schema.json#/$defs/response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '410':
+          $ref: '#/components/responses/Gone'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/CommandID'
+      requestBody:
+        required: true
+        description: Request payload.
+        content:
+          application/json:
+            schema:
+              $ref: schemas/node_channel.schema.json#/$defs/ack_request
+  /v1/node/events:
+    post:
+      tags:
+      - Node channel
+      operationId: ingestNodeEvents
+      summary: Ingest a batch of task events from a node
+      description: At most 500 events per batch. The server deduplicates per-task seq values and reports sequence
+        gaps; after a gap, post a task snapshot.
+      security:
+      - nodeBearer: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/node_channel.schema.json#/$defs/events_response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '413':
+          $ref: '#/components/responses/PayloadTooLarge'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      requestBody:
+        required: true
+        description: Request payload.
+        content:
+          application/json:
+            schema:
+              $ref: schemas/node_channel.schema.json#/$defs/events_request
+  /v1/node/tasks/{task}/snapshot:
+    post:
+      tags:
+      - Node channel
+      operationId: resyncNodeTaskSnapshot
+      summary: Resynchronize a task projection after reconnect or event gaps
+      description: Resynchronize a task projection after reconnect or event gaps
+      security:
+      - nodeBearer: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/remote_task.schema.json#/$defs/response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '413':
+          $ref: '#/components/responses/PayloadTooLarge'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/TaskID'
+      requestBody:
+        required: true
+        description: Request payload.
+        content:
+          application/json:
+            schema:
+              $ref: schemas/node_channel.schema.json#/$defs/snapshot_request
+  /v1/node/artifacts:
+    post:
+      tags:
+      - Node channel
+      operationId: initializeNodeArtifactUpload
+      summary: Initialize or resume a chunked artifact upload
+      description: Initialize or resume a chunked artifact upload
+      security:
+      - nodeBearer: []
+      responses:
+        '201':
+          description: Upload initialized. Repeating the same task/name/size/SHA-256 while uploading returns the
+            same artifact with status 200.
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/node_channel.schema.json#/$defs/artifact_init_response
+        '200':
+          description: Existing upload resumed.
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/node_channel.schema.json#/$defs/artifact_init_response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '413':
+          $ref: '#/components/responses/PayloadTooLarge'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      requestBody:
+        required: true
+        description: Request payload.
+        content:
+          application/json:
+            schema:
+              $ref: schemas/node_channel.schema.json#/$defs/artifact_init_request
+  /v1/node/artifacts/{art}/content:
+    put:
+      tags:
+      - Node channel
+      operationId: uploadNodeArtifactChunk
+      summary: Upload one artifact byte range
+      description: Each chunk must begin at the currently received offset, use a Content-Length equal to its Content-Range,
+        and not use chunked transfer encoding.
+      security:
+      - nodeBearer: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadProgress'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '413':
+          $ref: '#/components/responses/PayloadTooLarge'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/ArtifactID'
+      - $ref: '#/components/parameters/ContentRangeHeader'
+      requestBody:
+        required: true
+        description: Request payload.
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+    get:
+      tags:
+      - Node channel
+      operationId: getNodeArtifactUploadStatus
+      summary: Get resumable upload progress
+      description: Get resumable upload progress
+      security:
+      - nodeBearer: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/node_channel.schema.json#/$defs/artifact_upload_status
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/ArtifactID'
+  /v1/node/artifacts/{art}/complete:
+    post:
+      tags:
+      - Node channel
+      operationId: completeNodeArtifactUpload
+      summary: Verify SHA-256 and finalize artifact upload
+      description: The server verifies full byte count and SHA-256. Mismatch deletes staged content and marks the
+        upload rejected.
+      security:
+      - nodeBearer: []
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/XRequestID'
+            X-ASGEND-API-Version:
+              $ref: '#/components/headers/XApiVersion'
+          content:
+            application/json:
+              schema:
+                $ref: schemas/artifact.schema.json#/$defs/response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '410':
+          $ref: '#/components/responses/Gone'
+        '413':
+          $ref: '#/components/responses/PayloadTooLarge'
+        '422':
+          $ref: '#/components/responses/Unprocessable'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/ArtifactID'
+      requestBody:
+        required: false
+        description: Request payload.
+        content:
+          application/json:
+            schema:
+              $ref: schemas/requests.schema.json#/$defs/empty_request
+components:
+  securitySchemes:
+    userBearer:
+      type: http
+      scheme: bearer
+      bearerFormat: ucp_…
+      description: User/device access token. Only a SHA-256 hash is stored server-side; token is returned only at
+        issuance.
+    nodeBearer:
+      type: http
+      scheme: bearer
+      bearerFormat: ncp_…
+      description: Execution Node token, separate from user credentials.
+    metricsBearer:
+      type: http
+      scheme: bearer
+      bearerFormat: configured metrics token
+      description: Bearer token configured with ASGEND_CP_METRICS_TOKEN.
+    downloadTicket:
+      type: http
+      scheme: bearer
+      bearerFormat: dlt_…
+      description: Capability token for one artifact and issuing user. Because the implementation places it in the
+        URL path, the download operation documents it as a required sensitive path parameter and uses an explicit
+        empty security requirement; do not place the URL in logs or analytics.
+  parameters:
+    WorkspaceID:
+      name: ws
+      in: path
+      required: true
+      description: Workspace identifier.
+      schema:
+        $ref: schemas/common.schema.json#/$defs/workspace_id
+    TaskID:
+      name: task
+      in: path
+      required: true
+      description: Remote task identifier, not the local core task identifier.
+      schema:
+        $ref: schemas/common.schema.json#/$defs/task_id
+    NodeID:
+      name: node
+      in: path
+      required: true
+      schema:
+        $ref: schemas/common.schema.json#/$defs/node_id
+    ArtifactID:
+      name: art
+      in: path
+      required: true
+      schema:
+        $ref: schemas/common.schema.json#/$defs/artifact_id
+    CommandID:
+      name: cmd
+      in: path
+      required: true
+      schema:
+        $ref: schemas/common.schema.json#/$defs/command_id
+    DownloadTicket:
+      name: ticket
+      in: path
+      required: true
+      description: Secret capability token; do not log or expose it.
+      schema:
+        $ref: schemas/common.schema.json#/$defs/download_ticket
+    TaskStateFilter:
+      name: state
+      in: query
+      required: false
+      schema:
+        $ref: schemas/common.schema.json#/$defs/task_state
+    NodeFilter:
+      name: node_id
+      in: query
+      required: false
+      schema:
+        $ref: schemas/common.schema.json#/$defs/node_id
+    PageLimit200:
+      name: limit
+      in: query
+      required: false
+      description: Page size, 1..200 (default 50).
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+        default: 50
+    EventLimit:
+      name: limit
+      in: query
+      required: false
+      description: Page size, 1..500 (default 100).
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 500
+        default: 100
+    Cursor:
+      name: cursor
+      in: query
+      required: false
+      description: Opaque pagination cursor; do not parse it.
+      schema:
+        $ref: schemas/common.schema.json#/$defs/cursor
+    AfterEventID:
+      name: after_event_id
+      in: query
+      required: false
+      description: Resume after this server event ID; 0 means the beginning.
+      schema:
+        $ref: schemas/common.schema.json#/$defs/event_cursor
+    WaitMs:
+      name: wait_ms
+      in: query
+      required: false
+      description: Long-poll duration in milliseconds.
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 30000
+        default: 0
+    AuditLimit:
+      name: limit
+      in: query
+      required: false
+      description: Page size (default 50; service-defined maximum).
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+        default: 50
+    RangeHeader:
+      name: Range
+      in: header
+      required: false
+      description: Single byte range; unsupported/malformed multi-range values are ignored and full content is served.
+      schema:
+        type: string
+        pattern: ^bytes=(\d*-\d*)$
+    ContentRangeHeader:
+      name: Content-Range
+      in: header
+      required: true
+      description: Chunk range and declared total length.
+      schema:
+        type: string
+        pattern: ^bytes [0-9]+-[0-9]+/[0-9]+$
+  headers:
+    XRequestID:
+      description: Correlation ID for support and logs; never put credentials in this header.
+      schema:
+        type: string
+        maxLength: 64
+    XApiVersion:
+      description: Major API version.
+      schema:
+        type: string
+        const: '1'
+  responses:
+    BadRequest:
+      description: The request is invalid or a required field is missing.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/XRequestID'
+        X-ASGEND-API-Version:
+          $ref: '#/components/headers/XApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: schemas/error.schema.json
+    Unauthorized:
+      description: Missing, invalid or revoked credential.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/XRequestID'
+        X-ASGEND-API-Version:
+          $ref: '#/components/headers/XApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: schemas/error.schema.json
+    Forbidden:
+      description: The credential is valid but the requested action is not permitted.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/XRequestID'
+        X-ASGEND-API-Version:
+          $ref: '#/components/headers/XApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: schemas/error.schema.json
+    NotFound:
+      description: The object was not found or is outside the caller’s visible workspace.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/XRequestID'
+        X-ASGEND-API-Version:
+          $ref: '#/components/headers/XApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: schemas/error.schema.json
+    Conflict:
+      description: The request conflicts with the current task, command, or upload state.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/XRequestID'
+        X-ASGEND-API-Version:
+          $ref: '#/components/headers/XApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: schemas/error.schema.json
+    Gone:
+      description: The object or short-lived ticket expired.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/XRequestID'
+        X-ASGEND-API-Version:
+          $ref: '#/components/headers/XApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: schemas/error.schema.json
+    PayloadTooLarge:
+      description: The request or upload chunk exceeds a configured limit.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/XRequestID'
+        X-ASGEND-API-Version:
+          $ref: '#/components/headers/XApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: schemas/error.schema.json
+    RangeNotSatisfiable:
+      description: The requested byte range is not satisfiable.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/XRequestID'
+        X-ASGEND-API-Version:
+          $ref: '#/components/headers/XApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: schemas/error.schema.json
+    Unprocessable:
+      description: The artifact checksum or size does not match the declared upload.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/XRequestID'
+        X-ASGEND-API-Version:
+          $ref: '#/components/headers/XApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: schemas/error.schema.json
+    RateLimited:
+      description: The caller has exceeded a rate limit or quota and may retry later.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/XRequestID'
+        X-ASGEND-API-Version:
+          $ref: '#/components/headers/XApiVersion'
+        Retry-After:
+          description: Suggested delay before retrying.
+          schema:
+            type: integer
+            minimum: 0
+      content:
+        application/json:
+          schema:
+            $ref: schemas/error.schema.json
+    InternalError:
+      description: Unexpected server error; details do not contain secrets or filesystem paths.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/XRequestID'
+        X-ASGEND-API-Version:
+          $ref: '#/components/headers/XApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: schemas/error.schema.json
+    Unavailable:
+      description: The service is unavailable or is not ready.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/XRequestID'
+        X-ASGEND-API-Version:
+          $ref: '#/components/headers/XApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: schemas/error.schema.json
+  schemas:
+    UploadProgress:
+      type: object
+      required:
+      - api_version
+      - artifact_id
+      - received
+      - size
+      properties:
+        api_version:
+          $ref: schemas/common.schema.json#/$defs/api_version
+        artifact_id:
+          $ref: schemas/common.schema.json#/$defs/artifact_id
+        received:
+          type: integer
+          minimum: 0
+        size:
+          type: integer
+          minimum: 0
+        state:
+          $ref: schemas/common.schema.json#/$defs/artifact_state
+      description: Chunk upload progress returned by a successful PUT; the GET status schema also reports upload
+        state.
+    ApiVersionOnly:
+      type: object
+      required:
+      - api_version
+      properties:
+        api_version:
+          $ref: schemas/common.schema.json#/$defs/api_version
+      additionalProperties: true

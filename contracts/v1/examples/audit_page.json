@@ -1,0 +1,32 @@
+{
+  "api_version": 1,
+  "audit_events": [
+    {
+      "audit_id": "aud_01JBZ9D4E5F6G7H8J9K0M1N2P4",
+      "workspace_id": "ws_01JBZ8K6X3M4N5P6Q7R8S9T0VW",
+      "actor": "usr_01JBZ8M2C4D5E6F7G8H9J0K1MN",
+      "action": "artifact.download_ticket",
+      "target": "art_01JBZ9C3D4E5F6G7H8J9K0M1N2",
+      "result": "ok",
+      "request_id": "req-01JBZ9F6G7H9",
+      "at": "2026-10-21T10:05:00.000Z",
+      "details": {
+        "task_id": "rt_01JBZ9A0B1C2D3E4F5G6H7J8K9"
+      }
+    },
+    {
+      "audit_id": "aud_01JBZ9D4E5F6G7H8J9K0M1N2P3",
+      "workspace_id": "ws_01JBZ8K6X3M4N5P6Q7R8S9T0VW",
+      "actor": "system",
+      "action": "command.expire",
+      "target": "cmd_01JBZ9B7C8D9E0F1G2H3J4K5M7",
+      "result": "ok",
+      "request_id": null,
+      "at": "2026-10-21T11:00:00.000Z",
+      "details": {
+        "reason": "ttl_expired"
+      }
+    }
+  ],
+  "next_cursor": null
+}

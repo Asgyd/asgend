@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://asgend.invalid/contracts/v1/schemas/remote_task.schema.json",
+  "title": "RemoteTask",
+  "description": "Control Plane projection of a task executed on an Execution Node (CONTRACT_SKETCH §5). State after 'delivered' comes only from node events/snapshots. As a single-entity response body it additionally carries api_version (see $defs/response).",
+  "type": "object",
+  "required": [
+    "task_id", "workspace_id", "node_id", "core_task_id", "title", "agent", "session_id", "priority",
+    "state", "question", "attempts", "created_at", "updated_at", "last_event_id", "stale",
+    "idempotency_key", "result_summary", "error"
+  ],
+  "properties": {
+    "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+    "task_id": { "$ref": "common.schema.json#/$defs/task_id" },
+    "workspace_id": { "$ref": "common.schema.json#/$defs/workspace_id" },
+    "node_id": { "$ref": "common.schema.json#/$defs/node_id" },
+    "core_task_id": { "$ref": "common.schema.json#/$defs/core_task_id_or_null" },
+    "title": { "description": "Server-derived: first non-empty line of the task text, truncated to 200 characters.", "type": "string", "maxLength": 200 },
+    "agent": { "$ref": "common.schema.json#/$defs/agent_or_null" },
+    "session_id": { "$ref": "common.schema.json#/$defs/session_id_or_null" },
+    "priority": { "$ref": "common.schema.json#/$defs/priority" },
+    "state": { "$ref": "common.schema.json#/$defs/task_state" },
+    "question": {
+      "description": "Non-null only while state == waiting_input.",
+      "anyOf": [ { "$ref": "user_input_request.schema.json" }, { "type": "null" } ]
+    },
+    "attempts": { "description": "Core attempt count as last reported by the node (0 before delivery); server-side redelivery of a submit after delivery_failed also counts.", "type": "integer", "minimum": 0 },
+    "created_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "updated_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "last_event_id": { "description": "event_id of the newest TaskEvent of this task (0 if none).", "$ref": "common.schema.json#/$defs/event_cursor" },
+    "stale": { "description": "True when the owning node is offline/revoked (last heartbeat older than its lease) and the state is not terminal.", "type": "boolean" },
+    "idempotency_key": { "$ref": "common.schema.json#/$defs/idempotency_key" },
+    "result_summary": { "$ref": "common.schema.json#/$defs/result_summary_or_null" },
+    "error": { "$ref": "common.schema.json#/$defs/error_text_or_null" },
+    "last_seq": {
+      "description": "Addition (CHANGES.md C-003): highest node seq accepted for this task. Returned to nodes in the snapshot response; clients ignore it.",
+      "type": "integer",
+      "minimum": 0
+    },
+    "delivery_expires_at": {
+      "description": "Addition (CHANGES.md C-003): expires_at of the pending submit command while state == pending_delivery, else null.",
+      "$ref": "common.schema.json#/$defs/timestamp_or_null"
+    }
+  },
+  "$defs": {
+    "response": {
+      "description": "RemoteTask as a single-entity response body.",
+      "allOf": [ { "$ref": "#" }, { "required": [ "api_version" ] } ]
+    }
+  }
+}

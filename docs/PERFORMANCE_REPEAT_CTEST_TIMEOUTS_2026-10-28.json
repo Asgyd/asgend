@@ -1,0 +1,206 @@
+{
+  "ctest_version": {
+    "major": 1,
+    "minor": 0
+  },
+  "test_count": 49,
+  "finite_positive_timeout_count": 49,
+  "tests": [
+    {
+      "name": "integration",
+      "timeout_seconds": 300.0
+    },
+    {
+      "name": "node_agent_c_core_e2e",
+      "timeout_seconds": 30.0
+    },
+    {
+      "name": "release_gate_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "performance_inventory",
+      "timeout_seconds": 10.0
+    },
+    {
+      "name": "performance_benchmark_methodology",
+      "timeout_seconds": 10.0
+    },
+    {
+      "name": "performance_load_probe_smoke",
+      "timeout_seconds": 15.0
+    },
+    {
+      "name": "performance_core_rpc_lifecycle_smoke",
+      "timeout_seconds": 90.0
+    },
+    {
+      "name": "release_workflow_coverage",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "client_workflow_contract_triggers",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "client_workflow_test_coverage",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "core_rpc_contract_inventory",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "core_rpc_runtime_contract",
+      "timeout_seconds": 45.0
+    },
+    {
+      "name": "core_rpc_state_transitions",
+      "timeout_seconds": 75.0
+    },
+    {
+      "name": "core_artifacts",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "core_db_atomicity",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "core_db_fault_injection",
+      "timeout_seconds": 10.0
+    },
+    {
+      "name": "core_shutdown_idle_client",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "core_config_strings",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "core_config_safe_update",
+      "timeout_seconds": 20.0
+    },
+    {
+      "name": "core_provider_error_privacy",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "core_llm_sse_watchdog",
+      "timeout_seconds": 90.0
+    },
+    {
+      "name": "core_http_status_mapping",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "core_mcp_launcher_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "ui_asset_upgrade",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "tui_library_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "tui_terminal_layout",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "cli_terminal_layout",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "cli_stream_state_contract",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "cli_watch_reliability",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "cli_rpc_timeout_contract",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "cli_preview_stream_state_contract",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "cli_secret_input_contract",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "cli_stream_event_contract",
+      "timeout_seconds": 40.0
+    },
+    {
+      "name": "cli_session_contract",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "cli_orchestrator_group_contract",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "tui_visual_contract",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "memory_index_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "memory_pipeline_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "memory_embedding_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "memory_graph_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "memory_chunk_query_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "memory_rerank_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "memory_query_plan_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "retrieval_quality_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "query_plan_eval_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "memory_ann_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "memory_gc_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "memory_pdf_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "name": "memory_ooxml_smoke",
+      "timeout_seconds": 60.0
+    }
+  ]
+}

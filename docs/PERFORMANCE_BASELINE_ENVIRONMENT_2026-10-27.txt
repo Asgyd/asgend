@@ -1,0 +1,16 @@
+ASGEND performance baseline environment (single-run sample)
+Date: 2026-10-27
+Kernel/platform: Linux 6.18.55 x86_64
+Compiler: GCC 14.2.0 (Debian 14.2.0-19)
+CMake: 3.31.6
+Python: 3.13.5
+Online CPU threads: 3
+Visible memory: 5.8 GiB
+Build type: CMake Release
+Ninja parallelism: 4
+Clean configure: 5.0 s reported by CMake configure phase
+Clean build: 10.33 s wall; 18.74 s user CPU; 1.24 s system CPU; 81,608 KiB maximum RSS reported by GNU time
+Baseline CTest (input tree, 45 tests): 45/45 PASS; 248.21 s wall; 74.39 s user CPU; 12.20 s system CPU; 130,328 KiB maximum RSS reported by GNU time
+Long-tail CTest entries: integration 135.97 s; core_llm_sse_watchdog 39.70 s; core_mcp_launcher_smoke 20.67 s; core_rpc_state_transitions 6.76 s; memory_ann_smoke 2.93 s.
+Caveat: GNU time reports its process/child resource accounting; max RSS is not the sum of concurrently resident processes. Values are a single sample and not a production SLA.
+Unavailable here: Docker/Podman, Flutter/Dart, Gradle, Android adb, Qt/qmake, perf and Valgrind.

@@ -1,0 +1,79 @@
+name: ASGEND stable-release gate
+
+on:
+  push:
+    tags:
+      - 'v1.0.0'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  metadata-gate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate release metadata and recorded acceptance evidence
+        run: python scripts/check_release_readiness.py --strict
+
+  control-plane-core:
+    name: Core, Control Plane, Node Agent, PostgreSQL and Compose acceptance
+    needs: metadata-gate
+    permissions:
+      contents: read
+    uses: ./.github/workflows/control-plane-node-e2e.yml
+
+  native-android:
+    name: Native Android client acceptance
+    needs: metadata-gate
+    permissions:
+      contents: read
+    uses: ./.github/workflows/native-android.yml
+
+  flutter-android:
+    name: Flutter Android client acceptance
+    needs: metadata-gate
+    permissions:
+      contents: read
+    uses: ./.github/workflows/flutter-android.yml
+
+  qt-client:
+    name: Qt client acceptance
+    needs: metadata-gate
+    permissions:
+      contents: read
+    uses: ./.github/workflows/qt-client.yml
+
+  release-verification-summary:
+    name: Require all release verification jobs to pass
+    if: ${{ always() }}
+    needs:
+      - metadata-gate
+      - control-plane-core
+      - native-android
+      - flutter-android
+      - qt-client
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - name: Reject failed or skipped verification jobs
+        env:
+          RESULT_METADATA: ${{ needs.metadata-gate.result }}
+          RESULT_CORE: ${{ needs.control-plane-core.result }}
+          RESULT_NATIVE_ANDROID: ${{ needs.native-android.result }}
+          RESULT_FLUTTER_ANDROID: ${{ needs.flutter-android.result }}
+          RESULT_QT: ${{ needs.qt-client.result }}
+        run: |
+          set -eu
+          for result in "$RESULT_METADATA" "$RESULT_CORE" "$RESULT_NATIVE_ANDROID" "$RESULT_FLUTTER_ANDROID" "$RESULT_QT"; do
+            if [ "$result" != "success" ]; then
+              echo "Release verification blocked: a required job finished as $result."
+              exit 1
+            fi
+          done
+          echo "All release-tag verification jobs succeeded."

@@ -1,0 +1,13 @@
+ASGEND repeated performance audit — iteration 1 environment
+Date: 2026-10-27
+Input archive: asgend-performance-audit-final-2026-10-27.tar.gz (SHA-256 verified before extraction)
+Platform: Linux x86_64; GCC 14.2.0; CMake 3.31.6; Python 3.13.5; Ninja
+Build: clean Release, --parallel 3
+Configure: 4.98 s wall; 5.40 s user; 0.56 s system; 95,400 KiB max RSS
+Build: 9.10 s wall; 16.44 s user; 0.96 s system; 81,396 KiB max RSS
+Full CTest: 48/48 PASS; exit 0; 252.91 s wall; 78.62 s user; 11.82 s system; 130,204 KiB max RSS; -j1; --timeout 300; unprivileged nobody
+Long tests: integration 133.74 s; core_llm_sse_watchdog 40.33 s; core_mcp_launcher_smoke 20.57 s; memory_ann_smoke 4.57 s
+Generated CTest JSON: 48 tests; 48/48 have finite TIMEOUT property
+Inventory v1: 233 files; 70,916 lines in declared source/test extensions; does not count config/manifests separately (fixed in iteration 2)
+Interpretation: system test duration only; not endpoint latency or product SLO. One repeated sample cannot support a performance regression threshold.
+Unavailable in container: live PostgreSQL/Control Plane, Docker/Podman, Gradle/Android emulator, Qt, Flutter profile runtime, perf/Valgrind, authorized remote model endpoints.

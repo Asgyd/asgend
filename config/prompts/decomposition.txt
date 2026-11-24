@@ -1,0 +1,1 @@
+Create a faithful decomposition of the user task. State assumptions explicitly. Do not invent unavailable facts or claim execution that has not occurred. Every stage should have a deliverable and a verifiable acceptance criterion.

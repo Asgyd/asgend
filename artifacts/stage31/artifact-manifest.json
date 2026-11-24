@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "stage": 31,
+  "title": "ASGEND Memory Scan/Index Performance Audit",
+  "generated_utc": "2026-10-28T13:01:09.945494+00:00",
+  "provenance": {
+    "base_archive": "asgend-performance-repeat-audit-stage-30-task-list-c-api-benchmark.tar.gz",
+    "base_archive_sha256": "63d76cd3020900e6ec7d05ee02154aaea1d2252ec3760aa6baa3053de62db3f1",
+    "note": "The uploaded archive contained Stage 30 only; Stage 31 benchmark and full-test evidence were reconstructed and run anew."
+  },
+  "benchmark_validation": {
+    "scanner": "real Release C asgend-memory scan ROOT",
+    "measurements": 90,
+    "groups": 18,
+    "repeats_per_group": 5,
+    "fixture_files_verified": 33000,
+    "fixture_source_bytes_verified": 56320000,
+    "fixture_sha256_and_sizes_match": true,
+    "binary_sha256": "47a3e3f83c4ddd3fcfec12bff042a2c835a3a1206443409d8980bdf70b19e64f",
+    "page_cache_cleared": false,
+    "cold_physical_io_claimed": false
+  },
+  "ctest_validation": {
+    "test_count": 54,
+    "passed": 54,
+    "failed": 0,
+    "timeout": 0,
+    "not_run": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "total_seconds": 270.3,
+    "all_registered_timeouts_positive_finite": true,
+    "timeout_min_seconds": 10.0,
+    "timeout_max_seconds": 300.0,
+    "post_run_target_processes_remaining": 0
+  },
+  "limitations": [
+    "Local Release environment; not a production deployment benchmark.",
+    "Linux page cache was not cleared; results are not cold physical-I/O measurements.",
+    "logical_mib_per_second is corpus source bytes divided by wall time, not measured disk bandwidth.",
+    "Three critical review passes are local; no external subagent review was performed."
+  ],
+  "files": [
+    {
+      "path": "CMakeLists.txt",
+      "size_bytes": 16682,
+      "sha256": "b313591b93a733cfa72edd5bae8064a6f2b227d533636b4a2dec18150c4b7daf"
+    },
+    {
+      "path": "TODO.md",
+      "size_bytes": 20609,
+      "sha256": "d43743a369dde59d7ea765efce3f5ba3b0425ba5f135916a91117b69f1bee164"
+    },
+    {
+      "path": "scripts/benchmark_memory_scan_index.py",
+      "size_bytes": 14684,
+      "sha256": "8cd24681f67f20105b23c026e7998e97b21bfbdcbfe2cebf14192e2343b9ea3e"
+    },
+    {
+      "path": "scripts/memory_scan_runner.py",
+      "size_bytes": 6195,
+      "sha256": "f5d54ac15de60d5786d7f28c83adf925c7f4cea3f2f837e8a3c77a304a96cdb3"
+    },
+    {
+      "path": "scripts/render_memory_scan_report.py",
+      "size_bytes": 7467,
+      "sha256": "667259ae9b4d09019afcb26a3505ff23f5a8ff26a2ae6c10b7f93a0f26f2237a"
+    },
+    {
+      "path": "scripts/verify_memory_scan_index_benchmark.py",
+      "size_bytes": 5472,
+      "sha256": "3b62f87e949367d3dc66470ef428384253863b8126c6193cfb8b0213f2ea1c7d"
+    },
+    {
+      "path": "scripts/capture_ctest_metadata.py",
+      "size_bytes": 4912,
+      "sha256": "77dc71bb62d0286aea445117c4a615fe09a6502a7af43fcd517a50e1a546c966"
+    },
+    {
+      "path": "scripts/check_stage31_process_cleanup.py",
+      "size_bytes": 2520,
+      "sha256": "8b4f9e94731a91c95f25ce4c19b80fcbe4c092b7e42a150d95e84ef27c067ea3"
+    },
+    {
+      "path": "tests/test_memory_scan_timeout.py",
+      "size_bytes": 2099,
+      "sha256": "d8840b03e770549f3c7ff122485163a6bd59b57f350351f18df652df0cc15dab"
+    },
+    {
+      "path": "docs/PERFORMANCE_AUDIT_STAGE_31_MEMORY_SCAN_INDEX_2026-10-28.md",
+      "size_bytes": 4658,
+      "sha256": "6eceb14bea4b568d5c981020792d45c6ff09c5a1b5370bce26923b570c0b873e"
+    },
+    {
+      "path": "docs/PERFORMANCE_MEMORY_SCAN_INDEX_BENCHMARK_2026-10-28.json",
+      "size_bytes": 6684822,
+      "sha256": "1ae7df706d186e7c3a2d97e9c71bda5307a39f7b89d093857f2cac767bc40178"
+    },
+    {
+      "path": "docs/PERFORMANCE_MEMORY_SCAN_INDEX_BENCHMARK_2026-10-28.md",
+      "size_bytes": 4567,
+      "sha256": "0f9dbe38a8c7c94d6b2d1a42bb6a9a868d011dd068c950da3c7966f16e4f4e21"
+    },
+    {
+      "path": "docs/PERFORMANCE_MEMORY_SCAN_INDEX_ITERATION_1_2026-10-28.md",
+      "size_bytes": 2208,
+      "sha256": "82a595f6e1fa64b72a982c73ec9e555018a81cd828827027eb2b811ce29aa18a"
+    },
+    {
+      "path": "docs/PERFORMANCE_MEMORY_SCAN_INDEX_ITERATION_2_2026-10-28.md",
+      "size_bytes": 2149,
+      "sha256": "d40be2912bf01ead954f2dad87ad073b262910610a745a14e4970420a5fd52c4"
+    },
+    {
+      "path": "docs/PERFORMANCE_MEMORY_SCAN_INDEX_ITERATION_3_2026-10-28.md",
+      "size_bytes": 1787,
+      "sha256": "c68d31e2f9fe62cc4664bd626d6bcf4e6f3f1654926a7d17f41789343de6229a"
+    },
+    {
+      "path": "docs/PERFORMANCE_STAGE_31_BENCHMARK_VERIFICATION_2026-10-28.json",
+      "size_bytes": 742,
+      "sha256": "f7fdcf5a3dfc810bf0606192dcd104427b4effc3efef3d7a14c847f83973e45d"
+    },
+    {
+      "path": "docs/PERFORMANCE_STAGE_31_CTEST_LOG_2026-10-28.txt",
+      "size_bytes": 6708,
+      "sha256": "0dcf894151f6bcd279660f6a7f8405152986b08deec766c9cf18bea4f317b296"
+    },
+    {
+      "path": "docs/PERFORMANCE_STAGE_31_CTEST_SHOW_ONLY_2026-10-28.json",
+      "size_bytes": 36941,
+      "sha256": "93a768447f52febe2c1a0e14a98589bbb30939f9e5a8f01916fd655bf16bb077"
+    },
+    {
+      "path": "docs/PERFORMANCE_STAGE_31_CTEST_TIMEOUTS_2026-10-28.json",
+      "size_bytes": 25280,
+      "sha256": "5fbef3bf0da42df72977cd00996faf8a8a820dcf32eb1f02e5a1b729c05bc3e3"
+    },
+    {
+      "path": "docs/PERFORMANCE_STAGE_31_PROCESS_CLEANUP_2026-10-28.json",
+      "size_bytes": 342,
+      "sha256": "97e5e13012887888fc1fd73ef2ecb9909c78ffa8e264263c60b87776c42bde21"
+    },
+    {
+      "path": "docs/PERFORMANCE_REPEAT_TODO_2026-10-28.md",
+      "size_bytes": 12464,
+      "sha256": "6df72d61b4da1d015c0eed57065e2c94153ddfc250f622afbe8e0702e09be18a"
+    },
+    {
+      "path": "docs/PERFORMANCE_REPEAT_REVIEW_DECOMPOSITION_2026-10-28.md",
+      "size_bytes": 11878,
+      "sha256": "0dbb1d37cbd49fdd3c3051504b38d1963c86455efd050b98485f03b88d2f9f3f"
+    },
+    {
+      "path": "artifacts/stage31/README.md",
+      "size_bytes": 2602,
+      "sha256": "5f354f297de8b9b8b36e81eb88a1b44c7883d3b67047ca8867ccd4a563919d2a"
+    },
+    {
+      "path": "artifacts/stage31/asgend-memory",
+      "size_bytes": 1155560,
+      "sha256": "47a3e3f83c4ddd3fcfec12bff042a2c835a3a1206443409d8980bdf70b19e64f"
+    },
+    {
+      "path": "artifacts/stage31/memory-scan-fixtures.tar.gz",
+      "size_bytes": 1042817,
+      "sha256": "4e1b5cd51e1a335cfd7fa2fb9be177eb87eca79f4aebfbdcb80faf11c391db99"
+    }
+  ],
+  "manifest_note": "This manifest intentionally does not hash itself; artifact-manifest.sha256 is the detached digest for this file."
+}

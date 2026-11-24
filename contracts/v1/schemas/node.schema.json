@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://asgend.invalid/contracts/v1/schemas/node.schema.json",
+  "title": "Node",
+  "description": "A registered Execution Node (CONTRACT_SKETCH §5). status is derived by the server: online while lease_expires_at > now, offline otherwise, revoked after POST /v1/nodes/{node}/revoke (terminal).",
+  "type": "object",
+  "required": [
+    "node_id", "workspace_id", "name", "labels", "protocol_version", "core_version", "status",
+    "last_seen_at", "lease_expires_at", "created_at"
+  ],
+  "properties": {
+    "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+    "node_id": { "$ref": "common.schema.json#/$defs/node_id" },
+    "workspace_id": { "$ref": "common.schema.json#/$defs/workspace_id" },
+    "name": { "$ref": "common.schema.json#/$defs/display_name" },
+    "labels": { "$ref": "common.schema.json#/$defs/labels" },
+    "protocol_version": { "const": 1 },
+    "core_version": { "type": [ "string", "null" ], "maxLength": 64 },
+    "status": { "$ref": "common.schema.json#/$defs/node_status" },
+    "last_seen_at": { "description": "Time of the last accepted heartbeat.", "$ref": "common.schema.json#/$defs/timestamp_or_null" },
+    "lease_expires_at": { "description": "Presence lease: last heartbeat + lease_seconds.", "$ref": "common.schema.json#/$defs/timestamp_or_null" },
+    "created_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "reported_status": {
+      "description": "Addition (CHANGES.md C-003): status field of the last heartbeat (ready|busy|degraded), null before the first heartbeat.",
+      "anyOf": [ { "$ref": "common.schema.json#/$defs/node_reported_status" }, { "type": "null" } ]
+    },
+    "active_tasks": { "description": "Addition (CHANGES.md C-003): active_tasks of the last heartbeat.", "type": [ "integer", "null" ], "minimum": 0 },
+    "revoked_at": { "description": "Addition (CHANGES.md C-003).", "$ref": "common.schema.json#/$defs/timestamp_or_null" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "revoked" } }, "required": [ "status" ] },
+      "then": { "properties": { "lease_expires_at": { "type": "null" } } }
+    }
+  ],
+  "$defs": {
+    "response": {
+      "description": "Node as a single-entity response body.",
+      "allOf": [ { "$ref": "#" }, { "required": [ "api_version" ] } ]
+    }
+  }
+}

@@ -1,0 +1,2 @@
+# The gateway uses Python standard library only.
+# Inference is served by llama-server; do not install PyTorch or Transformers.

@@ -1,0 +1,20 @@
+ASGEND performance audit — final environment and execution evidence
+Date: 2026-10-27
+Platform: Linux 6.18.55 x86_64
+Compiler: GCC 14.2.0 (Debian 14.2.0-19)
+CMake: 3.31.6
+Python: 3.13.5
+Visible CPU threads: 3
+Visible RAM: approximately 5.8 GiB
+Build: clean CMake Release + Ninja, --parallel 3
+Configure wall time: 5.16 s; user 5.58 s; system 0.64 s; max RSS 95,400 KiB
+Build wall time: 11.36 s; user 20.66 s; system 1.22 s; max RSS 81,404 KiB
+CTest command: ctest --output-on-failure --timeout 300 -j1
+CTest: 48/48 PASS; exit 0; 253.62 s total wall; serial -j1 as unprivileged nobody
+CTest process accounting from GNU time: user 80.85 s; system 12.53 s; maximum RSS 130,196 KiB. Max RSS is process/child accounting and should not be interpreted as the sum of all concurrent process resident sets.
+Long-tail test durations: integration 135.56 s; core_llm_sse_watchdog 39.59 s; core_mcp_launcher_smoke 20.43 s; memory_ann_smoke 4.67 s; core_rpc_state_transitions 6.66 s; performance_load_probe_smoke 1.28 s; performance_inventory 0.80 s.
+Generated CTest JSON inspected before the run: all 48/48 registered tests have an effective TIMEOUT property. Default is 60 s; explicit budgets include integration 300 s, SSE 90 s, MCP 60 s, RPC runtime 45 s and RPC state transitions 75 s.
+Source inventory: 233 files and 70,916 lines across configured first-party source/test extensions; this includes tests and is not production LOC.
+Unavailable: Docker/Podman, PostgreSQL service, Flutter/Dart, Gradle/Android adb/emulator, Qt/qmake, perf and Valgrind.
+No live Control Plane/PostgreSQL load benchmark, real LLM provider measurements or physical/emulated UI performance tests were run. The separate 200-request localhost mock result is harness-only.
+Baseline build used --parallel 4 and final build used --parallel 3: their wall times are not a fair speedup/regression comparison.

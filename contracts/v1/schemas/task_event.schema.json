@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://asgend.invalid/contracts/v1/schemas/task_event.schema.json",
+  "title": "TaskEvent",
+  "description": "An event of a remote task as stored and served by the Control Plane (CONTRACT_SKETCH §5). Node-originated events carry node_id and seq; server-originated events (artifact_available, command_status, delivery_failed, answer_submitted and server-side state_changed) have seq = null. Clients MUST ignore events of unknown type but still advance their cursor.",
+  "type": "object",
+  "required": [
+    "event_id", "task_id", "workspace_id", "node_id", "seq", "type", "occurred_at", "received_at",
+    "schema_version", "payload"
+  ],
+  "properties": {
+    "event_id": { "$ref": "common.schema.json#/$defs/event_id" },
+    "task_id": { "$ref": "common.schema.json#/$defs/task_id" },
+    "workspace_id": { "$ref": "common.schema.json#/$defs/workspace_id" },
+    "node_id": { "$ref": "common.schema.json#/$defs/node_id_or_null" },
+    "seq": { "$ref": "common.schema.json#/$defs/seq_or_null" },
+    "type": { "$ref": "#/$defs/event_type" },
+    "occurred_at": { "description": "Node clock (node events) or server clock (server events).", "$ref": "common.schema.json#/$defs/timestamp" },
+    "received_at": { "description": "Server clock at ingest.", "$ref": "common.schema.json#/$defs/timestamp" },
+    "schema_version": { "description": "Version of the payload schema for this type.", "const": 1 },
+    "payload": { "type": "object" }
+  },
+  "allOf": [
+    { "if": { "$ref": "#/$defs/is_state_changed" }, "then": { "properties": { "payload": { "$ref": "#/$defs/state_changed_payload" } } } },
+    { "if": { "$ref": "#/$defs/is_question" }, "then": { "properties": { "payload": { "$ref": "#/$defs/question_payload" } } } },
+    { "if": { "$ref": "#/$defs/is_answer_submitted" }, "then": { "properties": { "payload": { "$ref": "#/$defs/answer_submitted_payload" }, "seq": { "type": "null" } } } },
+    { "if": { "$ref": "#/$defs/is_core_event" }, "then": { "properties": { "payload": { "$ref": "#/$defs/core_event_payload" } } } },
+    { "if": { "$ref": "#/$defs/is_artifact_available" }, "then": { "properties": { "payload": { "$ref": "#/$defs/artifact_available_payload" }, "seq": { "type": "null" } } } },
+    { "if": { "$ref": "#/$defs/is_command_status" }, "then": { "properties": { "payload": { "$ref": "#/$defs/command_status_payload" }, "seq": { "type": "null" } } } },
+    { "if": { "$ref": "#/$defs/is_delivery_failed" }, "then": { "properties": { "payload": { "$ref": "#/$defs/delivery_failed_payload" }, "seq": { "type": "null" } } } }
+  ],
+  "$defs": {
+    "event_type": {
+      "type": "string",
+      "enum": [ "state_changed", "question", "answer_submitted", "core_event", "artifact_available", "command_status", "delivery_failed" ]
+    },
+    "node_event_type": {
+      "description": "Types a node may send to POST /v1/node/events. All other types are server-only; the server rejects them (prevents a node from forging artifact availability or command outcomes).",
+      "type": "string",
+      "enum": [ "state_changed", "question", "core_event" ]
+    },
+    "is_state_changed": { "properties": { "type": { "const": "state_changed" } }, "required": [ "type" ] },
+    "is_question": { "properties": { "type": { "const": "question" } }, "required": [ "type" ] },
+    "is_answer_submitted": { "properties": { "type": { "const": "answer_submitted" } }, "required": [ "type" ] },
+    "is_core_event": { "properties": { "type": { "const": "core_event" } }, "required": [ "type" ] },
+    "is_artifact_available": { "properties": { "type": { "const": "artifact_available" } }, "required": [ "type" ] },
+    "is_command_status": { "properties": { "type": { "const": "command_status" } }, "required": [ "type" ] },
+    "is_delivery_failed": { "properties": { "type": { "const": "delivery_failed" } }, "required": [ "type" ] },
+
+    "state_changed_payload": {
+      "description": "Task state transition. From a node only core states are allowed (queued..cancelled); the server itself emits pending_delivery, delivered and delivery_failed.",
+      "type": "object",
+      "required": [ "state" ],
+      "properties": {
+        "state": { "$ref": "common.schema.json#/$defs/task_state" },
+        "previous_state": { "$ref": "common.schema.json#/$defs/task_state_or_null" },
+        "attempts": { "type": "integer", "minimum": 0 },
+        "core_task_id": { "$ref": "common.schema.json#/$defs/core_task_id_or_null" },
+        "result_summary": { "$ref": "common.schema.json#/$defs/result_summary_or_null" },
+        "error": { "$ref": "common.schema.json#/$defs/error_text_or_null" },
+        "source": { "description": "node = node event, snapshot = applied from a node snapshot, server = Control Plane decision.", "type": "string", "enum": [ "node", "snapshot", "server" ] }
+      }
+    },
+    "question_payload": {
+      "description": "UserInputRequest event. Sets RemoteTask.question; the node also sends state_changed -> waiting_input.",
+      "type": "object",
+      "required": [ "question" ],
+      "properties": {
+        "question": { "$ref": "user_input_request.schema.json" }
+      }
+    },
+    "answer_submitted_payload": {
+      "description": "Server-emitted when POST /v1/tasks/{task}/answer creates an answer command.",
+      "type": "object",
+      "required": [ "command_id" ],
+      "properties": {
+        "command_id": { "$ref": "common.schema.json#/$defs/command_id" },
+        "actor": { "$ref": "common.schema.json#/$defs/user_id" },
+        "answer": { "$ref": "common.schema.json#/$defs/answer_text" }
+      }
+    },
+    "core_event_payload": {
+      "description": "Pass-through of one core 'events' row (docs/PROTOCOL.md). seq of the enclosing event is the node-assigned per-task number for this core event_id.",
+      "type": "object",
+      "required": [ "core_event_id", "core_type" ],
+      "properties": {
+        "core_event_id": { "type": "integer", "minimum": 1 },
+        "core_type": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "actor": { "type": "string", "maxLength": 128 },
+        "message": { "type": "string", "maxLength": 16384 },
+        "data": { "description": "Core event payload object, possibly truncated by the node (then truncated=true).", "type": "object" },
+        "truncated": { "type": "boolean" }
+      }
+    },
+    "artifact_available_payload": {
+      "description": "Server-emitted after POST /v1/node/artifacts/{art}/complete verified size and SHA-256.",
+      "type": "object",
+      "required": [ "artifact_id", "name", "mime", "size", "sha256" ],
+      "properties": {
+        "artifact_id": { "$ref": "common.schema.json#/$defs/artifact_id" },
+        "name": { "$ref": "common.schema.json#/$defs/artifact_name" },
+        "mime": { "$ref": "common.schema.json#/$defs/mime" },
+        "size": { "$ref": "common.schema.json#/$defs/artifact_size" },
+        "sha256": { "$ref": "common.schema.json#/$defs/sha256" }
+      }
+    },
+    "command_status_payload": {
+      "description": "Server-emitted when a command is created (pending) and when it becomes acked, rejected or expired. Lease/redelivery transitions are not emitted.",
+      "type": "object",
+      "required": [ "command_id", "command_type", "state" ],
+      "properties": {
+        "command_id": { "$ref": "common.schema.json#/$defs/command_id" },
+        "command_type": { "$ref": "common.schema.json#/$defs/command_type" },
+        "state": { "$ref": "common.schema.json#/$defs/command_state" },
+        "delivery_attempts": { "type": "integer", "minimum": 0 },
+        "error": { "$ref": "common.schema.json#/$defs/error_text_or_null" }
+      }
+    },
+    "delivery_failed_payload": {
+      "description": "Server-emitted when a submit command can no longer reach the core: TTL expiry, node rejection or node revocation. Accompanied by state_changed -> delivery_failed.",
+      "type": "object",
+      "required": [ "command_id", "reason", "error" ],
+      "properties": {
+        "command_id": { "$ref": "common.schema.json#/$defs/command_id" },
+        "reason": { "type": "string", "enum": [ "ttl_expired", "rejected", "node_revoked" ] },
+        "error": { "type": "string", "maxLength": 4096 }
+      }
+    },
+
+    "node_event": {
+      "title": "NodeEventInput",
+      "description": "One item of POST /v1/node/events. workspace_id, node_id, event_id and received_at are assigned by the server from the authenticated node and are ignored if present.",
+      "type": "object",
+      "required": [ "task_id", "seq", "type", "occurred_at", "payload" ],
+      "properties": {
+        "task_id": { "$ref": "common.schema.json#/$defs/task_id" },
+        "seq": { "$ref": "common.schema.json#/$defs/seq" },
+        "type": { "$ref": "#/$defs/node_event_type" },
+        "occurred_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "payload": { "type": "object" }
+      },
+      "allOf": [
+        {
+          "if": { "$ref": "#/$defs/is_state_changed" },
+          "then": {
+            "properties": {
+              "payload": {
+                "allOf": [
+                  { "$ref": "#/$defs/state_changed_payload" },
+                  { "properties": { "state": { "$ref": "common.schema.json#/$defs/core_task_state" } } }
+                ]
+              }
+            }
+          }
+        },
+        { "if": { "$ref": "#/$defs/is_question" }, "then": { "properties": { "payload": { "$ref": "#/$defs/question_payload" } } } },
+        { "if": { "$ref": "#/$defs/is_core_event" }, "then": { "properties": { "payload": { "$ref": "#/$defs/core_event_payload" } } } }
+      ]
+    }
+  }
+}

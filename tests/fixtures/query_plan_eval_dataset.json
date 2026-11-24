@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "description": "Small deterministic smoke dataset for paired planner-evaluation plumbing. Relevance labels are curated test fixtures, not a production human-judged quality set.",
+  "queries": [
+    {
+      "query": "how can I regain use of my profile",
+      "relevant_paths": ["docs/security/authentication.md"],
+      "k": 3
+    },
+    {
+      "query": "who controls entitlements for employees",
+      "relevant_paths": ["docs/security/authorization.md"],
+      "k": 3
+    },
+    {
+      "query": "protect information before maintenance",
+      "relevant_paths": ["docs/operations/database-backup.md"],
+      "k": 3
+    },
+    {
+      "query": "rank similar representations efficiently",
+      "relevant_paths": ["src/memory/embedding.c"],
+      "k": 3
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "api_version": 1,
+  "node_id": "node_01JBZ8N1A2B3C4D5E6F7G8H9JK",
+  "workspace_id": "ws_01JBZ8K6X3M4N5P6Q7R8S9T0VW",
+  "node_token": "ucp_EXAMPLE-only-not-a-real-token-0000000000",
+  "heartbeat_interval_seconds": 15,
+  "lease_seconds": 45
+}

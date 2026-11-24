@@ -1,0 +1,121 @@
+{
+  "version": 1,
+  "dataset_id": "asgend-ann-judged-synthetic-v1",
+  "description": "Synthetic semantic-topic QA set with manually declared relevant paths. Queries are deliberately absent from fixture text to avoid lexical overlap. This is not a real-user or licensed-document relevance set.",
+  "corpus": {
+    "document_vectors": 5200,
+    "dimensions": 128,
+    "topic_count": 8,
+    "relevant_documents_per_topic": 4,
+    "distractors": 5168,
+    "seed": 340034
+  },
+  "acceptance_criteria": {
+    "min_mean_exact_recall_at_k": 0.95,
+    "min_mean_ann_recall_at_k": 0.9,
+    "min_mean_ann_mrr_at_k": 0.9,
+    "min_mean_ann_ndcg_at_k": 0.9,
+    "max_median_ann_candidate_ratio": 0.15,
+    "min_ann_candidates_per_query": 32,
+    "max_ann_candidates_per_query_ratio": 0.15,
+    "notes": "Criteria predeclared for this deterministic synthetic suite only; latency is reported and is not a pass/fail target until calibrated against a representative corpus."
+  },
+  "queries": [
+    {
+      "id": "topic-00",
+      "query": "veltronic zephyr quux 00",
+      "topic_index": 0,
+      "relevant_paths": [
+        "judged/topic-00/document-00.md",
+        "judged/topic-00/document-01.md",
+        "judged/topic-00/document-02.md",
+        "judged/topic-00/document-03.md"
+      ],
+      "k": 5
+    },
+    {
+      "id": "topic-01",
+      "query": "veltronic zephyr quux 01",
+      "topic_index": 1,
+      "relevant_paths": [
+        "judged/topic-01/document-00.md",
+        "judged/topic-01/document-01.md",
+        "judged/topic-01/document-02.md",
+        "judged/topic-01/document-03.md"
+      ],
+      "k": 5
+    },
+    {
+      "id": "topic-02",
+      "query": "veltronic zephyr quux 02",
+      "topic_index": 2,
+      "relevant_paths": [
+        "judged/topic-02/document-00.md",
+        "judged/topic-02/document-01.md",
+        "judged/topic-02/document-02.md",
+        "judged/topic-02/document-03.md"
+      ],
+      "k": 5
+    },
+    {
+      "id": "topic-03",
+      "query": "veltronic zephyr quux 03",
+      "topic_index": 3,
+      "relevant_paths": [
+        "judged/topic-03/document-00.md",
+        "judged/topic-03/document-01.md",
+        "judged/topic-03/document-02.md",
+        "judged/topic-03/document-03.md"
+      ],
+      "k": 5
+    },
+    {
+      "id": "topic-04",
+      "query": "veltronic zephyr quux 04",
+      "topic_index": 4,
+      "relevant_paths": [
+        "judged/topic-04/document-00.md",
+        "judged/topic-04/document-01.md",
+        "judged/topic-04/document-02.md",
+        "judged/topic-04/document-03.md"
+      ],
+      "k": 5
+    },
+    {
+      "id": "topic-05",
+      "query": "veltronic zephyr quux 05",
+      "topic_index": 5,
+      "relevant_paths": [
+        "judged/topic-05/document-00.md",
+        "judged/topic-05/document-01.md",
+        "judged/topic-05/document-02.md",
+        "judged/topic-05/document-03.md"
+      ],
+      "k": 5
+    },
+    {
+      "id": "topic-06",
+      "query": "veltronic zephyr quux 06",
+      "topic_index": 6,
+      "relevant_paths": [
+        "judged/topic-06/document-00.md",
+        "judged/topic-06/document-01.md",
+        "judged/topic-06/document-02.md",
+        "judged/topic-06/document-03.md"
+      ],
+      "k": 5
+    },
+    {
+      "id": "topic-07",
+      "query": "veltronic zephyr quux 07",
+      "topic_index": 7,
+      "relevant_paths": [
+        "judged/topic-07/document-00.md",
+        "judged/topic-07/document-01.md",
+        "judged/topic-07/document-02.md",
+        "judged/topic-07/document-03.md"
+      ],
+      "k": 5
+    }
+  ]
+}

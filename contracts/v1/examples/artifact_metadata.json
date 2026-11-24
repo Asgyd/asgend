@@ -1,0 +1,14 @@
+{
+  "api_version": 1,
+  "artifact_id": "art_01JBZ9C3D4E5F6G7H8J9K0M1N2",
+  "task_id": "rt_01JBZ9A0B1C2D3E4F5G6H7J8K9",
+  "workspace_id": "ws_01JBZ8K6X3M4N5P6Q7R8S9T0VW",
+  "node_id": "node_01JBZ8N1A2B3C4D5E6F7G8H9JK",
+  "name": "ring_buffer.c",
+  "mime": "text/x-c; charset=utf-8",
+  "size": 6,
+  "sha256": "5891b5b522d5df086d0ff0b110fbd9d21bb4fc7163af34d08286a2e846f6be03",
+  "state": "available",
+  "created_at": "2026-10-21T10:01:50.000Z",
+  "expires_at": "2026-11-20T10:01:50.000Z"
+}

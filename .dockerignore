@@ -1,0 +1,14 @@
+.git
+.git/**
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/.mypy_cache/
+**/build*/
+**/dist/
+**/venv/
+**/.venv/
+backups/**
+!backups/.gitkeep
+server/deploy/tls/**
+server/deploy/secrets/**

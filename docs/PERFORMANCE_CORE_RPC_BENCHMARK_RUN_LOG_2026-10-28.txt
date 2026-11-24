@@ -1,0 +1,91 @@
+[core-rpc-benchmark] concurrency=1 run=1/5
+[core-rpc-benchmark] c=1 run=1: basic RPC complete
+[core-rpc-benchmark] c=1 run=1: submit-to-terminal complete
+[core-rpc-benchmark] c=1 run=1: answer lifecycle complete
+[core-rpc-benchmark] c=1 run=1: cancel lifecycle complete
+[core-rpc-benchmark] c=1 run=1: retry lifecycle complete
+[core-rpc-benchmark] concurrency=1 run=2/5
+[core-rpc-benchmark] c=1 run=2: basic RPC complete
+[core-rpc-benchmark] c=1 run=2: submit-to-terminal complete
+[core-rpc-benchmark] c=1 run=2: answer lifecycle complete
+[core-rpc-benchmark] c=1 run=2: cancel lifecycle complete
+[core-rpc-benchmark] c=1 run=2: retry lifecycle complete
+[core-rpc-benchmark] concurrency=1 run=3/5
+[core-rpc-benchmark] c=1 run=3: basic RPC complete
+[core-rpc-benchmark] c=1 run=3: submit-to-terminal complete
+[core-rpc-benchmark] c=1 run=3: answer lifecycle complete
+[core-rpc-benchmark] c=1 run=3: cancel lifecycle complete
+[core-rpc-benchmark] c=1 run=3: retry lifecycle complete
+[core-rpc-benchmark] concurrency=1 run=4/5
+[core-rpc-benchmark] c=1 run=4: basic RPC complete
+[core-rpc-benchmark] c=1 run=4: submit-to-terminal complete
+[core-rpc-benchmark] c=1 run=4: answer lifecycle complete
+[core-rpc-benchmark] c=1 run=4: cancel lifecycle complete
+[core-rpc-benchmark] c=1 run=4: retry lifecycle complete
+[core-rpc-benchmark] concurrency=1 run=5/5
+[core-rpc-benchmark] c=1 run=5: basic RPC complete
+[core-rpc-benchmark] c=1 run=5: submit-to-terminal complete
+[core-rpc-benchmark] c=1 run=5: answer lifecycle complete
+[core-rpc-benchmark] c=1 run=5: cancel lifecycle complete
+[core-rpc-benchmark] c=1 run=5: retry lifecycle complete
+[core-rpc-benchmark] concurrency=4 run=1/5
+[core-rpc-benchmark] c=4 run=1: basic RPC complete
+[core-rpc-benchmark] c=4 run=1: submit-to-terminal complete
+[core-rpc-benchmark] c=4 run=1: answer lifecycle complete
+[core-rpc-benchmark] c=4 run=1: cancel lifecycle complete
+[core-rpc-benchmark] c=4 run=1: retry lifecycle complete
+[core-rpc-benchmark] concurrency=4 run=2/5
+[core-rpc-benchmark] c=4 run=2: basic RPC complete
+[core-rpc-benchmark] c=4 run=2: submit-to-terminal complete
+[core-rpc-benchmark] c=4 run=2: answer lifecycle complete
+[core-rpc-benchmark] c=4 run=2: cancel lifecycle complete
+[core-rpc-benchmark] c=4 run=2: retry lifecycle complete
+[core-rpc-benchmark] concurrency=4 run=3/5
+[core-rpc-benchmark] c=4 run=3: basic RPC complete
+[core-rpc-benchmark] c=4 run=3: submit-to-terminal complete
+[core-rpc-benchmark] c=4 run=3: answer lifecycle complete
+[core-rpc-benchmark] c=4 run=3: cancel lifecycle complete
+[core-rpc-benchmark] c=4 run=3: retry lifecycle complete
+[core-rpc-benchmark] concurrency=4 run=4/5
+[core-rpc-benchmark] c=4 run=4: basic RPC complete
+[core-rpc-benchmark] c=4 run=4: submit-to-terminal complete
+[core-rpc-benchmark] c=4 run=4: answer lifecycle complete
+[core-rpc-benchmark] c=4 run=4: cancel lifecycle complete
+[core-rpc-benchmark] c=4 run=4: retry lifecycle complete
+[core-rpc-benchmark] concurrency=4 run=5/5
+[core-rpc-benchmark] c=4 run=5: basic RPC complete
+[core-rpc-benchmark] c=4 run=5: submit-to-terminal complete
+[core-rpc-benchmark] c=4 run=5: answer lifecycle complete
+[core-rpc-benchmark] c=4 run=5: cancel lifecycle complete
+[core-rpc-benchmark] c=4 run=5: retry lifecycle complete
+[core-rpc-benchmark] concurrency=16 run=1/5
+[core-rpc-benchmark] c=16 run=1: basic RPC complete
+[core-rpc-benchmark] c=16 run=1: submit-to-terminal complete
+[core-rpc-benchmark] c=16 run=1: answer lifecycle complete
+[core-rpc-benchmark] c=16 run=1: cancel lifecycle complete
+[core-rpc-benchmark] c=16 run=1: retry lifecycle complete
+[core-rpc-benchmark] concurrency=16 run=2/5
+[core-rpc-benchmark] c=16 run=2: basic RPC complete
+[core-rpc-benchmark] c=16 run=2: submit-to-terminal complete
+[core-rpc-benchmark] c=16 run=2: answer lifecycle complete
+[core-rpc-benchmark] c=16 run=2: cancel lifecycle complete
+[core-rpc-benchmark] c=16 run=2: retry lifecycle complete
+[core-rpc-benchmark] concurrency=16 run=3/5
+[core-rpc-benchmark] c=16 run=3: basic RPC complete
+[core-rpc-benchmark] c=16 run=3: submit-to-terminal complete
+[core-rpc-benchmark] c=16 run=3: answer lifecycle complete
+[core-rpc-benchmark] c=16 run=3: cancel lifecycle complete
+[core-rpc-benchmark] c=16 run=3: retry lifecycle complete
+[core-rpc-benchmark] concurrency=16 run=4/5
+[core-rpc-benchmark] c=16 run=4: basic RPC complete
+[core-rpc-benchmark] c=16 run=4: submit-to-terminal complete
+[core-rpc-benchmark] c=16 run=4: answer lifecycle complete
+[core-rpc-benchmark] c=16 run=4: cancel lifecycle complete
+[core-rpc-benchmark] c=16 run=4: retry lifecycle complete
+[core-rpc-benchmark] concurrency=16 run=5/5
+[core-rpc-benchmark] c=16 run=5: basic RPC complete
+[core-rpc-benchmark] c=16 run=5: submit-to-terminal complete
+[core-rpc-benchmark] c=16 run=5: answer lifecycle complete
+[core-rpc-benchmark] c=16 run=5: cancel lifecycle complete
+[core-rpc-benchmark] c=16 run=5: retry lifecycle complete
+{"passed": true, "output": "docs/PERFORMANCE_CORE_RPC_LIFECYCLE_BENCHMARK_2026-10-28.json", "summary": {"concurrency_levels": [1, 4, 16], "runs_per_concurrency": 5, "samples_per_run": 20, "samples_per_method_per_concurrency": 100, "methods": ["ping", "submit", "status", "list_tasks", "events", "answer", "cancel", "retry_task", "submit_to_terminal"], "error_count": 0}}

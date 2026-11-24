@@ -1,0 +1,13 @@
+{
+  "api_version": 1,
+  "error": {
+    "code": "invalid_request",
+    "message": "unknown field in grant-shaping request",
+    "request_id": "req-01JBZ9F6G7H8",
+    "details": {
+      "unknown_fields": [
+        "scope"
+      ]
+    }
+  }
+}

@@ -1,0 +1,3670 @@
+{
+  "benchmark_type": "isolated SQLite A/B prototype; production SQL untouched",
+  "correctness_policy": {
+    "aging_and_equal_keys_exercised": true,
+    "all_ordered_rows_must_match": true,
+    "all_status_filters_tested": true,
+    "candidate_partial_indexes_applied_to_production": false,
+    "direct_c_db_list_tasks_oracle": true,
+    "production_sql_modified_for_deterministic_tie_break": true,
+    "stable_tie_break": "id ASC appended to db_list_tasks() as a stable tertiary tie-break; baseline and candidate preserve this order"
+  },
+  "created_utc": "2026-10-28T04:49:03.403789+00:00",
+  "database_results": {
+    "1000": {
+      "c_reference_validation": {
+        "checks": 32,
+        "oracle": "actual C db_list_tasks() using same SQLite database",
+        "passed": true,
+        "reference_binary_sha256": "44ee6c1c985ef3b452fb7ad93dbe88eff21ccd8e8c5fad6628607abf6019e545",
+        "rows_compared_to_c": 1518
+      },
+      "correctness": {
+        "checks": 32,
+        "deterministic_tie_break": "id ASC (stable tertiary key explicitly added to db_list_tasks())",
+        "includes_priority_aging": true,
+        "includes_ties": true,
+        "limits": [
+          1,
+          10,
+          50,
+          200
+        ],
+        "passed": true,
+        "rows_compared": 1518,
+        "status_filters": [
+          "all",
+          "queued",
+          "running",
+          "waiting_input",
+          "completed",
+          "completed_without_model",
+          "failed",
+          "cancelled"
+        ]
+      },
+      "query_plans": {
+        "baseline_all": [
+          "SCAN tasks",
+          "USE TEMP B-TREE FOR ORDER BY"
+        ],
+        "candidate_other_band": [
+          "SCAN tasks USING INDEX idx_ab_other_order"
+        ],
+        "candidate_queued_band": [
+          "SEARCH tasks USING INDEX idx_tasks_queue_priority (status=?)",
+          "USE TEMP B-TREE FOR ORDER BY"
+        ],
+        "candidate_running_band": [
+          "SCAN tasks USING COVERING INDEX idx_ab_running_order"
+        ],
+        "observations": {
+          "baseline_all_uses_temp_sort": true,
+          "candidate_other_index_used": true,
+          "candidate_other_uses_temp_sort": false,
+          "candidate_queued_uses_temp_sort": true,
+          "candidate_running_index_used": true,
+          "candidate_running_uses_temp_sort": false
+        }
+      },
+      "results": {
+        "1": {
+          "aggregate": {
+            "baseline": {
+              "max": 3.855,
+              "mean": 1.691,
+              "median": 1.454,
+              "min": 1.122,
+              "p50": 1.447,
+              "p95": 3.573,
+              "p99": null,
+              "samples": 50,
+              "tail_percentile_status": {
+                "p95": "estimated",
+                "p99": "not_reported_requires_100_samples"
+              }
+            },
+            "baseline_error_count": 0,
+            "candidate": {
+              "max": 1.213,
+              "mean": 0.877,
+              "median": 0.86,
+              "min": 0.707,
+              "p50": 0.86,
+              "p95": 1.147,
+              "p99": null,
+              "samples": 50,
+              "tail_percentile_status": {
+                "p95": "estimated",
+                "p99": "not_reported_requires_100_samples"
+              }
+            },
+            "candidate_error_count": 0,
+            "median_speedup": 1.6907,
+            "runs": 5,
+            "samples_per_method": 50
+          },
+          "runs": [
+            {
+              "candidate_speedup_median": 1.5049,
+              "candidate_throughput_ratio": 1.5751,
+              "completed_utc": "2026-10-28T04:49:03.533227+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 1.501,
+                    "mean": 1.279,
+                    "median": 1.234,
+                    "min": 1.122,
+                    "p50": 1.225,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    1.465526,
+                    1.24169,
+                    1.202978,
+                    1.335429,
+                    1.257476,
+                    1.221495,
+                    1.225352,
+                    1.121606,
+                    1.213552,
+                    1.500524
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 612.911,
+                  "wall_ms": 16.316
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 1.026,
+                    "mean": 0.854,
+                    "median": 0.82,
+                    "min": 0.714,
+                    "p50": 0.805,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    0.805276,
+                    1.026447,
+                    0.99009,
+                    0.985265,
+                    0.835001,
+                    0.714003,
+                    0.79017,
+                    0.79713,
+                    0.859695,
+                    0.738139
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 965.38,
+                  "wall_ms": 10.359
+                }
+              },
+              "order": [
+                "baseline",
+                "candidate"
+              ],
+              "run": 1,
+              "started_utc": "2026-10-28T04:49:03.506249+00:00"
+            },
+            {
+              "candidate_speedup_median": 1.7708,
+              "candidate_throughput_ratio": 1.7001,
+              "completed_utc": "2026-10-28T04:49:03.560052+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 1.649,
+                    "mean": 1.455,
+                    "median": 1.445,
+                    "min": 1.282,
+                    "p50": 1.442,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    1.3538,
+                    1.301822,
+                    1.56042,
+                    1.282082,
+                    1.648526,
+                    1.446579,
+                    1.442465,
+                    1.553433,
+                    1.532982,
+                    1.429744
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 594.808,
+                  "wall_ms": 16.812
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 0.922,
+                    "mean": 0.821,
+                    "median": 0.816,
+                    "min": 0.707,
+                    "p50": 0.783,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    0.848807,
+                    0.734588,
+                    0.893789,
+                    0.707191,
+                    0.921869,
+                    0.919436,
+                    0.749618,
+                    0.751006,
+                    0.783012,
+                    0.902468
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 1011.212,
+                  "wall_ms": 9.889
+                }
+              },
+              "order": [
+                "candidate",
+                "baseline"
+              ],
+              "run": 2,
+              "started_utc": "2026-10-28T04:49:03.533240+00:00"
+            },
+            {
+              "candidate_speedup_median": 1.6651,
+              "candidate_throughput_ratio": 1.6553,
+              "completed_utc": "2026-10-28T04:49:03.588316+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 2.538,
+                    "mean": 1.556,
+                    "median": 1.432,
+                    "min": 1.157,
+                    "p50": 1.402,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    1.157043,
+                    1.18671,
+                    1.171332,
+                    1.250985,
+                    1.401791,
+                    1.461541,
+                    1.547547,
+                    2.358971,
+                    2.537604,
+                    1.48593
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 569.875,
+                  "wall_ms": 17.548
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 1.213,
+                    "mean": 0.885,
+                    "median": 0.86,
+                    "min": 0.715,
+                    "p50": 0.852,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    1.034856,
+                    0.867575,
+                    0.876035,
+                    0.750958,
+                    0.851801,
+                    0.721418,
+                    0.724163,
+                    0.715423,
+                    1.212614,
+                    1.098667
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 943.292,
+                  "wall_ms": 10.601
+                }
+              },
+              "order": [
+                "baseline",
+                "candidate"
+              ],
+              "run": 3,
+              "started_utc": "2026-10-28T04:49:03.560065+00:00"
+            },
+            {
+              "candidate_speedup_median": 1.6438,
+              "candidate_throughput_ratio": 1.5733,
+              "completed_utc": "2026-10-28T04:49:03.620036+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 2.598,
+                    "mean": 1.642,
+                    "median": 1.606,
+                    "min": 1.144,
+                    "p50": 1.591,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    2.598278,
+                    1.197995,
+                    1.667601,
+                    1.334805,
+                    1.144052,
+                    1.426407,
+                    1.621784,
+                    1.590933,
+                    2.064234,
+                    1.775203
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 517.684,
+                  "wall_ms": 19.317
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 1.183,
+                    "mean": 0.973,
+                    "median": 0.977,
+                    "min": 0.764,
+                    "p50": 0.954,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    1.052552,
+                    1.146694,
+                    0.825317,
+                    0.764476,
+                    1.182592,
+                    1.007771,
+                    0.925315,
+                    0.953928,
+                    1.000353,
+                    0.866314
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 814.484,
+                  "wall_ms": 12.278
+                }
+              },
+              "order": [
+                "candidate",
+                "baseline"
+              ],
+              "run": 4,
+              "started_utc": "2026-10-28T04:49:03.588331+00:00"
+            },
+            {
+              "candidate_speedup_median": 2.9181,
+              "candidate_throughput_ratio": 2.7781,
+              "completed_utc": "2026-10-28T04:49:03.659830+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 3.855,
+                    "mean": 2.525,
+                    "median": 2.495,
+                    "min": 1.257,
+                    "p50": 2.196,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    3.572874,
+                    2.055219,
+                    1.718558,
+                    1.380329,
+                    2.793766,
+                    2.803928,
+                    2.195991,
+                    3.855435,
+                    1.25686,
+                    3.617987
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 343.156,
+                  "wall_ms": 29.141
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 1.045,
+                    "mean": 0.851,
+                    "median": 0.855,
+                    "min": 0.737,
+                    "p50": 0.849,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    1.045272,
+                    0.952209,
+                    0.758676,
+                    0.849203,
+                    0.736559,
+                    0.89757,
+                    0.860163,
+                    0.863256,
+                    0.746292,
+                    0.80086
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 953.305,
+                  "wall_ms": 10.49
+                }
+              },
+              "order": [
+                "baseline",
+                "candidate"
+              ],
+              "run": 5,
+              "started_utc": "2026-10-28T04:49:03.620059+00:00"
+            }
+          ]
+        },
+        "4": {
+          "aggregate": {
+            "baseline": {
+              "max": 33.769,
+              "mean": 9.028,
+              "median": 7.301,
+              "min": 1.111,
+              "p50": 7.288,
+              "p95": 23.081,
+              "p99": 28.08,
+              "samples": 200,
+              "tail_percentile_status": {
+                "p95": "estimated",
+                "p99": "estimated"
+              }
+            },
+            "baseline_error_count": 0,
+            "candidate": {
+              "max": 40.247,
+              "mean": 9.705,
+              "median": 8.353,
+              "min": 0.707,
+              "p50": 8.283,
+              "p95": 22.501,
+              "p99": 31.743,
+              "samples": 200,
+              "tail_percentile_status": {
+                "p95": "estimated",
+                "p99": "estimated"
+              }
+            },
+            "candidate_error_count": 0,
+            "median_speedup": 0.8741,
+            "runs": 5,
+            "samples_per_method": 200
+          },
+          "runs": [
+            {
+              "candidate_speedup_median": 1.1107,
+              "candidate_throughput_ratio": 0.7936,
+              "completed_utc": "2026-10-28T04:49:03.920002+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 18.586,
+                    "mean": 9.886,
+                    "median": 10.566,
+                    "min": 1.437,
+                    "p50": 10.534,
+                    "p95": 17.286,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    13.943479,
+                    17.224638,
+                    9.685206,
+                    10.533681,
+                    10.244212,
+                    14.573615,
+                    7.430687,
+                    12.75236,
+                    3.742358,
+                    1.436576,
+                    17.285812,
+                    8.061192,
+                    14.980021,
+                    11.525585,
+                    4.98736,
+                    13.297696,
+                    7.013127,
+                    15.30624,
+                    4.198651,
+                    2.221436,
+                    18.585588,
+                    17.638733,
+                    5.054917,
+                    10.865355,
+                    15.633425,
+                    1.764965,
+                    9.356541,
+                    13.412434,
+                    6.369828,
+                    2.293373,
+                    16.19466,
+                    7.465307,
+                    2.672582,
+                    13.664842,
+                    10.889663,
+                    2.007113,
+                    12.989738,
+                    10.59736,
+                    11.773349,
+                    5.761743
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 347.804,
+                  "wall_ms": 115.007
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 40.247,
+                    "mean": 11.743,
+                    "median": 9.513,
+                    "min": 0.975,
+                    "p50": 8.888,
+                    "p95": 30.506,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    29.014868,
+                    25.738649,
+                    18.168005,
+                    13.682072,
+                    4.709789,
+                    11.254684,
+                    14.164635,
+                    7.692465,
+                    3.624113,
+                    3.586815,
+                    14.218672,
+                    7.147243,
+                    11.781528,
+                    10.137867,
+                    8.887937,
+                    7.485429,
+                    3.734924,
+                    7.36591,
+                    8.065573,
+                    4.668795,
+                    6.721453,
+                    14.360315,
+                    16.350362,
+                    10.742211,
+                    34.656533,
+                    5.847511,
+                    10.27513,
+                    7.47915,
+                    8.228239,
+                    6.835425,
+                    40.247033,
+                    30.506163,
+                    17.737473,
+                    11.406649,
+                    11.592865,
+                    11.538401,
+                    3.857584,
+                    3.34561,
+                    1.882959,
+                    0.975279
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 276.034,
+                  "wall_ms": 144.91
+                }
+              },
+              "order": [
+                "baseline",
+                "candidate"
+              ],
+              "run": 1,
+              "started_utc": "2026-10-28T04:49:03.659886+00:00"
+            },
+            {
+              "candidate_speedup_median": 0.2754,
+              "candidate_throughput_ratio": 0.81,
+              "completed_utc": "2026-10-28T04:49:04.126176+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 33.769,
+                    "mean": 6.867,
+                    "median": 3.108,
+                    "min": 1.292,
+                    "p50": 3.081,
+                    "p95": 21.47,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    21.315281,
+                    16.816257,
+                    26.164066,
+                    1.666269,
+                    1.291906,
+                    1.819408,
+                    2.316974,
+                    2.231879,
+                    2.016058,
+                    1.700821,
+                    7.313162,
+                    9.112112,
+                    1.298716,
+                    21.470473,
+                    14.751819,
+                    3.229279,
+                    1.938232,
+                    1.954215,
+                    1.989765,
+                    2.01256,
+                    11.248816,
+                    4.531802,
+                    1.352536,
+                    3.982496,
+                    4.635503,
+                    8.461367,
+                    3.135426,
+                    5.280285,
+                    7.704767,
+                    5.240021,
+                    21.35428,
+                    33.769083,
+                    3.080933,
+                    1.920989,
+                    2.05644,
+                    6.112394,
+                    2.239965,
+                    2.094704,
+                    2.052389,
+                    1.996691
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 433.875,
+                  "wall_ms": 92.192
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 26.39,
+                    "mean": 10.216,
+                    "median": 11.286,
+                    "min": 0.707,
+                    "p50": 10.662,
+                    "p95": 19.483,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    24.368391,
+                    10.662223,
+                    15.477932,
+                    19.482753,
+                    16.347396,
+                    8.784922,
+                    4.809553,
+                    3.532191,
+                    2.937035,
+                    1.748729,
+                    26.389912,
+                    15.458422,
+                    14.497346,
+                    16.513238,
+                    18.895347,
+                    5.999747,
+                    3.269255,
+                    1.006141,
+                    2.877367,
+                    2.947511,
+                    3.984868,
+                    0.725608,
+                    0.706883,
+                    0.968016,
+                    8.505328,
+                    12.805618,
+                    14.989507,
+                    14.652296,
+                    17.048899,
+                    18.06009,
+                    1.100061,
+                    0.791094,
+                    0.938419,
+                    11.9104,
+                    15.50964,
+                    15.316477,
+                    18.266379,
+                    14.917145,
+                    14.712157,
+                    6.715216
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 351.45,
+                  "wall_ms": 113.814
+                }
+              },
+              "order": [
+                "candidate",
+                "baseline"
+              ],
+              "run": 2,
+              "started_utc": "2026-10-28T04:49:03.920016+00:00"
+            },
+            {
+              "candidate_speedup_median": 0.8885,
+              "candidate_throughput_ratio": 1.0238,
+              "completed_utc": "2026-10-28T04:49:04.350168+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 28.08,
+                    "mean": 9.015,
+                    "median": 7.685,
+                    "min": 1.111,
+                    "p50": 7.282,
+                    "p95": 25.699,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    2.812148,
+                    6.05386,
+                    8.715537,
+                    7.282383,
+                    1.381217,
+                    3.565705,
+                    1.284923,
+                    1.179639,
+                    8.79269,
+                    8.893326,
+                    25.698685,
+                    28.079522,
+                    2.887953,
+                    9.111822,
+                    6.407218,
+                    6.82369,
+                    6.392955,
+                    3.873131,
+                    8.08852,
+                    1.846775,
+                    25.115254,
+                    27.02473,
+                    12.355545,
+                    17.371301,
+                    16.52109,
+                    4.769407,
+                    1.437405,
+                    1.221223,
+                    1.145145,
+                    1.110677,
+                    10.399026,
+                    14.804711,
+                    16.863036,
+                    10.19342,
+                    2.658025,
+                    8.482107,
+                    9.70635,
+                    14.167594,
+                    11.323059,
+                    4.743895
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 353.294,
+                  "wall_ms": 113.22
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 31.743,
+                    "mean": 9.127,
+                    "median": 8.649,
+                    "min": 0.863,
+                    "p50": 8.539,
+                    "p95": 19.207,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    8.216792,
+                    4.686228,
+                    2.647253,
+                    0.90173,
+                    10.221642,
+                    6.962859,
+                    10.431565,
+                    10.669634,
+                    9.359896,
+                    8.758576,
+                    5.207154,
+                    8.538957,
+                    18.641118,
+                    21.99799,
+                    5.581426,
+                    15.209019,
+                    9.573926,
+                    6.303828,
+                    3.274458,
+                    4.716435,
+                    7.512737,
+                    14.917495,
+                    12.238526,
+                    11.6452,
+                    15.403157,
+                    13.122294,
+                    4.876439,
+                    4.172553,
+                    3.333815,
+                    4.544596,
+                    8.917389,
+                    12.538151,
+                    19.207445,
+                    31.742861,
+                    10.890723,
+                    9.437245,
+                    4.281734,
+                    2.548673,
+                    0.997466,
+                    0.862918
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 361.688,
+                  "wall_ms": 110.592
+                }
+              },
+              "order": [
+                "baseline",
+                "candidate"
+              ],
+              "run": 3,
+              "started_utc": "2026-10-28T04:49:04.126191+00:00"
+            },
+            {
+              "candidate_speedup_median": 1.0895,
+              "candidate_throughput_ratio": 1.1344,
+              "completed_utc": "2026-10-28T04:49:04.566323+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 30.208,
+                    "mean": 9.606,
+                    "median": 7.206,
+                    "min": 1.385,
+                    "p50": 7.124,
+                    "p95": 22.338,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    20.627241,
+                    21.572674,
+                    20.396939,
+                    5.691647,
+                    4.02734,
+                    5.933359,
+                    2.518758,
+                    6.089185,
+                    7.124415,
+                    9.029991,
+                    1.942889,
+                    12.246449,
+                    7.459905,
+                    6.228905,
+                    14.010455,
+                    5.344481,
+                    5.972624,
+                    7.288463,
+                    6.513162,
+                    1.923649,
+                    22.337638,
+                    12.871069,
+                    30.208094,
+                    6.54627,
+                    8.567785,
+                    6.524939,
+                    15.787683,
+                    1.528991,
+                    1.516325,
+                    1.405285,
+                    8.477182,
+                    12.967128,
+                    13.291433,
+                    7.743722,
+                    25.175365,
+                    11.037409,
+                    15.16526,
+                    6.715417,
+                    3.02871,
+                    1.385452
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 348.449,
+                  "wall_ms": 114.794
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 27.665,
+                    "mean": 8.669,
+                    "median": 6.614,
+                    "min": 0.823,
+                    "p50": 6.21,
+                    "p95": 22.501,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    4.255359,
+                    27.66515,
+                    4.520282,
+                    8.762497,
+                    6.209792,
+                    4.750935,
+                    11.269811,
+                    7.296851,
+                    7.161167,
+                    5.70077,
+                    1.101342,
+                    0.888624,
+                    10.070865,
+                    9.646179,
+                    19.04444,
+                    27.101197,
+                    11.548796,
+                    8.610137,
+                    4.573499,
+                    0.851611,
+                    8.088217,
+                    1.671828,
+                    0.823226,
+                    3.511208,
+                    6.028125,
+                    4.21218,
+                    6.120228,
+                    14.843772,
+                    16.504634,
+                    14.622731,
+                    1.546578,
+                    0.883903,
+                    7.017635,
+                    14.020248,
+                    17.296124,
+                    22.500541,
+                    15.371722,
+                    4.691471,
+                    4.720445,
+                    1.248158
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 395.279,
+                  "wall_ms": 101.194
+                }
+              },
+              "order": [
+                "candidate",
+                "baseline"
+              ],
+              "run": 4,
+              "started_utc": "2026-10-28T04:49:04.350184+00:00"
+            },
+            {
+              "candidate_speedup_median": 0.9678,
+              "candidate_throughput_ratio": 0.9861,
+              "completed_utc": "2026-10-28T04:49:04.793552+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 25.169,
+                    "mean": 9.766,
+                    "median": 7.989,
+                    "min": 1.291,
+                    "p50": 7.958,
+                    "p95": 23.081,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    4.070777,
+                    13.421177,
+                    8.062362,
+                    8.570955,
+                    8.516511,
+                    7.500506,
+                    11.847628,
+                    7.958013,
+                    8.020369,
+                    6.312373,
+                    25.169483,
+                    19.370535,
+                    23.080603,
+                    19.427095,
+                    5.744197,
+                    3.147663,
+                    2.386757,
+                    2.169238,
+                    1.976267,
+                    1.953372,
+                    18.44262,
+                    17.179492,
+                    24.576106,
+                    21.45153,
+                    13.552685,
+                    3.920655,
+                    2.122981,
+                    2.022859,
+                    2.062527,
+                    1.291377,
+                    16.262358,
+                    3.196489,
+                    6.98977,
+                    12.096322,
+                    16.352464,
+                    5.976802,
+                    13.59765,
+                    12.389406,
+                    5.292446,
+                    3.164426
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 354.861,
+                  "wall_ms": 112.72
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 21.812,
+                    "mean": 8.77,
+                    "median": 8.255,
+                    "min": 0.745,
+                    "p50": 8.226,
+                    "p95": 21.356,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    14.929164,
+                    8.529398,
+                    21.651494,
+                    7.439533,
+                    4.283092,
+                    5.852221,
+                    8.477486,
+                    9.685011,
+                    8.423775,
+                    8.641558,
+                    16.459689,
+                    9.453309,
+                    0.843116,
+                    0.744521,
+                    1.10336,
+                    12.183068,
+                    19.556108,
+                    21.355649,
+                    17.093329,
+                    3.565691,
+                    9.418998,
+                    2.39163,
+                    2.306362,
+                    4.19655,
+                    7.680657,
+                    8.283086,
+                    0.873045,
+                    0.957401,
+                    0.923174,
+                    8.226464,
+                    13.442727,
+                    6.703612,
+                    4.544384,
+                    21.811645,
+                    14.286356,
+                    16.023284,
+                    17.053226,
+                    6.429079,
+                    3.982221,
+                    0.99596
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 349.918,
+                  "wall_ms": 114.312
+                }
+              },
+              "order": [
+                "baseline",
+                "candidate"
+              ],
+              "run": 5,
+              "started_utc": "2026-10-28T04:49:04.566340+00:00"
+            }
+          ]
+        }
+      },
+      "rows": 1000
+    },
+    "10000": {
+      "c_reference_validation": {
+        "checks": 32,
+        "oracle": "actual C db_list_tasks() using same SQLite database",
+        "passed": true,
+        "reference_binary_sha256": "44ee6c1c985ef3b452fb7ad93dbe88eff21ccd8e8c5fad6628607abf6019e545",
+        "rows_compared_to_c": 2088
+      },
+      "correctness": {
+        "checks": 32,
+        "deterministic_tie_break": "id ASC (stable tertiary key explicitly added to db_list_tasks())",
+        "includes_priority_aging": true,
+        "includes_ties": true,
+        "limits": [
+          1,
+          10,
+          50,
+          200
+        ],
+        "passed": true,
+        "rows_compared": 2088,
+        "status_filters": [
+          "all",
+          "queued",
+          "running",
+          "waiting_input",
+          "completed",
+          "completed_without_model",
+          "failed",
+          "cancelled"
+        ]
+      },
+      "query_plans": {
+        "baseline_all": [
+          "SCAN tasks",
+          "USE TEMP B-TREE FOR ORDER BY"
+        ],
+        "candidate_other_band": [
+          "SCAN tasks USING INDEX idx_ab_other_order"
+        ],
+        "candidate_queued_band": [
+          "SEARCH tasks USING INDEX idx_tasks_queue_priority (status=?)",
+          "USE TEMP B-TREE FOR ORDER BY"
+        ],
+        "candidate_running_band": [
+          "SCAN tasks USING COVERING INDEX idx_ab_running_order"
+        ],
+        "observations": {
+          "baseline_all_uses_temp_sort": true,
+          "candidate_other_index_used": true,
+          "candidate_other_uses_temp_sort": false,
+          "candidate_queued_uses_temp_sort": true,
+          "candidate_running_index_used": true,
+          "candidate_running_uses_temp_sort": false
+        }
+      },
+      "results": {
+        "1": {
+          "aggregate": {
+            "baseline": {
+              "max": 11.759,
+              "mean": 4.437,
+              "median": 4.203,
+              "min": 3.498,
+              "p50": 4.195,
+              "p95": 5.634,
+              "p99": null,
+              "samples": 50,
+              "tail_percentile_status": {
+                "p95": "estimated",
+                "p99": "not_reported_requires_100_samples"
+              }
+            },
+            "baseline_error_count": 0,
+            "candidate": {
+              "max": 1.01,
+              "mean": 0.569,
+              "median": 0.541,
+              "min": 0.472,
+              "p50": 0.537,
+              "p95": 0.714,
+              "p99": null,
+              "samples": 50,
+              "tail_percentile_status": {
+                "p95": "estimated",
+                "p99": "not_reported_requires_100_samples"
+              }
+            },
+            "candidate_error_count": 0,
+            "median_speedup": 7.7689,
+            "runs": 5,
+            "samples_per_method": 50
+          },
+          "runs": [
+            {
+              "candidate_speedup_median": 7.3646,
+              "candidate_throughput_ratio": 6.5875,
+              "completed_utc": "2026-10-28T04:49:05.208554+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 11.759,
+                    "mean": 4.888,
+                    "median": 4.161,
+                    "min": 3.498,
+                    "p50": 4.017,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    4.701261,
+                    4.304535,
+                    4.016504,
+                    3.999929,
+                    3.704545,
+                    3.875387,
+                    3.49846,
+                    4.330769,
+                    4.69431,
+                    11.758992
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 180.172,
+                  "wall_ms": 55.502
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 1.01,
+                    "mean": 0.605,
+                    "median": 0.565,
+                    "min": 0.476,
+                    "p50": 0.549,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    0.520569,
+                    1.010226,
+                    0.524505,
+                    0.589415,
+                    0.580358,
+                    0.47602,
+                    0.607341,
+                    0.669014,
+                    0.524316,
+                    0.549485
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 1186.88,
+                  "wall_ms": 8.425
+                }
+              },
+              "order": [
+                "baseline",
+                "candidate"
+              ],
+              "run": 1,
+              "started_utc": "2026-10-28T04:49:05.144492+00:00"
+            },
+            {
+              "candidate_speedup_median": 7.0914,
+              "candidate_throughput_ratio": 6.5889,
+              "completed_utc": "2026-10-28T04:49:05.265447+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 4.844,
+                    "mean": 4.121,
+                    "median": 3.957,
+                    "min": 3.782,
+                    "p50": 3.907,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    3.781663,
+                    3.907425,
+                    3.896142,
+                    4.844279,
+                    4.669983,
+                    4.007505,
+                    3.884381,
+                    4.245312,
+                    3.809503,
+                    4.160771
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 202.849,
+                  "wall_ms": 49.298
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 0.675,
+                    "mean": 0.573,
+                    "median": 0.558,
+                    "min": 0.507,
+                    "p50": 0.555,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    0.584063,
+                    0.616557,
+                    0.560556,
+                    0.67495,
+                    0.601297,
+                    0.550964,
+                    0.507073,
+                    0.530383,
+                    0.546232,
+                    0.555404
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 1336.547,
+                  "wall_ms": 7.482
+                }
+              },
+              "order": [
+                "candidate",
+                "baseline"
+              ],
+              "run": 2,
+              "started_utc": "2026-10-28T04:49:05.208567+00:00"
+            },
+            {
+              "candidate_speedup_median": 8.6112,
+              "candidate_throughput_ratio": 6.4489,
+              "completed_utc": "2026-10-28T04:49:05.322407+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 5.254,
+                    "mean": 4.426,
+                    "median": 4.297,
+                    "min": 3.911,
+                    "p50": 4.291,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    4.124349,
+                    4.087477,
+                    4.29076,
+                    4.850219,
+                    4.302981,
+                    5.254084,
+                    4.38097,
+                    4.78983,
+                    3.910628,
+                    4.270413
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 203.163,
+                  "wall_ms": 49.221
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 0.822,
+                    "mean": 0.559,
+                    "median": 0.499,
+                    "min": 0.473,
+                    "p50": 0.49,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    0.622645,
+                    0.822284,
+                    0.486727,
+                    0.489545,
+                    0.473728,
+                    0.69301,
+                    0.536509,
+                    0.508274,
+                    0.473475,
+                    0.487511
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 1310.172,
+                  "wall_ms": 7.633
+                }
+              },
+              "order": [
+                "baseline",
+                "candidate"
+              ],
+              "run": 3,
+              "started_utc": "2026-10-28T04:49:05.265459+00:00"
+            },
+            {
+              "candidate_speedup_median": 8.0312,
+              "candidate_throughput_ratio": 7.1736,
+              "completed_utc": "2026-10-28T04:49:05.378375+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 5.634,
+                    "mean": 4.383,
+                    "median": 4.12,
+                    "min": 3.874,
+                    "p50": 4.045,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    4.037051,
+                    5.295278,
+                    5.634404,
+                    4.194982,
+                    4.322287,
+                    4.045263,
+                    4.563791,
+                    3.981125,
+                    3.882768,
+                    3.874115
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 203.918,
+                  "wall_ms": 49.039
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 0.699,
+                    "mean": 0.547,
+                    "median": 0.513,
+                    "min": 0.472,
+                    "p50": 0.509,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    0.615609,
+                    0.509395,
+                    0.491662,
+                    0.699146,
+                    0.574513,
+                    0.622975,
+                    0.477387,
+                    0.491552,
+                    0.472205,
+                    0.517357
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 1462.825,
+                  "wall_ms": 6.836
+                }
+              },
+              "order": [
+                "candidate",
+                "baseline"
+              ],
+              "run": 4,
+              "started_utc": "2026-10-28T04:49:05.322419+00:00"
+            },
+            {
+              "candidate_speedup_median": 8.1096,
+              "candidate_throughput_ratio": 6.2912,
+              "completed_utc": "2026-10-28T04:49:05.436068+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 6.88,
+                    "mean": 4.365,
+                    "median": 4.217,
+                    "min": 3.509,
+                    "p50": 4.212,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    4.2231,
+                    6.88006,
+                    4.211725,
+                    4.232369,
+                    3.967095,
+                    3.805888,
+                    3.790738,
+                    3.509222,
+                    4.632662,
+                    4.395733
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 201.256,
+                  "wall_ms": 49.688
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 0.714,
+                    "mean": 0.559,
+                    "median": 0.52,
+                    "min": 0.477,
+                    "p50": 0.505,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    0.50314,
+                    0.582864,
+                    0.598714,
+                    0.504738,
+                    0.500909,
+                    0.503628,
+                    0.714394,
+                    0.477234,
+                    0.536027,
+                    0.67218
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 1266.151,
+                  "wall_ms": 7.898
+                }
+              },
+              "order": [
+                "baseline",
+                "candidate"
+              ],
+              "run": 5,
+              "started_utc": "2026-10-28T04:49:05.378387+00:00"
+            }
+          ]
+        },
+        "4": {
+          "aggregate": {
+            "baseline": {
+              "max": 43.947,
+              "mean": 11.8,
+              "median": 9.327,
+              "min": 3.711,
+              "p50": 9.288,
+              "p95": 27.617,
+              "p99": 36.871,
+              "samples": 200,
+              "tail_percentile_status": {
+                "p95": "estimated",
+                "p99": "estimated"
+              }
+            },
+            "baseline_error_count": 0,
+            "candidate": {
+              "max": 40.694,
+              "mean": 12.191,
+              "median": 10.238,
+              "min": 0.496,
+              "p50": 10.234,
+              "p95": 29.051,
+              "p99": 37.776,
+              "samples": 200,
+              "tail_percentile_status": {
+                "p95": "estimated",
+                "p99": "estimated"
+              }
+            },
+            "candidate_error_count": 0,
+            "median_speedup": 0.911,
+            "runs": 5,
+            "samples_per_method": 200
+          },
+          "runs": [
+            {
+              "candidate_speedup_median": 1.0588,
+              "candidate_throughput_ratio": 0.9651,
+              "completed_utc": "2026-10-28T04:49:05.772996+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 32.736,
+                    "mean": 12.127,
+                    "median": 10.143,
+                    "min": 4.018,
+                    "p50": 9.451,
+                    "p95": 24.644,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    4.371157,
+                    9.185355,
+                    23.447362,
+                    24.643955,
+                    23.98177,
+                    16.593317,
+                    11.586275,
+                    18.298627,
+                    4.503808,
+                    4.261592,
+                    7.216243,
+                    17.842478,
+                    11.361275,
+                    6.938535,
+                    13.116562,
+                    5.757554,
+                    4.092784,
+                    16.195829,
+                    5.256061,
+                    6.794971,
+                    6.342938,
+                    6.717768,
+                    29.699591,
+                    17.161788,
+                    5.494128,
+                    19.741712,
+                    8.871326,
+                    7.483812,
+                    10.834835,
+                    5.273257,
+                    11.070566,
+                    32.736352,
+                    19.407614,
+                    12.962409,
+                    4.120431,
+                    18.661198,
+                    9.45123,
+                    5.929615,
+                    4.017652,
+                    13.654
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 241.929,
+                  "wall_ms": 165.337
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 37.776,
+                    "mean": 13.47,
+                    "median": 9.58,
+                    "min": 0.612,
+                    "p50": 9.306,
+                    "p95": 31.161,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    12.264607,
+                    10.364546,
+                    7.531991,
+                    4.092529,
+                    7.358945,
+                    4.912844,
+                    10.244864,
+                    9.854883,
+                    9.305916,
+                    11.811527,
+                    29.050508,
+                    29.171957,
+                    31.312334,
+                    4.557652,
+                    5.083226,
+                    8.132574,
+                    8.052492,
+                    8.641234,
+                    5.965696,
+                    6.167854,
+                    31.160876,
+                    37.775533,
+                    28.770637,
+                    20.776251,
+                    18.22818,
+                    6.423852,
+                    5.638433,
+                    4.301724,
+                    4.50779,
+                    0.61205,
+                    15.475794,
+                    19.102668,
+                    20.006037,
+                    20.528503,
+                    22.492836,
+                    21.182831,
+                    20.571705,
+                    6.742079,
+                    5.550997,
+                    5.054454
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 233.476,
+                  "wall_ms": 171.324
+                }
+              },
+              "order": [
+                "baseline",
+                "candidate"
+              ],
+              "run": 1,
+              "started_utc": "2026-10-28T04:49:05.436120+00:00"
+            },
+            {
+              "candidate_speedup_median": 1.0487,
+              "candidate_throughput_ratio": 0.9523,
+              "completed_utc": "2026-10-28T04:49:06.044242+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 30.604,
+                    "mean": 10.867,
+                    "median": 8.52,
+                    "min": 3.725,
+                    "p50": 8.261,
+                    "p95": 22.249,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    20.79149,
+                    13.344989,
+                    20.94469,
+                    7.106297,
+                    22.249022,
+                    15.214388,
+                    5.427362,
+                    4.644309,
+                    4.398382,
+                    3.725276,
+                    4.360993,
+                    19.165619,
+                    11.278275,
+                    6.03069,
+                    5.631807,
+                    7.879148,
+                    11.38586,
+                    7.258427,
+                    12.527595,
+                    6.205771,
+                    19.577337,
+                    9.25856,
+                    7.331519,
+                    8.260591,
+                    8.780328,
+                    30.604054,
+                    7.73494,
+                    5.917398,
+                    5.749514,
+                    6.302039,
+                    5.938375,
+                    17.011945,
+                    13.819264,
+                    11.49857,
+                    22.633397,
+                    14.928029,
+                    10.305554,
+                    10.078908,
+                    4.962183,
+                    4.409256
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 302.706,
+                  "wall_ms": 132.141
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 37.782,
+                    "mean": 10.976,
+                    "median": 8.124,
+                    "min": 1.208,
+                    "p50": 7.939,
+                    "p95": 34.693,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    6.909472,
+                    8.898314,
+                    9.945761,
+                    9.347927,
+                    9.303465,
+                    8.526591,
+                    7.136289,
+                    4.653068,
+                    4.864042,
+                    8.955049,
+                    34.79173,
+                    37.782457,
+                    16.262565,
+                    14.781128,
+                    7.032593,
+                    4.125919,
+                    2.524288,
+                    3.911717,
+                    3.172525,
+                    1.207727,
+                    13.031853,
+                    34.693097,
+                    27.823295,
+                    7.930727,
+                    4.953091,
+                    5.129049,
+                    2.32145,
+                    2.144117,
+                    3.743242,
+                    8.309232,
+                    12.818008,
+                    21.134924,
+                    20.106962,
+                    23.634932,
+                    11.841615,
+                    15.573162,
+                    7.938674,
+                    4.559026,
+                    2.90999,
+                    4.321475
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 288.263,
+                  "wall_ms": 138.762
+                }
+              },
+              "order": [
+                "candidate",
+                "baseline"
+              ],
+              "run": 2,
+              "started_utc": "2026-10-28T04:49:05.773020+00:00"
+            },
+            {
+              "candidate_speedup_median": 1.2684,
+              "candidate_throughput_ratio": 1.234,
+              "completed_utc": "2026-10-28T04:49:06.360036+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 43.947,
+                    "mean": 15.124,
+                    "median": 13.227,
+                    "min": 3.744,
+                    "p50": 13.135,
+                    "p95": 35.96,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    18.126742,
+                    19.072845,
+                    14.340814,
+                    12.824699,
+                    6.159281,
+                    12.178539,
+                    9.365517,
+                    12.477095,
+                    24.901175,
+                    19.364583,
+                    15.762161,
+                    13.134807,
+                    11.809209,
+                    12.133478,
+                    13.096574,
+                    7.783484,
+                    11.022953,
+                    8.23155,
+                    36.870566,
+                    18.25263,
+                    9.025426,
+                    23.952682,
+                    17.205157,
+                    15.081343,
+                    14.332833,
+                    3.934437,
+                    43.946728,
+                    21.480138,
+                    4.930361,
+                    3.743833,
+                    17.754108,
+                    19.061215,
+                    14.595738,
+                    13.319847,
+                    6.265421,
+                    11.778463,
+                    9.287576,
+                    35.959821,
+                    16.309899,
+                    6.083419
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 229.508,
+                  "wall_ms": 174.286
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 40.694,
+                    "mean": 11.975,
+                    "median": 10.428,
+                    "min": 0.547,
+                    "p50": 10.234,
+                    "p95": 27.187,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    12.907626,
+                    6.70229,
+                    13.967711,
+                    6.918687,
+                    12.891595,
+                    13.282129,
+                    5.447862,
+                    5.863563,
+                    10.233856,
+                    9.450522,
+                    6.893525,
+                    16.949044,
+                    24.896906,
+                    19.684723,
+                    27.187484,
+                    10.114303,
+                    8.27208,
+                    5.828992,
+                    3.51916,
+                    0.583039,
+                    11.967846,
+                    15.271759,
+                    14.891197,
+                    19.710438,
+                    14.758718,
+                    14.441133,
+                    9.637562,
+                    4.826606,
+                    6.626071,
+                    16.231243,
+                    1.654608,
+                    0.547482,
+                    6.836218,
+                    12.931553,
+                    32.890448,
+                    40.694238,
+                    10.621963,
+                    14.773707,
+                    7.106319,
+                    0.977704
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 283.205,
+                  "wall_ms": 141.241
+                }
+              },
+              "order": [
+                "baseline",
+                "candidate"
+              ],
+              "run": 3,
+              "started_utc": "2026-10-28T04:49:06.044265+00:00"
+            },
+            {
+              "candidate_speedup_median": 0.6548,
+              "candidate_throughput_ratio": 0.956,
+              "completed_utc": "2026-10-28T04:49:06.624173+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 27.617,
+                    "mean": 9.248,
+                    "median": 7.905,
+                    "min": 3.711,
+                    "p50": 7.834,
+                    "p95": 20.228,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    4.698672,
+                    4.099935,
+                    11.732576,
+                    4.128165,
+                    5.825571,
+                    3.983657,
+                    4.801262,
+                    4.105384,
+                    3.710994,
+                    3.746907,
+                    6.803732,
+                    15.332023,
+                    8.183536,
+                    7.500316,
+                    7.333253,
+                    7.976135,
+                    7.693685,
+                    22.372142,
+                    8.011834,
+                    8.572165,
+                    10.941493,
+                    11.906806,
+                    13.29473,
+                    13.229681,
+                    14.356446,
+                    15.96554,
+                    6.54395,
+                    7.833688,
+                    7.420752,
+                    3.770973,
+                    27.616681,
+                    11.104782,
+                    15.122493,
+                    10.552076,
+                    20.227661,
+                    8.921728,
+                    8.388988,
+                    4.03932,
+                    4.00575,
+                    4.08419
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 310.098,
+                  "wall_ms": 128.992
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 22.743,
+                    "mean": 11.518,
+                    "median": 12.073,
+                    "min": 0.496,
+                    "p50": 10.957,
+                    "p95": 21.41,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    21.842734,
+                    19.898391,
+                    19.761533,
+                    19.524085,
+                    10.957418,
+                    6.831959,
+                    7.561936,
+                    9.617748,
+                    4.644619,
+                    5.436737,
+                    22.74277,
+                    21.409915,
+                    16.798742,
+                    20.374754,
+                    21.162622,
+                    17.40056,
+                    3.357064,
+                    2.088924,
+                    1.467023,
+                    0.612118,
+                    1.033983,
+                    6.866162,
+                    18.319337,
+                    10.675532,
+                    6.759177,
+                    14.530806,
+                    13.187842,
+                    14.539784,
+                    17.952407,
+                    15.617246,
+                    18.599319,
+                    8.420066,
+                    0.822165,
+                    0.495715,
+                    1.090125,
+                    15.136366,
+                    14.856898,
+                    15.957771,
+                    1.589806,
+                    10.796905
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 296.448,
+                  "wall_ms": 134.931
+                }
+              },
+              "order": [
+                "candidate",
+                "baseline"
+              ],
+              "run": 4,
+              "started_utc": "2026-10-28T04:49:06.360061+00:00"
+            },
+            {
+              "candidate_speedup_median": 0.6372,
+              "candidate_throughput_ratio": 1.0032,
+              "completed_utc": "2026-10-28T04:49:06.953249+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 40.029,
+                    "mean": 11.633,
+                    "median": 8.638,
+                    "min": 3.826,
+                    "p50": 8.459,
+                    "p95": 33.33,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    15.048886,
+                    5.101181,
+                    3.825697,
+                    20.683006,
+                    8.817437,
+                    9.852464,
+                    4.261746,
+                    6.084045,
+                    5.502384,
+                    4.26792,
+                    14.047874,
+                    7.0157,
+                    33.329976,
+                    16.118325,
+                    11.809011,
+                    12.8283,
+                    12.420787,
+                    8.459404,
+                    6.140223,
+                    4.545719,
+                    20.476515,
+                    35.520095,
+                    8.366069,
+                    7.200521,
+                    8.291575,
+                    6.022894,
+                    9.203833,
+                    11.820377,
+                    8.819599,
+                    27.737673,
+                    10.236896,
+                    6.206483,
+                    40.029382,
+                    15.597321,
+                    12.321913,
+                    6.374569,
+                    6.34017,
+                    4.852998,
+                    5.632393,
+                    4.120847
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 243.474,
+                  "wall_ms": 164.289
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 35.581,
+                    "mean": 13.018,
+                    "median": 13.557,
+                    "min": 0.521,
+                    "p50": 13.44,
+                    "p95": 25.271,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    25.270538,
+                    22.070717,
+                    12.672014,
+                    13.672942,
+                    14.215747,
+                    15.711928,
+                    18.061026,
+                    5.75383,
+                    7.324996,
+                    3.645879,
+                    16.840015,
+                    16.786064,
+                    27.324901,
+                    18.665586,
+                    13.857787,
+                    20.411575,
+                    11.135903,
+                    3.135799,
+                    2.703029,
+                    9.076356,
+                    5.938521,
+                    8.259986,
+                    10.841412,
+                    10.241934,
+                    5.251963,
+                    17.369753,
+                    7.908064,
+                    17.801017,
+                    21.209855,
+                    14.608464,
+                    35.580988,
+                    6.702787,
+                    0.640696,
+                    0.706906,
+                    0.520611,
+                    13.440141,
+                    19.36834,
+                    9.949099,
+                    16.31961,
+                    19.732899
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 244.25,
+                  "wall_ms": 163.767
+                }
+              },
+              "order": [
+                "baseline",
+                "candidate"
+              ],
+              "run": 5,
+              "started_utc": "2026-10-28T04:49:06.624193+00:00"
+            }
+          ]
+        }
+      },
+      "rows": 10000
+    },
+    "100000": {
+      "c_reference_validation": {
+        "checks": 32,
+        "oracle": "actual C db_list_tasks() using same SQLite database",
+        "passed": true,
+        "reference_binary_sha256": "44ee6c1c985ef3b452fb7ad93dbe88eff21ccd8e8c5fad6628607abf6019e545",
+        "rows_compared_to_c": 2088
+      },
+      "correctness": {
+        "checks": 32,
+        "deterministic_tie_break": "id ASC (stable tertiary key explicitly added to db_list_tasks())",
+        "includes_priority_aging": true,
+        "includes_ties": true,
+        "limits": [
+          1,
+          10,
+          50,
+          200
+        ],
+        "passed": true,
+        "rows_compared": 2088,
+        "status_filters": [
+          "all",
+          "queued",
+          "running",
+          "waiting_input",
+          "completed",
+          "completed_without_model",
+          "failed",
+          "cancelled"
+        ]
+      },
+      "query_plans": {
+        "baseline_all": [
+          "SCAN tasks",
+          "USE TEMP B-TREE FOR ORDER BY"
+        ],
+        "candidate_other_band": [
+          "SCAN tasks USING INDEX idx_ab_other_order"
+        ],
+        "candidate_queued_band": [
+          "SEARCH tasks USING INDEX idx_tasks_queue_priority (status=?)",
+          "USE TEMP B-TREE FOR ORDER BY"
+        ],
+        "candidate_running_band": [
+          "SCAN tasks USING COVERING INDEX idx_ab_running_order"
+        ],
+        "observations": {
+          "baseline_all_uses_temp_sort": true,
+          "candidate_other_index_used": true,
+          "candidate_other_uses_temp_sort": false,
+          "candidate_queued_uses_temp_sort": true,
+          "candidate_running_index_used": true,
+          "candidate_running_uses_temp_sort": false
+        }
+      },
+      "results": {
+        "1": {
+          "aggregate": {
+            "baseline": {
+              "max": 34.983,
+              "mean": 28.799,
+              "median": 28.738,
+              "min": 24.132,
+              "p50": 28.571,
+              "p95": 32.414,
+              "p99": null,
+              "samples": 50,
+              "tail_percentile_status": {
+                "p95": "estimated",
+                "p99": "not_reported_requires_100_samples"
+              }
+            },
+            "baseline_error_count": 0,
+            "candidate": {
+              "max": 2.348,
+              "mean": 0.674,
+              "median": 0.58,
+              "min": 0.485,
+              "p50": 0.579,
+              "p95": 1.105,
+              "p99": null,
+              "samples": 50,
+              "tail_percentile_status": {
+                "p95": "estimated",
+                "p99": "not_reported_requires_100_samples"
+              }
+            },
+            "candidate_error_count": 0,
+            "median_speedup": 49.5483,
+            "runs": 5,
+            "samples_per_method": 50
+          },
+          "runs": [
+            {
+              "candidate_speedup_median": 49.9967,
+              "candidate_throughput_ratio": 39.2394,
+              "completed_utc": "2026-10-28T04:49:12.228875+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 33.281,
+                    "mean": 29.99,
+                    "median": 30.548,
+                    "min": 25.84,
+                    "p50": 30.399,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    25.840075,
+                    32.395257,
+                    27.427018,
+                    32.103399,
+                    27.681293,
+                    30.696692,
+                    30.399442,
+                    27.664301,
+                    32.413764,
+                    33.28124
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 30.018,
+                  "wall_ms": 333.133
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 0.797,
+                    "mean": 0.628,
+                    "median": 0.611,
+                    "min": 0.514,
+                    "p50": 0.602,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    0.525161,
+                    0.695589,
+                    0.74628,
+                    0.619997,
+                    0.582075,
+                    0.569037,
+                    0.513746,
+                    0.631562,
+                    0.601716,
+                    0.797368
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 1177.887,
+                  "wall_ms": 8.49
+                }
+              },
+              "order": [
+                "baseline",
+                "candidate"
+              ],
+              "run": 1,
+              "started_utc": "2026-10-28T04:49:11.887019+00:00"
+            },
+            {
+              "candidate_speedup_median": 56.1154,
+              "candidate_throughput_ratio": 44.3775,
+              "completed_utc": "2026-10-28T04:49:12.550808+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 31.437,
+                    "mean": 28.726,
+                    "median": 29.18,
+                    "min": 24.988,
+                    "p50": 29.118,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    26.952841,
+                    31.241888,
+                    26.481635,
+                    29.865217,
+                    24.98825,
+                    31.437232,
+                    29.242435,
+                    29.118172,
+                    31.02459,
+                    26.903087
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 31.779,
+                  "wall_ms": 314.671
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 0.833,
+                    "mean": 0.566,
+                    "median": 0.52,
+                    "min": 0.485,
+                    "p50": 0.514,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    0.509281,
+                    0.691602,
+                    0.513524,
+                    0.526704,
+                    0.8332,
+                    0.503945,
+                    0.559531,
+                    0.484568,
+                    0.551644,
+                    0.488623
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 1410.271,
+                  "wall_ms": 7.091
+                }
+              },
+              "order": [
+                "candidate",
+                "baseline"
+              ],
+              "run": 2,
+              "started_utc": "2026-10-28T04:49:12.228896+00:00"
+            },
+            {
+              "candidate_speedup_median": 40.6822,
+              "candidate_throughput_ratio": 28.5018,
+              "completed_utc": "2026-10-28T04:49:12.876026+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 32.151,
+                    "mean": 28.544,
+                    "median": 27.908,
+                    "min": 26.182,
+                    "p50": 27.907,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    26.367189,
+                    28.903664,
+                    26.778801,
+                    26.249338,
+                    32.150545,
+                    31.337471,
+                    27.909238,
+                    26.181839,
+                    31.650143,
+                    27.907483
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 31.848,
+                  "wall_ms": 313.989
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 2.348,
+                    "mean": 0.891,
+                    "median": 0.686,
+                    "min": 0.509,
+                    "p50": 0.662,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    1.105096,
+                    2.348495,
+                    0.531132,
+                    1.055274,
+                    0.912177,
+                    0.710722,
+                    0.525676,
+                    0.554113,
+                    0.508869,
+                    0.661725
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 907.725,
+                  "wall_ms": 11.017
+                }
+              },
+              "order": [
+                "baseline",
+                "candidate"
+              ],
+              "run": 3,
+              "started_utc": "2026-10-28T04:49:12.550829+00:00"
+            },
+            {
+              "candidate_speedup_median": 51.4534,
+              "candidate_throughput_ratio": 43.1077,
+              "completed_utc": "2026-10-28T04:49:13.200731+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 34.983,
+                    "mean": 28.713,
+                    "median": 28.711,
+                    "min": 24.132,
+                    "p50": 28.438,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    31.918869,
+                    34.983099,
+                    24.131726,
+                    26.950329,
+                    28.984467,
+                    27.629114,
+                    29.248826,
+                    30.370839,
+                    28.437949,
+                    24.474258
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 31.534,
+                  "wall_ms": 317.116
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 0.805,
+                    "mean": 0.589,
+                    "median": 0.558,
+                    "min": 0.517,
+                    "p50": 0.556,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    0.516803,
+                    0.804614,
+                    0.544071,
+                    0.625828,
+                    0.517418,
+                    0.555697,
+                    0.526967,
+                    0.632157,
+                    0.561074,
+                    0.607607
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 1359.359,
+                  "wall_ms": 7.356
+                }
+              },
+              "order": [
+                "candidate",
+                "baseline"
+              ],
+              "run": 4,
+              "started_utc": "2026-10-28T04:49:12.876048+00:00"
+            },
+            {
+              "candidate_speedup_median": 47.2811,
+              "candidate_throughput_ratio": 36.3061,
+              "completed_utc": "2026-10-28T04:49:13.522987+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 31.299,
+                    "mean": 28.021,
+                    "median": 27.754,
+                    "min": 24.354,
+                    "p50": 26.936,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    29.222873,
+                    26.936056,
+                    25.914774,
+                    30.742559,
+                    31.215818,
+                    24.353841,
+                    25.958087,
+                    28.57147,
+                    31.299188,
+                    25.990608
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 31.906,
+                  "wall_ms": 313.418
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 1.127,
+                    "mean": 0.696,
+                    "median": 0.587,
+                    "min": 0.511,
+                    "p50": 0.582,
+                    "p95": null,
+                    "p99": null,
+                    "samples": 10,
+                    "tail_percentile_status": {
+                      "p95": "not_reported_requires_20_samples",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    0.734036,
+                    0.855968,
+                    0.52062,
+                    0.510689,
+                    0.545201,
+                    0.582106,
+                    0.578752,
+                    0.592438,
+                    1.127477,
+                    0.909422
+                  ],
+                  "sample_count": 10,
+                  "throughput_queries_s": 1158.381,
+                  "wall_ms": 8.633
+                }
+              },
+              "order": [
+                "baseline",
+                "candidate"
+              ],
+              "run": 5,
+              "started_utc": "2026-10-28T04:49:13.200753+00:00"
+            }
+          ]
+        },
+        "4": {
+          "aggregate": {
+            "baseline": {
+              "max": 164.256,
+              "mean": 71.018,
+              "median": 77.728,
+              "min": 24.793,
+              "p50": 77.704,
+              "p95": 101.028,
+              "p99": 124.609,
+              "samples": 200,
+              "tail_percentile_status": {
+                "p95": "estimated",
+                "p99": "estimated"
+              }
+            },
+            "baseline_error_count": 0,
+            "candidate": {
+              "max": 41.377,
+              "mean": 10.113,
+              "median": 8.038,
+              "min": 0.49,
+              "p50": 7.963,
+              "p95": 27.814,
+              "p99": 36.445,
+              "samples": 200,
+              "tail_percentile_status": {
+                "p95": "estimated",
+                "p99": "estimated"
+              }
+            },
+            "candidate_error_count": 0,
+            "median_speedup": 9.6701,
+            "runs": 5,
+            "samples_per_method": 200
+          },
+          "runs": [
+            {
+              "candidate_speedup_median": 10.4985,
+              "candidate_throughput_ratio": 6.3523,
+              "completed_utc": "2026-10-28T04:49:14.488769+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 100.551,
+                    "mean": 72.575,
+                    "median": 79.169,
+                    "min": 27.269,
+                    "p50": 78.066,
+                    "p95": 95.75,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    61.034854,
+                    93.726357,
+                    88.261173,
+                    88.967173,
+                    95.75001,
+                    89.034962,
+                    95.437788,
+                    87.890189,
+                    31.943207,
+                    30.07936,
+                    45.987601,
+                    100.550854,
+                    77.170226,
+                    77.941364,
+                    46.498488,
+                    77.110049,
+                    80.832291,
+                    45.662003,
+                    76.946406,
+                    77.904898,
+                    45.822015,
+                    84.694549,
+                    88.128393,
+                    42.992405,
+                    73.649063,
+                    80.272245,
+                    42.050208,
+                    83.042568,
+                    78.065525,
+                    47.017317,
+                    64.728754,
+                    92.249262,
+                    82.51312,
+                    87.172418,
+                    100.048131,
+                    95.026602,
+                    95.316413,
+                    92.421578,
+                    27.269084,
+                    31.790236
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 47.957,
+                  "wall_ms": 834.087
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 36.247,
+                    "mean": 10.684,
+                    "median": 7.541,
+                    "min": 0.564,
+                    "p50": 7.454,
+                    "p95": 28.418,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    17.926478,
+                    20.990424,
+                    14.2298,
+                    18.088457,
+                    23.497217,
+                    6.860904,
+                    4.430385,
+                    4.876277,
+                    5.504214,
+                    1.487739,
+                    22.828358,
+                    0.624424,
+                    0.563563,
+                    0.645673,
+                    0.996061,
+                    1.441821,
+                    28.417652,
+                    27.814494,
+                    11.664364,
+                    7.34561,
+                    19.246868,
+                    0.87364,
+                    0.862424,
+                    1.076892,
+                    29.587451,
+                    36.246714,
+                    15.433214,
+                    4.641162,
+                    4.202398,
+                    4.676095,
+                    7.454076,
+                    8.385985,
+                    15.474753,
+                    4.048264,
+                    7.627341,
+                    10.520458,
+                    10.178283,
+                    11.112486,
+                    9.306625,
+                    6.160783
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 304.635,
+                  "wall_ms": 131.305
+                }
+              },
+              "order": [
+                "baseline",
+                "candidate"
+              ],
+              "run": 1,
+              "started_utc": "2026-10-28T04:49:13.523059+00:00"
+            },
+            {
+              "candidate_speedup_median": 9.3494,
+              "candidate_throughput_ratio": 5.4841,
+              "completed_utc": "2026-10-28T04:49:15.498034+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 101.088,
+                    "mean": 74.071,
+                    "median": 78.638,
+                    "min": 29.534,
+                    "p50": 78.213,
+                    "p95": 100.143,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    84.341537,
+                    97.033784,
+                    64.218742,
+                    90.302002,
+                    98.459837,
+                    100.14275,
+                    89.510049,
+                    90.999271,
+                    32.511294,
+                    41.772361,
+                    79.788416,
+                    44.692423,
+                    76.979061,
+                    83.102619,
+                    43.951234,
+                    86.67672,
+                    81.255334,
+                    51.842993,
+                    76.888513,
+                    74.620939,
+                    87.910572,
+                    97.085764,
+                    58.907988,
+                    94.030737,
+                    93.062575,
+                    101.088068,
+                    101.027889,
+                    79.06252,
+                    29.533571,
+                    33.225986,
+                    52.067631,
+                    71.852674,
+                    77.75106,
+                    78.212579,
+                    44.30908,
+                    72.776269,
+                    91.030474,
+                    52.748538,
+                    75.103943,
+                    82.943294
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 46.87,
+                  "wall_ms": 853.417
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 41.377,
+                    "mean": 12.104,
+                    "median": 8.411,
+                    "min": 1.833,
+                    "p50": 8.251,
+                    "p95": 33.955,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    33.955031,
+                    41.376658,
+                    15.824318,
+                    15.38336,
+                    18.153614,
+                    4.012812,
+                    1.832912,
+                    2.232857,
+                    3.32915,
+                    2.960015,
+                    9.622499,
+                    12.114329,
+                    8.188242,
+                    9.012705,
+                    8.250694,
+                    6.717308,
+                    5.043566,
+                    7.830271,
+                    7.142656,
+                    8.215048,
+                    31.029268,
+                    38.188934,
+                    20.422585,
+                    11.840372,
+                    7.225953,
+                    3.515853,
+                    7.800642,
+                    7.96336,
+                    7.009697,
+                    3.638553,
+                    14.555416,
+                    11.591825,
+                    12.188073,
+                    19.212931,
+                    18.524595,
+                    9.143907,
+                    5.018239,
+                    6.802517,
+                    8.571437,
+                    18.730189
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 257.042,
+                  "wall_ms": 155.617
+                }
+              },
+              "order": [
+                "candidate",
+                "baseline"
+              ],
+              "run": 2,
+              "started_utc": "2026-10-28T04:49:14.488789+00:00"
+            },
+            {
+              "candidate_speedup_median": 6.2207,
+              "candidate_throughput_ratio": 5.2007,
+              "completed_utc": "2026-10-28T04:49:16.485996+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 107.869,
+                    "mean": 71.398,
+                    "median": 77.336,
+                    "min": 26.498,
+                    "p50": 76.641,
+                    "p95": 98.724,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    63.987614,
+                    74.50036,
+                    53.443551,
+                    76.641308,
+                    82.414718,
+                    79.298028,
+                    41.663703,
+                    76.403179,
+                    43.022694,
+                    73.543903,
+                    81.570544,
+                    100.128192,
+                    89.214035,
+                    98.724344,
+                    86.975801,
+                    93.377795,
+                    91.674801,
+                    48.115347,
+                    44.825588,
+                    26.497769,
+                    53.919449,
+                    80.374262,
+                    49.230162,
+                    85.330291,
+                    75.132117,
+                    43.032705,
+                    75.265363,
+                    79.123471,
+                    43.140316,
+                    79.174442,
+                    78.030256,
+                    107.869478,
+                    87.075067,
+                    94.676868,
+                    92.860234,
+                    94.775511,
+                    91.243589,
+                    47.351472,
+                    44.7638,
+                    27.546371
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 48.285,
+                  "wall_ms": 828.421
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 36.445,
+                    "mean": 13.24,
+                    "median": 12.432,
+                    "min": 0.527,
+                    "p50": 12.041,
+                    "p95": 24.953,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    36.444514,
+                    21.099579,
+                    15.932064,
+                    15.409555,
+                    17.612296,
+                    17.532802,
+                    8.982008,
+                    7.471403,
+                    4.270656,
+                    0.526806,
+                    16.761075,
+                    3.459386,
+                    4.798704,
+                    5.468192,
+                    7.819236,
+                    17.177467,
+                    13.113739,
+                    21.387353,
+                    17.111866,
+                    11.056572,
+                    8.962347,
+                    11.403631,
+                    0.871346,
+                    4.595655,
+                    9.651012,
+                    12.040966,
+                    24.952988,
+                    24.50175,
+                    17.826404,
+                    6.99673,
+                    30.527717,
+                    18.314961,
+                    20.215954,
+                    12.822451,
+                    16.388319,
+                    18.454325,
+                    10.045463,
+                    7.490916,
+                    5.840199,
+                    4.253792
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 251.118,
+                  "wall_ms": 159.287
+                }
+              },
+              "order": [
+                "baseline",
+                "candidate"
+              ],
+              "run": 3,
+              "started_utc": "2026-10-28T04:49:15.498056+00:00"
+            },
+            {
+              "candidate_speedup_median": 21.4254,
+              "candidate_throughput_ratio": 12.3899,
+              "completed_utc": "2026-10-28T04:49:17.398726+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 164.256,
+                    "mean": 65.712,
+                    "median": 65.326,
+                    "min": 24.793,
+                    "p50": 64.274,
+                    "p95": 124.609,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    32.157214,
+                    49.135024,
+                    31.114493,
+                    66.378776,
+                    28.871808,
+                    69.096329,
+                    28.271722,
+                    70.053361,
+                    27.896828,
+                    33.167802,
+                    105.700076,
+                    118.144792,
+                    164.256109,
+                    103.908717,
+                    77.879998,
+                    48.363281,
+                    79.260009,
+                    24.792814,
+                    28.924316,
+                    27.64424,
+                    100.419646,
+                    124.608834,
+                    149.892398,
+                    104.178374,
+                    26.610646,
+                    29.195466,
+                    61.613847,
+                    35.103169,
+                    64.273779,
+                    31.070836,
+                    70.198402,
+                    49.180203,
+                    79.052319,
+                    77.704088,
+                    43.80881,
+                    81.083436,
+                    81.300499,
+                    41.725255,
+                    75.412403,
+                    87.032857
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 47.375,
+                  "wall_ms": 844.332
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 16.367,
+                    "mean": 4.635,
+                    "median": 3.049,
+                    "min": 0.526,
+                    "p50": 2.964,
+                    "p95": 11.451,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    11.117303,
+                    8.722094,
+                    6.299311,
+                    0.577519,
+                    0.573755,
+                    0.549573,
+                    0.641987,
+                    0.568242,
+                    0.604698,
+                    7.031932,
+                    14.55228,
+                    8.95599,
+                    10.817429,
+                    3.896931,
+                    3.606877,
+                    2.31694,
+                    2.477001,
+                    4.814499,
+                    4.124999,
+                    3.133654,
+                    1.341708,
+                    10.572123,
+                    8.580728,
+                    16.367256,
+                    5.700278,
+                    5.390994,
+                    2.963944,
+                    2.852958,
+                    1.26633,
+                    2.854736,
+                    2.609277,
+                    0.628334,
+                    0.569167,
+                    0.600856,
+                    0.67116,
+                    1.940539,
+                    11.451079,
+                    6.160977,
+                    0.526181,
+                    6.966615
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 586.972,
+                  "wall_ms": 68.146
+                }
+              },
+              "order": [
+                "candidate",
+                "baseline"
+              ],
+              "run": 4,
+              "started_utc": "2026-10-28T04:49:16.486018+00:00"
+            },
+            {
+              "candidate_speedup_median": 8.2732,
+              "candidate_throughput_ratio": 6.4925,
+              "completed_utc": "2026-10-28T04:49:18.360695+00:00",
+              "methods": {
+                "baseline": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 101.216,
+                    "mean": 71.333,
+                    "median": 77.876,
+                    "min": 28.209,
+                    "p50": 77.788,
+                    "p95": 99.507,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    71.076955,
+                    101.216104,
+                    95.74553,
+                    99.507369,
+                    97.878431,
+                    86.572226,
+                    93.717582,
+                    46.240897,
+                    44.571617,
+                    30.900166,
+                    77.788018,
+                    93.872498,
+                    99.649738,
+                    91.449016,
+                    92.307932,
+                    99.016474,
+                    95.167542,
+                    42.15139,
+                    41.339742,
+                    28.208656,
+                    51.295906,
+                    81.106068,
+                    48.22329,
+                    70.70806,
+                    86.508786,
+                    48.899116,
+                    79.968038,
+                    72.775705,
+                    44.404262,
+                    75.03144,
+                    57.453916,
+                    75.288518,
+                    47.635568,
+                    81.812376,
+                    84.879524,
+                    77.9648,
+                    45.289834,
+                    80.219652,
+                    79.879818,
+                    35.592756
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 48.001,
+                  "wall_ms": 833.316
+                },
+                "candidate": {
+                  "error_count": 0,
+                  "latency_ms": {
+                    "max": 32.573,
+                    "mean": 9.904,
+                    "median": 9.413,
+                    "min": 0.49,
+                    "p50": 9.133,
+                    "p95": 20.971,
+                    "p99": null,
+                    "samples": 40,
+                    "tail_percentile_status": {
+                      "p95": "estimated",
+                      "p99": "not_reported_requires_100_samples"
+                    }
+                  },
+                  "raw_samples_ms": [
+                    20.82684,
+                    10.098685,
+                    2.108487,
+                    4.073196,
+                    12.220713,
+                    15.797153,
+                    0.601984,
+                    0.505778,
+                    0.512401,
+                    0.489867,
+                    19.088163,
+                    32.572824,
+                    20.732693,
+                    13.221646,
+                    12.2133,
+                    5.585974,
+                    5.730002,
+                    5.082481,
+                    1.835351,
+                    0.785512,
+                    9.692539,
+                    10.323196,
+                    7.924732,
+                    11.699572,
+                    1.90195,
+                    11.497712,
+                    16.666662,
+                    9.747154,
+                    9.133094,
+                    8.111991,
+                    16.835876,
+                    5.268509,
+                    1.1813,
+                    25.086565,
+                    20.971429,
+                    14.325093,
+                    15.550559,
+                    5.323614,
+                    5.731034,
+                    5.119877
+                  ],
+                  "sample_count": 40,
+                  "throughput_queries_s": 311.646,
+                  "wall_ms": 128.351
+                }
+              },
+              "order": [
+                "baseline",
+                "candidate"
+              ],
+              "run": 5,
+              "started_utc": "2026-10-28T04:49:17.398749+00:00"
+            }
+          ]
+        }
+      },
+      "rows": 100000
+    }
+  },
+  "environment": {
+    "benchmark_script_sha256": "dfbae269635a8709ee94779e917448cacbc51eece61e483d9ccf6cb83f5d452e",
+    "cgroup_cpu_max": "200000 100000",
+    "cgroup_memory_max_bytes": "4294967296",
+    "db_c_sha256": "d7cd34a63104d51f8d14bc0d436cddead96f5fa2c02a53559ca2f9d73d1f9929",
+    "logical_cpus": 3,
+    "machine": "x86_64",
+    "metrics_script_sha256": "222352ee2db0f145628cb45b8dd56fdad7577d34e14cdd177429c7cec171f027",
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+    "python": "3.13.5",
+    "sqlite": "3.46.1"
+  },
+  "parameters": {
+    "concurrencies": [
+      1,
+      4
+    ],
+    "fixed_now": "2026-10-28T04:49:03.403537Z",
+    "limit": 200,
+    "operations_per_worker": 10,
+    "priority_aging_seconds": 300,
+    "runs": 5,
+    "sizes": [
+      1000,
+      10000,
+      100000
+    ],
+    "warmup_queries_per_worker": 1
+  },
+  "passed": true,
+  "schema": "asgend.task_list_ab.v1"
+}

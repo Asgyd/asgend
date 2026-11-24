@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=ASGEND
+GenericName=Task Orchestration Client
+Comment=Manage ASGEND tasks, execution nodes and artifacts
+Exec=asgend-qt
+Icon=org.asgend.QtClient
+Terminal=false
+Categories=Development;Utility;
+StartupNotify=true

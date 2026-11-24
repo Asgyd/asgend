@@ -1,0 +1,19 @@
+{
+  "api_version": 1,
+  "members": [
+    {
+      "user_id": "usr_01JBZ8K6X3M4N5P6Q7R8S9T0AA",
+      "workspace_id": "ws_01JBZ8K6X3M4N5P6Q7R8S9T0VW",
+      "role": "owner",
+      "display_name": "Pixel 8 (owner)",
+      "created_at": "2026-10-20T08:00:00.000Z"
+    },
+    {
+      "user_id": "usr_01JBZ8M2C4D5E6F7G8H9J0K1MN",
+      "workspace_id": "ws_01JBZ8K6X3M4N5P6Q7R8S9T0VW",
+      "role": "operator",
+      "display_name": "ThinkPad X1 (Qt)",
+      "created_at": "2026-10-21T10:00:30.000Z"
+    }
+  ]
+}

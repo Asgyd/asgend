@@ -1,0 +1,17 @@
+{
+  "all_metadata_valid": true,
+  "all_processes_clean": true,
+  "all_single_file_changes_exact": true,
+  "checked_code_hashes": {
+    "/mnt/data/asgend-stage31-build/asgend-memory": "47a3e3f83c4ddd3fcfec12bff042a2c835a3a1206443409d8980bdf70b19e64f",
+    "/mnt/data/asgend-stage31-work/asgend-android-work/scripts/benchmark_memory_scan_index.py": "8cd24681f67f20105b23c026e7998e97b21bfbdcbfe2cebf14192e2343b9ea3e",
+    "/mnt/data/asgend-stage31-work/asgend-android-work/scripts/memory_scan_runner.py": "f5d54ac15de60d5786d7f28c83adf925c7f4cea3f2f837e8a3c77a304a96cdb3"
+  },
+  "fixture_bytes_verified": 56320000,
+  "fixtures_verified": 33000,
+  "groups": 18,
+  "measurements": 90,
+  "repeats_per_group": 5,
+  "stage": 31,
+  "status": "PASS"
+}

@@ -1,0 +1,20 @@
+-- Install configuration: "Release"
+-- Installing: /mnt/data/asgend-performance-repeat-work/stage3-install-check/bin/agent-orchestrator
+-- Installing: /mnt/data/asgend-performance-repeat-work/stage3-install-check/bin/asgend-cli
+-- Installing: /mnt/data/asgend-performance-repeat-work/stage3-install-check/bin/asgend-memory
+-- Installing: /mnt/data/asgend-performance-repeat-work/stage3-install-check/lib/libasgend_memory.a
+-- Installing: /mnt/data/asgend-performance-repeat-work/stage3-install-check/lib/libasgend_tui.a
+-- Installing: /mnt/data/asgend-performance-repeat-work/stage3-install-check/include/asgend_tui.h
+-- Installing: /mnt/data/asgend-performance-repeat-work/stage3-install-check/include/asgend_memory.h
+-- Installing: /mnt/data/asgend-performance-repeat-work/stage3-install-check/bin/asgend-memory-evaluate
+-- Installing: /mnt/data/asgend-performance-repeat-work/stage3-install-check/bin/asgend-memory-benchmark-vectors
+-- Installing: /mnt/data/asgend-performance-repeat-work/stage3-install-check/bin/performance_metrics.py
+-- Installing: /mnt/data/asgend-performance-repeat-work/stage3-install-check/share/agent-orchestrator-c/ui
+-- Installing: /mnt/data/asgend-performance-repeat-work/stage3-install-check/share/agent-orchestrator-c/ui/app.js
+-- Installing: /mnt/data/asgend-performance-repeat-work/stage3-install-check/share/agent-orchestrator-c/ui/index.html
+-- Installing: /mnt/data/asgend-performance-repeat-work/stage3-install-check/share/agent-orchestrator-c/ui/style.css
+-- Installing: /mnt/data/asgend-performance-repeat-work/stage3-install-check/share/agent-orchestrator-c/instructions
+-- Installing: /mnt/data/asgend-performance-repeat-work/stage3-install-check/share/agent-orchestrator-c/instructions/select_system_prompts.md
+-- Installing: /mnt/data/asgend-performance-repeat-work/stage3-install-check/share/agent-orchestrator-c/instructions/select_tools.md
+-- Installing: /mnt/data/asgend-performance-repeat-work/stage3-install-check/share/agent-orchestrator-c/instructions/select_knowledge.md
+-- Installing: /mnt/data/asgend-performance-repeat-work/stage3-install-check/share/agent-orchestrator-c/instructions/select_skills.md

@@ -1,0 +1,18 @@
+{
+  "event_id": 1002,
+  "task_id": "rt_01JBZ9A0B1C2D3E4F5G6H7J8K9",
+  "workspace_id": "ws_01JBZ8K6X3M4N5P6Q7R8S9T0VW",
+  "node_id": null,
+  "seq": 7,
+  "type": "command_status",
+  "occurred_at": "2026-10-21T10:00:00.000Z",
+  "received_at": "2026-10-21T10:00:00.000Z",
+  "schema_version": 1,
+  "payload": {
+    "command_id": "cmd_01JBZ9A0B1C2D3E4F5G6H7J8MA",
+    "command_type": "submit",
+    "state": "pending",
+    "delivery_attempts": 0,
+    "error": null
+  }
+}

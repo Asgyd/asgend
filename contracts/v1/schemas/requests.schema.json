@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://asgend.invalid/contracts/v1/schemas/requests.schema.json",
+  "title": "User/client API requests and small responses",
+  "description": "Bodies of CONTRACT_SKETCH §6 operations that are not plain entities. Idempotency rules: docs/API_CONTRACT.md §4.",
+  "$defs": {
+    "submit_task_request": {
+      "description": "POST /v1/workspaces/{ws}/tasks (operator). 201 + RemoteTask for a new key, 200 + the same RemoteTask for a repeated key with an equivalent body, 409 conflict for a repeated key with a different body.",
+      "type": "object",
+      "required": [ "node_id", "task", "idempotency_key" ],
+      "properties": {
+        "node_id": { "$ref": "common.schema.json#/$defs/node_id" },
+        "task": { "$ref": "common.schema.json#/$defs/task_text" },
+        "agent": { "$ref": "common.schema.json#/$defs/agent_or_null" },
+        "session_id": { "$ref": "common.schema.json#/$defs/session_id_or_null" },
+        "priority": { "description": "Default 5.", "$ref": "common.schema.json#/$defs/priority" },
+        "idempotency_key": { "$ref": "common.schema.json#/$defs/idempotency_key" },
+        "ttl_seconds": { "description": "Delivery TTL of the submit command; default 3600.", "type": "integer", "minimum": 10, "maximum": 86400 }
+      }
+    },
+    "answer_request": {
+      "description": "POST /v1/tasks/{task}/answer (operator) -> 202 Command; 409 unless the task is waiting_input (checked after the idempotency lookup).",
+      "type": "object",
+      "required": [ "answer", "idempotency_key" ],
+      "properties": {
+        "answer": { "$ref": "common.schema.json#/$defs/answer_text" },
+        "idempotency_key": { "$ref": "common.schema.json#/$defs/idempotency_key" }
+      }
+    },
+    "cancel_request": {
+      "description": "POST /v1/tasks/{task}/cancel (operator) -> 202 Command. 409 if the task is already terminal.",
+      "type": "object",
+      "required": [ "idempotency_key" ],
+      "properties": {
+        "idempotency_key": { "$ref": "common.schema.json#/$defs/idempotency_key" }
+      }
+    },
+    "retry_request": {
+      "description": "POST /v1/tasks/{task}/retry (operator) -> 202 Command; 409 unless failed/delivery_failed. For delivery_failed the returned command has type 'submit' (redelivery of the original payload), for failed type 'retry'.",
+      "type": "object",
+      "required": [ "idempotency_key" ],
+      "properties": {
+        "idempotency_key": { "$ref": "common.schema.json#/$defs/idempotency_key" }
+      }
+    },
+    "empty_request": {
+      "description": "Operations without parameters accept an empty body, '{}' or any object (fields ignored).",
+      "type": "object"
+    },
+    "health_response": {
+      "type": "object",
+      "required": [ "api_version", "status" ],
+      "properties": {
+        "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+        "status": { "const": "ok" }
+      }
+    },
+    "ready_response": {
+      "description": "200 when the database is reachable and migrations are current; otherwise 503 ErrorEnvelope(unavailable) with details.checks.",
+      "type": "object",
+      "required": [ "api_version", "status" ],
+      "properties": {
+        "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+        "status": { "const": "ready" },
+        "checks": {
+          "type": "object",
+          "additionalProperties": { "type": "string", "enum": [ "ok", "failed" ] }
+        }
+      }
+    },
+    "download_ticket_response": {
+      "description": "POST /v1/artifacts/{art}/download-ticket (viewer). Ticket lives 300 s, is bound to (artifact, user), may be used repeatedly within its lifetime (Range resume) and is re-authorized on every use.",
+      "type": "object",
+      "required": [ "api_version", "ticket", "url", "expires_at" ],
+      "properties": {
+        "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+        "ticket": { "$ref": "common.schema.json#/$defs/download_ticket" },
+        "url": { "description": "Path relative to the API origin.", "type": "string", "pattern": "^/v1/downloads/dlt_[A-Za-z0-9_-]{32,256}$" },
+        "expires_at": { "$ref": "common.schema.json#/$defs/timestamp" }
+      }
+    }
+  }
+}

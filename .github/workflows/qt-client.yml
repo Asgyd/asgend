@@ -1,0 +1,101 @@
+name: Qt client
+on:
+  workflow_call:
+  push:
+    paths:
+      - 'clients/asgend_qt/**'
+      - 'packaging/linux/**'
+      - '.github/workflows/qt-client.yml'
+      - 'src/**'
+      - 'include/**'
+      - 'server/**'
+      - 'contracts/**'
+      - 'tests/contracts/**'
+      - 'tests/test_core_rpc_contract_inventory.py'
+      - 'tests/test_core_rpc_runtime_contract.py'
+      - 'tests/test_core_rpc_state_transitions.py'
+      - 'docs/API_CONTRACT.md'
+      - 'docs/PROTOCOL.md'
+      - 'docs/REMOTE_CONTROL_PLANE.md'
+      - 'CMakeLists.txt'
+  pull_request:
+    paths:
+      - 'clients/asgend_qt/**'
+      - 'packaging/linux/**'
+      - '.github/workflows/qt-client.yml'
+      - 'src/**'
+      - 'include/**'
+      - 'server/**'
+      - 'contracts/**'
+      - 'tests/contracts/**'
+      - 'tests/test_core_rpc_contract_inventory.py'
+      - 'tests/test_core_rpc_runtime_contract.py'
+      - 'tests/test_core_rpc_state_transitions.py'
+      - 'docs/API_CONTRACT.md'
+      - 'docs/PROTOCOL.md'
+      - 'docs/REMOTE_CONTROL_PLANE.md'
+      - 'CMakeLists.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install shared API contract test dependencies
+        run: python -m pip install --disable-pip-version-check -r tests/contracts/requirements.txt
+      - name: Validate shared API/OpenAPI and client route contracts
+        run: python tests/contracts/test_contracts.py
+      - name: Install native dependencies for live Core RPC tests
+        working-directory: ${{ github.workspace }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential pkg-config libjson-c-dev libcurl4-openssl-dev libsqlite3-dev libssl-dev zlib1g-dev
+      - name: Build Core service for live RPC tests
+        working-directory: ${{ github.workspace }}
+        run: |
+          cmake -S . -B build-core-ci -DCMAKE_BUILD_TYPE=Release
+          cmake --build build-core-ci --target agent-orchestrator --parallel 2
+      - name: Run Core RPC inventory, runtime contract and state transitions
+        working-directory: ${{ github.workspace }}
+        run: ctest --test-dir build-core-ci --output-on-failure --timeout 75 -R '^(core_rpc_contract_inventory|core_rpc_runtime_contract|core_rpc_state_transitions)$'
+      - name: Install Qt build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build g++ qt6-base-dev qt6-tools-dev qt6-tools-dev-tools libqt6svg6-dev
+      - name: Configure
+        run: cmake -S clients/asgend_qt -B build-qt -G Ninja -DCMAKE_BUILD_TYPE=Release -DASGEND_QT_BUILD_TESTS=ON -DASGEND_QT_USE_QTKEYCHAIN=OFF
+      - name: Build
+        run: cmake --build build-qt --parallel 2
+      - name: Test
+        run: QT_QPA_PLATFORM=offscreen ctest --test-dir build-qt --output-on-failure --timeout 60
+      - name: Package
+        working-directory: build-qt
+        run: cpack -G "TGZ;DEB"
+      - name: Install smoke test in a clean Ubuntu 24.04 container
+        run: |
+          docker run --rm -v "$PWD/build-qt:/pkg:ro" ubuntu:24.04 bash -euc '
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -qq
+            apt-get install -y -qq /pkg/asgend-qt-*.deb >/dev/null
+            test -x /usr/bin/asgend-qt
+            test -f /usr/share/applications/org.asgend.QtClient.desktop
+            test -f /usr/share/metainfo/org.asgend.QtClient.metainfo.xml
+            rc=0; QT_QPA_PLATFORM=offscreen timeout 5 asgend-qt || rc=$?
+            # 124: still running when the timeout fired, i.e. the GUI started.
+            test "$rc" -eq 124
+            apt-get remove -y -qq asgend-qt >/dev/null'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: asgend-qt-linux-${{ runner.arch }}
+          path: |
+            build-qt/*.tar.gz
+            build-qt/*.deb
+          if-no-files-found: error

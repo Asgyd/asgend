@@ -1,0 +1,12 @@
+{
+  "api_version": 1,
+  "error": {
+    "code": "checksum_mismatch",
+    "message": "sha256 of received bytes does not match",
+    "request_id": "req-01JBZ9F6G7H8",
+    "details": {
+      "expected_sha256": "5891b5b522d5df086d0ff0b110fbd9d21bb4fc7163af34d08286a2e846f6be03",
+      "received": 6
+    }
+  }
+}

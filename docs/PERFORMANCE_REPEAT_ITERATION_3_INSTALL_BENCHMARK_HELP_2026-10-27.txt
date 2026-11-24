@@ -1,0 +1,22 @@
+usage: asgend-memory-benchmark-vectors [-h] --cli CLI --root ROOT
+                                       --queries QUERIES [--k K]
+                                       [--repetitions REPETITIONS]
+                                       [--warmup WARMUP]
+
+Compare exact cosine search with the persistent ANN path on an indexed
+project. The measured latency is end-to-end CLI wall time: process startup,
+query embedding endpoint latency, local search, and JSON output. This script
+deliberately alternates exact/ANN execution order to reduce fixed-order warm-
+cache bias; it is not a pure in-process search-kernel microbenchmark.
+
+options:
+  -h, --help            show this help message and exit
+  --cli CLI             Path to asgend-memory
+  --root ROOT           Project root containing .asgend_mem
+  --queries QUERIES     JSON array of query strings or an object with a
+                        'queries' array
+  --k K                 Top-K result count (1..100)
+  --repetitions REPETITIONS
+                        Paired exact/ANN measured repetitions per query
+                        (1..1000)
+  --warmup WARMUP       Unmeasured paired warm-up repetitions per query (0..5)

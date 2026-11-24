@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://asgend.invalid/contracts/v1/schemas/node_channel.schema.json",
+  "title": "Execution Node channel",
+  "description": "Bodies of CONTRACT_SKETCH §7 (Bearer ncp_). A node may only touch tasks, commands and artifacts with its own node_id; anything else is 404 not_found. Timing: docs/API_CONTRACT.md §6.",
+  "$defs": {
+    "heartbeat_request": {
+      "type": "object",
+      "required": [ "status", "active_tasks" ],
+      "properties": {
+        "status": { "$ref": "common.schema.json#/$defs/node_reported_status" },
+        "core_version": { "type": [ "string", "null" ], "maxLength": 64 },
+        "active_tasks": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "heartbeat_response": {
+      "type": "object",
+      "required": [ "api_version", "server_time", "lease_expires_at" ],
+      "properties": {
+        "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+        "server_time": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "lease_expires_at": { "$ref": "common.schema.json#/$defs/timestamp" }
+      }
+    },
+    "lease_request": {
+      "type": "object",
+      "properties": {
+        "max": { "description": "Default 10.", "type": "integer", "minimum": 1, "maximum": 50 },
+        "wait_ms": { "description": "Long-poll: return as soon as >= 1 command is leasable or after wait_ms. Default 0.", "type": "integer", "minimum": 0, "maximum": 30000 }
+      }
+    },
+    "lease_response": {
+      "type": "object",
+      "required": [ "api_version", "commands" ],
+      "properties": {
+        "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+        "commands": {
+          "type": "array",
+          "maxItems": 50,
+          "items": { "$ref": "command_envelope.schema.json#/$defs/leased" }
+        }
+      }
+    },
+    "ack_request": {
+      "description": "POST /v1/node/commands/{cmd}/ack. Response: CommandEnvelope (acked|rejected). Same outcome repeated -> 200 idempotent; different outcome -> 409; lease_id of a superseded lease -> 409; command expired -> 410 gone. core_task_id is required for an accepted submit; error is required for rejected.",
+      "type": "object",
+      "required": [ "lease_id", "outcome" ],
+      "properties": {
+        "lease_id": { "$ref": "common.schema.json#/$defs/lease_id" },
+        "outcome": { "type": "string", "enum": [ "accepted", "rejected" ] },
+        "core_task_id": { "$ref": "common.schema.json#/$defs/core_task_id_or_null" },
+        "error": { "$ref": "common.schema.json#/$defs/error_text_or_null" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "outcome": { "const": "rejected" } }, "required": [ "outcome" ] },
+          "then": { "required": [ "error" ], "properties": { "error": { "type": "string", "minLength": 1 } } }
+        }
+      ]
+    },
+    "events_request": {
+      "type": "object",
+      "required": [ "events" ],
+      "properties": {
+        "events": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 500,
+          "items": { "$ref": "task_event.schema.json#/$defs/node_event" }
+        }
+      }
+    },
+    "events_response": {
+      "description": "Per-item outcome counts. accepted: stored (seq == last_seq + 1). duplicates: seq <= last_seq (ignored). gaps: for each task with a missing seq, the first expected seq; that task's events beyond the gap in this batch are not stored. rejected (addition C-003): items refused individually (foreign/unknown task, server-only type, invalid payload).",
+      "type": "object",
+      "required": [ "api_version", "accepted", "duplicates", "gaps" ],
+      "properties": {
+        "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+        "accepted": { "type": "integer", "minimum": 0 },
+        "duplicates": { "type": "integer", "minimum": 0 },
+        "gaps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [ "task_id", "expected_seq" ],
+            "properties": {
+              "task_id": { "$ref": "common.schema.json#/$defs/task_id" },
+              "expected_seq": { "$ref": "common.schema.json#/$defs/seq" }
+            }
+          }
+        },
+        "rejected": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [ "task_id", "seq", "code" ],
+            "properties": {
+              "task_id": { "type": "string", "maxLength": 128 },
+              "seq": { "type": [ "integer", "null" ] },
+              "code": { "$ref": "common.schema.json#/$defs/error_code" },
+              "message": { "type": "string", "maxLength": 1024 }
+            }
+          }
+        }
+      }
+    },
+    "snapshot_request": {
+      "description": "POST /v1/node/tasks/{task}/snapshot: authoritative resync after gaps/reconnect/restart. Response: RemoteTask (with last_seq). If last_seq < the server's last_seq the server keeps its value and the node continues numbering from response.last_seq + 1.",
+      "type": "object",
+      "required": [ "state", "core_task_id", "last_seq", "attempts" ],
+      "properties": {
+        "state": { "$ref": "common.schema.json#/$defs/core_task_state" },
+        "core_task_id": { "$ref": "common.schema.json#/$defs/core_task_id" },
+        "last_seq": { "type": "integer", "minimum": 0 },
+        "attempts": { "type": "integer", "minimum": 0 },
+        "question": { "anyOf": [ { "$ref": "user_input_request.schema.json" }, { "type": "null" } ] },
+        "result_summary": { "$ref": "common.schema.json#/$defs/result_summary_or_null" },
+        "error": { "$ref": "common.schema.json#/$defs/error_text_or_null" }
+      }
+    },
+    "artifact_init_request": {
+      "description": "POST /v1/node/artifacts. Quota is checked here (429 quota_exceeded / 413 payload_too_large). Repeating the same (task_id, name, size, sha256) while that artifact is uploading or available returns the same artifact (200) for resumption; otherwise 201 with a new artifact_id.",
+      "type": "object",
+      "required": [ "task_id", "name", "mime", "size", "sha256" ],
+      "properties": {
+        "task_id": { "$ref": "common.schema.json#/$defs/task_id" },
+        "name": { "$ref": "common.schema.json#/$defs/artifact_name" },
+        "mime": { "$ref": "common.schema.json#/$defs/mime" },
+        "size": { "$ref": "common.schema.json#/$defs/artifact_size" },
+        "sha256": { "$ref": "common.schema.json#/$defs/sha256" }
+      }
+    },
+    "artifact_init_response": {
+      "type": "object",
+      "required": [ "api_version", "artifact_id", "upload_url", "chunk_size" ],
+      "properties": {
+        "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+        "artifact_id": { "$ref": "common.schema.json#/$defs/artifact_id" },
+        "upload_url": { "description": "Path relative to the API origin.", "type": "string", "pattern": "^/v1/node/artifacts/art_[0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{26}/content$" },
+        "chunk_size": { "description": "Maximum bytes per PUT (<= 8 MiB).", "type": "integer", "minimum": 65536, "maximum": 8388608 },
+        "received": { "description": "Addition: bytes already stored (non-zero when resuming).", "type": "integer", "minimum": 0 },
+        "state": { "$ref": "common.schema.json#/$defs/artifact_state" }
+      }
+    },
+    "artifact_upload_status": {
+      "description": "Response of PUT and GET /v1/node/artifacts/{art}/content.",
+      "type": "object",
+      "required": [ "api_version", "received" ],
+      "properties": {
+        "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+        "received": { "description": "Contiguous bytes stored from offset 0.", "type": "integer", "minimum": 0 },
+        "size": { "$ref": "common.schema.json#/$defs/artifact_size" }
+      }
+    }
+  }
+}

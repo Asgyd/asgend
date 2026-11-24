@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://asgend.invalid/contracts/v1/schemas/user_input_request.schema.json",
+  "title": "UserInputRequest",
+  "description": "A question the running core task asks the user (RemoteTask.question, 'question' event payload). Mapped by the node from the first entry of core result.question / question event: text = question, options = option labels. The answer is free text; choosing an option means sending its label verbatim.",
+  "type": "object",
+  "required": [ "text", "options" ],
+  "properties": {
+    "text": { "type": "string", "minLength": 1, "maxLength": 4000 },
+    "options": {
+      "description": "Suggested answers (may be empty: free text only).",
+      "type": "array",
+      "maxItems": 16,
+      "items": { "type": "string", "minLength": 1, "maxLength": 500 }
+    }
+  }
+}

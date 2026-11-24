@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://asgend.invalid/contracts/v1/schemas/command_envelope.schema.json",
+  "title": "CommandEnvelope",
+  "description": "A durable outbox command for one Execution Node (CONTRACT_SKETCH §5). The server never executes it. Delivered at-least-once via lease; the node dedupes by command_id. Payload shape depends on type. Nodes build core requests from the whitelisted payload fields only and ignore unknown payload fields.",
+  "type": "object",
+  "required": [
+    "command_id", "task_id", "workspace_id", "node_id", "type", "payload", "idempotency_key",
+    "state", "created_at", "expires_at", "lease_id", "lease_expires_at", "delivery_attempts", "error"
+  ],
+  "properties": {
+    "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+    "command_id": { "$ref": "common.schema.json#/$defs/command_id" },
+    "task_id": { "$ref": "common.schema.json#/$defs/task_id" },
+    "workspace_id": { "$ref": "common.schema.json#/$defs/workspace_id" },
+    "node_id": { "$ref": "common.schema.json#/$defs/node_id" },
+    "type": { "$ref": "common.schema.json#/$defs/command_type" },
+    "payload": { "type": "object" },
+    "idempotency_key": { "description": "The client idempotency key of the user operation that created this command (for a server-created redelivery submit: the retry key).", "$ref": "common.schema.json#/$defs/idempotency_key" },
+    "state": { "$ref": "common.schema.json#/$defs/command_state" },
+    "created_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "expires_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "lease_id": { "anyOf": [ { "$ref": "common.schema.json#/$defs/lease_id" }, { "type": "null" } ] },
+    "lease_expires_at": { "$ref": "common.schema.json#/$defs/timestamp_or_null" },
+    "delivery_attempts": { "description": "Number of times the command has been leased.", "type": "integer", "minimum": 0 },
+    "error": { "$ref": "common.schema.json#/$defs/error_text_or_null" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "type": { "const": "submit" } }, "required": [ "type" ] },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/submit_payload" } } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "answer" } }, "required": [ "type" ] },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/answer_payload" } } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "cancel" } }, "required": [ "type" ] },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/cancel_payload" } } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "retry" } }, "required": [ "type" ] },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/retry_payload" } } }
+    },
+    {
+      "if": { "properties": { "state": { "const": "leased" } }, "required": [ "state" ] },
+      "then": {
+        "properties": {
+          "lease_id": { "$ref": "common.schema.json#/$defs/lease_id" },
+          "lease_expires_at": { "$ref": "common.schema.json#/$defs/timestamp" }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "submit_payload": {
+      "description": "Node -> core {op:'submit', task, agent?, session_id?, priority?, idempotency_key:'cp:'+command_id}.",
+      "type": "object",
+      "required": [ "task" ],
+      "properties": {
+        "task": { "$ref": "common.schema.json#/$defs/task_text" },
+        "agent": { "$ref": "common.schema.json#/$defs/agent_or_null" },
+        "session_id": { "$ref": "common.schema.json#/$defs/session_id_or_null" },
+        "priority": { "$ref": "common.schema.json#/$defs/priority" }
+      }
+    },
+    "answer_payload": {
+      "description": "Node -> core {op:'answer', task_id:<core_task_id>, answer}.",
+      "type": "object",
+      "required": [ "answer" ],
+      "properties": {
+        "answer": { "$ref": "common.schema.json#/$defs/answer_text" }
+      }
+    },
+    "cancel_payload": { "description": "Node -> core {op:'cancel', task_id:<core_task_id>}.", "type": "object" },
+    "retry_payload": { "description": "Node -> core {op:'retry_task', task_id:<core_task_id>}.", "type": "object" },
+    "response": {
+      "description": "CommandEnvelope as a single-entity response body.",
+      "allOf": [ { "$ref": "#" }, { "required": [ "api_version" ] } ]
+    },
+    "leased": {
+      "description": "A command as returned by POST /v1/node/commands/lease.",
+      "allOf": [
+        { "$ref": "#" },
+        { "properties": { "state": { "const": "leased" } }, "required": [ "state" ] }
+      ]
+    }
+  }
+}

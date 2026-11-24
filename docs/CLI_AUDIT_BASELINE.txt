@@ -1,0 +1,3 @@
+Audit baseline: asgend-cli-stream-final-integration-fix.tar.gz
+Prior patch context: asgend-cli-stream-final-followup.diff and asgend-cli-stream-final-followup2.diff are reflected in this source snapshot.
+Audit date: 2026-10-23

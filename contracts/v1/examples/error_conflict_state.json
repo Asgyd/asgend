@@ -1,0 +1,11 @@
+{
+  "api_version": 1,
+  "error": {
+    "code": "conflict",
+    "message": "task is not waiting_input",
+    "request_id": "req-01JBZ9F6G7H8",
+    "details": {
+      "state": "running"
+    }
+  }
+}

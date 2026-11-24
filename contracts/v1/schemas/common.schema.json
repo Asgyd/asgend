@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://asgend.invalid/contracts/v1/schemas/common.schema.json",
+  "title": "ASGEND Remote API v1 — common definitions",
+  "description": "Shared primitives: identifiers, timestamps, enums, limits. Contains only $defs. Normative prose: docs/API_CONTRACT.md.",
+  "$defs": {
+    "api_version": {
+      "description": "Major API version carried at the top level of every JSON response body.",
+      "const": 1
+    },
+    "timestamp": {
+      "description": "RFC 3339 timestamp. Servers emit UTC with 'Z' and millisecond precision; consumers accept any RFC 3339 offset and 0-9 fractional digits.",
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt][0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,9})?([Zz]|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "timestamp_or_null": {
+      "anyOf": [ { "$ref": "#/$defs/timestamp" }, { "type": "null" } ]
+    },
+    "user_id": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{26}$" },
+    "workspace_id": { "type": "string", "pattern": "^ws_[0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{26}$" },
+    "node_id": { "type": "string", "pattern": "^node_[0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{26}$" },
+    "node_id_or_null": { "anyOf": [ { "$ref": "#/$defs/node_id" }, { "type": "null" } ] },
+    "task_id": {
+      "description": "Remote task id (rt_). Not the core task id.",
+      "type": "string",
+      "pattern": "^rt_[0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{26}$"
+    },
+    "command_id": { "type": "string", "pattern": "^cmd_[0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{26}$" },
+    "artifact_id": { "type": "string", "pattern": "^art_[0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{26}$" },
+    "audit_id": { "type": "string", "pattern": "^aud_[0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{26}$" },
+    "enrollment_id": { "type": "string", "pattern": "^enr_[0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{26}$" },
+    "pairing_id": { "type": "string", "pattern": "^pair_[0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{26}$" },
+    "core_task_id": {
+      "description": "Opaque task id of the local ASGEND core (the 0.9.x core generates 10 lowercase base32 chars, e.g. 'k3v9q2m7xa'; docs show 'task-...'). Never parsed; no prefix is guaranteed.",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+    },
+    "core_task_id_or_null": { "anyOf": [ { "$ref": "#/$defs/core_task_id" }, { "type": "null" } ] },
+    "actor": {
+      "description": "Who performed an action: a user, a node, or the server itself.",
+      "anyOf": [ { "$ref": "#/$defs/user_id" }, { "$ref": "#/$defs/node_id" }, { "const": "system" } ]
+    },
+    "event_id": {
+      "description": "Server-assigned 64-bit integer, strictly increasing per workspace (not necessarily contiguous).",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9223372036854775807
+    },
+    "event_cursor": {
+      "description": "Event cursor: 0 = from the beginning, otherwise an event_id already seen.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9223372036854775807
+    },
+    "seq": {
+      "description": "Node-assigned per-task sequence number: contiguous 1, 2, 3, ...",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9223372036854775807
+    },
+    "seq_or_null": { "anyOf": [ { "$ref": "#/$defs/seq" }, { "type": "null" } ] },
+    "idempotency_key": {
+      "description": "Client-chosen key, unique per (workspace, operation kind).",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._:-]{8,128}$"
+    },
+    "request_id": { "type": "string", "pattern": "^[A-Za-z0-9._-]{1,64}$" },
+    "lease_id": { "description": "Opaque lease identifier.", "type": "string", "pattern": "^[A-Za-z0-9._:-]{8,128}$" },
+    "sha256": { "description": "Lowercase hex SHA-256 digest.", "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "cursor": {
+      "description": "Opaque pagination cursor (never parsed by clients).",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._~-]{1,512}$"
+    },
+    "cursor_or_null": { "anyOf": [ { "$ref": "#/$defs/cursor" }, { "type": "null" } ] },
+    "role": {
+      "description": "Workspace role. Adding a role is a breaking change (v2).",
+      "type": "string",
+      "enum": [ "owner", "operator", "viewer" ]
+    },
+    "priority": { "type": "integer", "minimum": 0, "maximum": 9 },
+    "task_state": {
+      "description": "Remote task state. Adding a value is a breaking change (v2).",
+      "type": "string",
+      "enum": [
+        "pending_delivery", "delivered", "queued", "running", "waiting_input",
+        "completed", "completed_without_model", "failed", "cancelled", "delivery_failed"
+      ]
+    },
+    "task_state_or_null": { "anyOf": [ { "$ref": "#/$defs/task_state" }, { "type": "null" } ] },
+    "terminal_task_state": {
+      "type": "string",
+      "enum": [ "completed", "completed_without_model", "failed", "cancelled", "delivery_failed" ]
+    },
+    "core_task_state": {
+      "description": "States that only an Execution Node may report (mirror of the core 'status' op).",
+      "type": "string",
+      "enum": [ "queued", "running", "waiting_input", "completed", "completed_without_model", "failed", "cancelled" ]
+    },
+    "command_type": { "type": "string", "enum": [ "submit", "answer", "cancel", "retry" ] },
+    "command_state": { "type": "string", "enum": [ "pending", "leased", "acked", "rejected", "expired" ] },
+    "node_status": { "type": "string", "enum": [ "online", "offline", "revoked" ] },
+    "node_reported_status": { "type": "string", "enum": [ "ready", "busy", "degraded" ] },
+    "artifact_state": { "type": "string", "enum": [ "uploading", "available", "rejected", "expired" ] },
+    "error_code": {
+      "description": "Machine-readable error code. New codes may be added in a minor contract revision; clients fall back to the HTTP status for unknown codes.",
+      "type": "string",
+      "enum": [
+        "invalid_request", "unauthorized", "forbidden", "not_found", "conflict", "gone",
+        "payload_too_large", "checksum_mismatch", "unprocessable", "rate_limited",
+        "quota_exceeded", "internal", "unavailable"
+      ]
+    },
+    "label": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+    },
+    "labels": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/label" },
+      "maxItems": 32,
+      "uniqueItems": true
+    },
+    "display_name": {
+      "description": "Human-readable single-line name (node, device, workspace, user).",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+    },
+    "artifact_name": {
+      "description": "Basename only: no '/', backslash, NUL or other control characters, not '.' or '..', at most 255 characters (servers additionally enforce <= 255 UTF-8 bytes).",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255,
+      "pattern": "^(?!\\.{1,2}$)[^/\\\\\\u0000-\\u001f\\u007f]+$"
+    },
+    "mime": {
+      "description": "Declared media type (type/subtype with optional parameters). Advisory only: downloads are always served as attachments with X-Content-Type-Options: nosniff.",
+      "type": "string",
+      "maxLength": 255,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]{0,126}/[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]{0,126}( *; *[A-Za-z0-9!#$&^_.+-]+=(\"[^\"\\u0000-\\u001f]*\"|[A-Za-z0-9!#$&^_.+-]+))*$"
+    },
+    "artifact_size": {
+      "description": "Size in bytes; v1 limit is 256 MiB per artifact (core artifact_list limit).",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 268435456
+    },
+    "agent": { "type": "string", "pattern": "^[A-Za-z0-9._-]{1,64}$" },
+    "agent_or_null": { "anyOf": [ { "$ref": "#/$defs/agent" }, { "type": "null" } ] },
+    "session_id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[^\\u0000-\\u001f\\u007f]+$" },
+    "session_id_or_null": { "anyOf": [ { "$ref": "#/$defs/session_id" }, { "type": "null" } ] },
+    "task_text": { "description": "Task prompt, 1..262144 characters (body limit 1 MiB still applies).", "type": "string", "minLength": 1, "maxLength": 262144 },
+    "answer_text": { "type": "string", "minLength": 1, "maxLength": 65536 },
+    "error_text_or_null": { "type": [ "string", "null" ], "maxLength": 4096 },
+    "result_summary_or_null": { "type": [ "string", "null" ], "maxLength": 16384 },
+    "user_token": { "description": "User/device bearer token. Returned exactly once, at creation.", "type": "string", "pattern": "^ucp_[A-Za-z0-9_-]{32,256}$" },
+    "node_token": { "description": "Node bearer token. Returned exactly once, at enrollment/rotation.", "type": "string", "pattern": "^ncp_[A-Za-z0-9_-]{32,256}$" },
+    "download_ticket": { "type": "string", "pattern": "^dlt_[A-Za-z0-9_-]{32,256}$" },
+    "one_time_code": {
+      "description": "Pairing/enrollment code as typed by a human: Crockford base32 with optional '-' or ' ' separators; servers normalize (uppercase, strip separators, I/L->1, O->0) before hashing/lookup.",
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 64,
+      "pattern": "^[0-9A-Za-z][0-9A-Za-z -]{6,62}[0-9A-Za-z]$"
+    },
+    "closed_object_note": {
+      "description": "Documentation anchor. Schemas that set additionalProperties:false are grant-shaping inputs (pairing-code, node-enrollment, members PUT). Ignoring an unknown restricting field there would widen privileges, so the server rejects unknown fields with 400 invalid_request (fail closed). Everything else tolerates unknown fields.",
+      "const": "closed"
+    }
+  }
+}

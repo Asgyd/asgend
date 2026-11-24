@@ -1,0 +1,5 @@
+find_package(Qt6 6.4 REQUIRED COMPONENTS Test)
+add_executable(tst_asgend_qt tst_asgend_qt.cpp)
+target_link_libraries(tst_asgend_qt PRIVATE asgendqt_core Qt6::Test)
+add_test(NAME qt_core_tests COMMAND tst_asgend_qt)
+set_tests_properties(qt_core_tests PROPERTIES TIMEOUT 30)

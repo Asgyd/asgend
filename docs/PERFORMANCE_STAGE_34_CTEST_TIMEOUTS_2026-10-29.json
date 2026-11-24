@@ -1,0 +1,306 @@
+{
+  "all_timeouts_finite_positive": true,
+  "ctest_exit_code": 0,
+  "ctest_failed": 0,
+  "ctest_passed": 58,
+  "ctest_total_time_seconds": 274.73,
+  "max_timeout_seconds": 300.0,
+  "min_timeout_seconds": 10.0,
+  "registered_test_count": 58,
+  "run_status": "completed",
+  "schema_version": 1,
+  "stage": 34,
+  "test_inventory_sha256": "95dc56a3feb8de57209e8a9588bad157fd3e5de557e43a6273d6f250327bc373",
+  "tests": [
+    {
+      "finite_positive": true,
+      "name": "integration",
+      "timeout_seconds": 300.0
+    },
+    {
+      "finite_positive": true,
+      "name": "node_agent_c_core_e2e",
+      "timeout_seconds": 30.0
+    },
+    {
+      "finite_positive": true,
+      "name": "release_gate_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "performance_inventory",
+      "timeout_seconds": 10.0
+    },
+    {
+      "finite_positive": true,
+      "name": "performance_benchmark_methodology",
+      "timeout_seconds": 10.0
+    },
+    {
+      "finite_positive": true,
+      "name": "performance_load_probe_smoke",
+      "timeout_seconds": 15.0
+    },
+    {
+      "finite_positive": true,
+      "name": "performance_core_rpc_lifecycle_smoke",
+      "timeout_seconds": 90.0
+    },
+    {
+      "finite_positive": true,
+      "name": "performance_sqlite_artifacts_smoke",
+      "timeout_seconds": 90.0
+    },
+    {
+      "finite_positive": true,
+      "name": "performance_task_list_sql_ab_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "performance_task_list_index_cost_smoke",
+      "timeout_seconds": 90.0
+    },
+    {
+      "finite_positive": true,
+      "name": "release_workflow_coverage",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "client_workflow_contract_triggers",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "client_workflow_test_coverage",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "core_rpc_contract_inventory",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "core_rpc_runtime_contract",
+      "timeout_seconds": 45.0
+    },
+    {
+      "finite_positive": true,
+      "name": "core_rpc_state_transitions",
+      "timeout_seconds": 75.0
+    },
+    {
+      "finite_positive": true,
+      "name": "core_artifacts",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "core_db_atomicity",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "core_db_fault_injection",
+      "timeout_seconds": 10.0
+    },
+    {
+      "finite_positive": true,
+      "name": "performance_task_list_c_api_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "core_shutdown_idle_client",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "core_config_strings",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "core_config_safe_update",
+      "timeout_seconds": 20.0
+    },
+    {
+      "finite_positive": true,
+      "name": "core_provider_error_privacy",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "core_llm_sse_watchdog",
+      "timeout_seconds": 90.0
+    },
+    {
+      "finite_positive": true,
+      "name": "core_http_status_mapping",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "core_mcp_launcher_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "ui_asset_upgrade",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "tui_library_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "tui_terminal_layout",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "cli_terminal_layout",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "cli_stream_state_contract",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "cli_watch_reliability",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "cli_rpc_timeout_contract",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "cli_preview_stream_state_contract",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "cli_secret_input_contract",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "cli_stream_event_contract",
+      "timeout_seconds": 40.0
+    },
+    {
+      "finite_positive": true,
+      "name": "cli_session_contract",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "cli_orchestrator_group_contract",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "tui_visual_contract",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "memory_index_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "memory_pipeline_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "memory_embedding_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "memory_graph_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "memory_chunk_query_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "memory_rerank_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "memory_query_plan_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "retrieval_quality_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "query_plan_eval_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "memory_ann_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "memory_gc_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "memory_pdf_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "memory_ooxml_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "performance_memory_scan_timeout_guard",
+      "timeout_seconds": 10.0
+    },
+    {
+      "finite_positive": true,
+      "name": "performance_memory_extractors_benchmark_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "performance_memory_embedding_benchmark_smoke",
+      "timeout_seconds": 60.0
+    },
+    {
+      "finite_positive": true,
+      "name": "performance_memory_ann_quality_benchmark_smoke",
+      "timeout_seconds": 120.0
+    },
+    {
+      "finite_positive": true,
+      "name": "performance_memory_ann_quality_verifier_smoke",
+      "timeout_seconds": 30.0
+    }
+  ]
+}

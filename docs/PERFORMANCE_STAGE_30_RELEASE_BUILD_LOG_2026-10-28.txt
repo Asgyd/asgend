@@ -1,0 +1,21 @@
+[  2%] Building C object CMakeFiles/asgend_tui.dir/src/asgend_tui.c.o
+[  4%] Building C object CMakeFiles/test-core-db-faults.dir/tests/test_core_db_faults.c.o
+[ 28%] Built target asgend_memory
+[ 36%] Built target test-task-list-c-api-benchmark
+[ 44%] Built target test-task-list-reference
+[ 79%] Built target agent-orchestrator
+[ 81%] Building C object CMakeFiles/test-core-db-faults.dir/src/db.c.o
+[ 83%] Building C object CMakeFiles/asgend-memory.dir/clients/asgend-memory.c.o
+[ 85%] Linking C executable asgend-memory
+[ 85%] Built target asgend-memory
+[ 87%] Building C object CMakeFiles/test-core-db-faults.dir/src/config.c.o
+[ 89%] Linking C executable test-core-db-faults
+[ 89%] Built target test-core-db-faults
+[ 91%] Linking C static library libasgend_tui.a
+[ 91%] Built target asgend_tui
+[ 95%] Building C object CMakeFiles/asgend-cli.dir/clients/asgend_cli.c.o
+[ 95%] Building C object CMakeFiles/test-asgend-tui.dir/tests/test_tui_library.c.o
+[ 97%] Linking C executable test-asgend-tui
+[ 97%] Built target test-asgend-tui
+[100%] Linking C executable asgend-cli
+[100%] Built target asgend-cli

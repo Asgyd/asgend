@@ -1,0 +1,72 @@
+{
+  "server": {
+    "host": "127.0.0.1",
+    "port": 8765,
+    "auth_token": "",
+    "max_request_bytes": 1048576,
+    "max_connections": 128,
+    "request_timeout_seconds": 30,
+    "unix_socket": {
+      "enabled": true,
+      "path": "data/agent-orchestrator.sock"
+    }
+  },
+  "runtime": {
+    "workers": 2,
+    "queue_max_pending": 1000,
+    "max_retries": 2,
+    "database_path": "data/tasks.sqlite3",
+    "priority_aging_seconds": 300
+  },
+  "local_llm": {
+    "enabled": false,
+    "base_url": "http://127.0.0.1:11434/v1",
+    "model": "qwen2.5:7b",
+    "api_key": "",
+    "timeout_seconds": 120,
+    "temperature": 0.2
+  },
+  "paths": {
+    "agents_dir": "config/agents",
+    "skills_dir": "skills",
+    "knowledge_dir": "knowledge",
+    "models_config": "config/models.json",
+    "system_prompts_dir": "system_prompts",
+    "tools_dir": "tools",
+    "instructions_dir": "~/.config/asgend/instructions"
+  },
+  "mcp": {
+    "servers": [
+      {
+        "name": "artifact_workspace",
+        "transport": "stdio",
+        "command": "/usr/bin/python3",
+        "args": [
+          "$PROJECT_ROOT/tools/artifact_workspace/server.py",
+          "--tasks-root",
+          "$ASGEND_TASKS"
+        ],
+        "timeout_seconds": 90,
+        "write_paths": [
+          "$ASGEND_TASKS"
+        ]
+      }
+    ]
+  },
+  "ui": {
+    "enabled": false,
+    "host": "127.0.0.1",
+    "port": 8766,
+    "auth_token": "",
+    "directory": "ui"
+  },
+  "sandbox": {
+    "enabled": true,
+    "require_landlock": true,
+    "allow_network": false,
+    "cpu_seconds": 120,
+    "memory_mb": 512,
+    "file_size_mb": 64,
+    "open_files": 64
+  }
+}

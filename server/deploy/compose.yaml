@@ -1,0 +1,157 @@
+name: asgend
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: asgend
+      POSTGRES_USER: asgend
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    secrets:
+      - postgres_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - db_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+    stop_grace_period: 1m
+    security_opt:
+      - no-new-privileges:true
+
+  migrate:
+    build:
+      context: ../..
+      dockerfile: server/Dockerfile
+    image: asgend-control-plane:1.0.0
+    restart: "no"
+    command: ["migrate"]
+    environment: &cp_environment
+      ASGEND_CP_BIND: 0.0.0.0
+      ASGEND_CP_PORT: "8787"
+      ASGEND_CP_DB_URL: postgresql://asgend@postgres:5432/asgend
+      ASGEND_CP_DB_PASSWORD_FILE: /run/secrets/postgres_password
+      ASGEND_CP_DATA_DIR: /data/artifacts
+      ASGEND_CP_ALLOW_INSECURE_HTTP: "true"
+      ASGEND_CP_ALLOWED_HOSTS: "${ASGEND_CP_ALLOWED_HOSTS:-localhost,127.0.0.1,asgend.example.com}"
+      ASGEND_CP_TRUSTED_PROXIES: 172.30.0.2/32
+      ASGEND_CP_LOG_LEVEL: "${ASGEND_CP_LOG_LEVEL:-INFO}"
+      ASGEND_CP_DB_POOL_SIZE: "16"
+    secrets:
+      - postgres_password
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - db_net
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=16m
+    cap_drop: ["ALL"]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 128
+
+  control-plane:
+    build:
+      context: ../..
+      dockerfile: server/Dockerfile
+    image: asgend-control-plane:1.0.0
+    restart: unless-stopped
+    environment:
+      <<: *cp_environment
+      ASGEND_CP_MAX_JSON_BODY_BYTES: "1048576"
+      ASGEND_CP_MAX_CHUNK_BYTES: "8388608"
+      ASGEND_CP_MAX_ARTIFACT_BYTES: "268435456"
+      ASGEND_CP_WORKSPACE_ARTIFACT_QUOTA_BYTES: "10737418240"
+      ASGEND_CP_AUTO_MIGRATE: "false"
+    secrets:
+      - postgres_password
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+    volumes:
+      - artifact_data:/data/artifacts
+    # Dynamic addresses only: helper containers started with `compose run` by the
+    # backup/restore scripts join these networks while the API is running.
+    networks:
+      - proxy_net
+      - db_net
+    expose:
+      - "8787"
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=16m
+    init: true
+    cap_drop: ["ALL"]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 256
+    stop_grace_period: 30s
+    healthcheck:
+      test: ["CMD", "python", "-m", "asgend_cp", "healthcheck", "--ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 15s
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    depends_on:
+      control-plane:
+        condition: service_healthy
+    ports:
+      - "${ASGEND_CP_HTTP_PORT:-80}:80"
+      - "${ASGEND_CP_HTTPS_PORT:-443}:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ${ASGEND_CP_TLS_DIR:-./tls}:/etc/nginx/tls:ro
+    networks:
+      proxy_net:
+        ipv4_address: 172.30.0.2
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx:rw,noexec,nosuid,size=16m
+      - /var/run:rw,noexec,nosuid,size=2m
+      - /tmp:rw,noexec,nosuid,size=8m
+    cap_drop: ["ALL"]
+    # NGINX starts as root to read the mounted TLS private key, then drops to
+    # its unprivileged worker identity and binds the standard TLS/HTTP ports.
+    # CHOWN lets the master hand its tmpfs temp directories to the worker user.
+    cap_add: ["CHOWN", "NET_BIND_SERVICE", "SETUID", "SETGID"]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 128
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --no-check-certificate -O /dev/null https://127.0.0.1/v1/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 4
+      start_period: 10s
+
+networks:
+  proxy_net:
+    ipam:
+      config:
+        - subnet: 172.30.0.0/24
+          # Dynamic allocation stays in the upper half so no container can take
+          # the reverse proxy's fixed trusted address (172.30.0.2).
+          ip_range: 172.30.0.128/25
+  db_net:
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.30.1.0/24
+
+volumes:
+  postgres_data:
+  artifact_data:
+
+secrets:
+  postgres_password:
+    file: ${ASGEND_CP_POSTGRES_PASSWORD_FILE:?Set ASGEND_CP_POSTGRES_PASSWORD_FILE to a readable password file}

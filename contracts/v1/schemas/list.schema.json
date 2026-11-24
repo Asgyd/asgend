@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://asgend.invalid/contracts/v1/schemas/list.schema.json",
+  "title": "List and page envelopes",
+  "description": "Cursor-paginated lists use next_cursor (opaque, null = no more pages; newest first). Event pages use the event_id cursor (ascending). Unpaginated lists return all items (bounded by server limits).",
+  "$defs": {
+    "task_list": {
+      "description": "GET /v1/workspaces/{ws}/tasks. Sorted by task_id descending (newest first).",
+      "type": "object",
+      "required": [ "api_version", "tasks", "next_cursor" ],
+      "properties": {
+        "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+        "tasks": { "type": "array", "maxItems": 200, "items": { "$ref": "remote_task.schema.json" } },
+        "next_cursor": { "$ref": "common.schema.json#/$defs/cursor_or_null" }
+      }
+    },
+    "event_page": {
+      "description": "GET /v1/tasks/{task}/events and /v1/workspaces/{ws}/events. events ascending by event_id, all > after_event_id. last_event_id = event_id of the last returned event; for an empty page = min(after_event_id, newest event_id of the workspace) — a value lower than the requested after_event_id signals a cursor reset (see API_CONTRACT §5).",
+      "type": "object",
+      "required": [ "api_version", "events", "last_event_id" ],
+      "properties": {
+        "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+        "events": { "type": "array", "maxItems": 500, "items": { "$ref": "task_event.schema.json" } },
+        "last_event_id": { "$ref": "common.schema.json#/$defs/event_cursor" },
+        "has_more": { "description": "Addition: true when more events are immediately available (page was full).", "type": "boolean" }
+      }
+    },
+    "node_list": {
+      "type": "object",
+      "required": [ "api_version", "nodes" ],
+      "properties": {
+        "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+        "nodes": { "type": "array", "items": { "$ref": "node.schema.json" } }
+      }
+    },
+    "command_list": {
+      "description": "GET /v1/tasks/{task}/commands, ascending by created_at.",
+      "type": "object",
+      "required": [ "api_version", "commands" ],
+      "properties": {
+        "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+        "commands": { "type": "array", "items": { "$ref": "command_envelope.schema.json" } }
+      }
+    },
+    "artifact_list": {
+      "description": "GET /v1/tasks/{task}/artifacts, ascending by created_at. Includes uploading/rejected/expired entries; only 'available' ones are downloadable.",
+      "type": "object",
+      "required": [ "api_version", "artifacts" ],
+      "properties": {
+        "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+        "artifacts": { "type": "array", "items": { "$ref": "artifact.schema.json" } }
+      }
+    },
+    "audit_page": {
+      "description": "GET /v1/workspaces/{ws}/audit, newest first.",
+      "type": "object",
+      "required": [ "api_version", "audit_events", "next_cursor" ],
+      "properties": {
+        "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+        "audit_events": { "type": "array", "maxItems": 200, "items": { "$ref": "audit_event.schema.json" } },
+        "next_cursor": { "$ref": "common.schema.json#/$defs/cursor_or_null" }
+      }
+    }
+  }
+}

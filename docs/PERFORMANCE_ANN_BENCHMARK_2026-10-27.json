@@ -1,0 +1,31 @@
+{
+  "ann_candidates": 251,
+  "ann_latency_ms": {
+    "max": 53.029,
+    "median": 49.483,
+    "min": 47.973,
+    "p95": 53.029,
+    "p95_status": "historical_order_statistic_5_samples_not_reliable_tail_estimate",
+    "p99_status": "not_measured_in_historical_record"
+  },
+  "benchmark": "memory_ann_synthetic_fixture",
+  "candidate_ratio": 0.0483,
+  "correct_top_result": true,
+  "dimensions": 128,
+  "documents": 5200,
+  "exact_latency_ms": {
+    "max": 254.257,
+    "median": 237.904,
+    "min": 231.07,
+    "p95": 254.257,
+    "p95_status": "historical_order_statistic_5_samples_not_reliable_tail_estimate",
+    "p99_status": "not_measured_in_historical_record"
+  },
+  "latency_scope": "end-to-end CLI wall time including process startup and local mock embedding HTTP round trip",
+  "measured_pairs": 5,
+  "median_paired_speedup": 4.831,
+  "path_recall_at_5": 0.6,
+  "top_k": 5,
+  "warmup_per_mode": 1,
+  "historical_tail_percentile_caveat": "This historical measurement used five samples. Under nearest-rank calculation, p95 equals the maximum sample; these values are retained for provenance but are not stable tail-latency estimates. The repeat audit suppresses p95 until 20 samples and p99 until 100 samples."
+}

@@ -1,0 +1,123 @@
+{
+  "benchmark": {
+    "ann_samples": 40,
+    "exact_samples": 40,
+    "measured_pairs_per_query": 5,
+    "mock_requests": 96,
+    "queries": 8,
+    "vector_count": 5200
+  },
+  "files": [
+    {
+      "path": "CMakeLists.txt",
+      "sha256": "c46301581f54cd3583abb22ce216e9930f101a276928430d9b8317a66ae770d8",
+      "size_bytes": 19302
+    },
+    {
+      "path": "scripts/benchmark_memory_ann_quality.py",
+      "sha256": "39012ba7116eaa4e941cb5e3bef4b646c5f880291186db62525c3a23afab5d2f",
+      "size_bytes": 39389
+    },
+    {
+      "path": "scripts/verify_memory_ann_quality.py",
+      "sha256": "1a68cb51f6c1256b89bbfed6b833b722f2f206514642755cce1aef0e1f9978bb",
+      "size_bytes": 20827
+    },
+    {
+      "path": "tests/fixtures/ann_quality_judged_dataset.json",
+      "sha256": "730e4427822fd4965516d611099437275c990f76c952f45f53962255fd6bec81",
+      "size_bytes": 3535
+    },
+    {
+      "path": "docs/PERFORMANCE_AUDIT_STAGE_34_ANN_QUALITY_2026-10-29.md",
+      "sha256": "a0a293f7116b97623324661349ee9051321cedc5d28b101a293206b4e9bb116d",
+      "size_bytes": 4976
+    },
+    {
+      "path": "docs/PERFORMANCE_MEMORY_ANN_QUALITY_BENCHMARK_2026-10-29.md",
+      "sha256": "d3655cda74a741cfe94c02fe6855f7a7d83a760c4546443e994a5e46c32d486e",
+      "size_bytes": 2664
+    },
+    {
+      "path": "docs/PERFORMANCE_STAGE_34_REVIEW_DECOMPOSITION_2026-10-29.md",
+      "sha256": "8747ee24eeb600b179aa1dbc5b299f4e2914f1cd5b507fadb2a2725ac455de22",
+      "size_bytes": 3032
+    },
+    {
+      "path": "docs/PERFORMANCE_STAGE_34_TODO_2026-10-29.md",
+      "sha256": "1605522a7cf59099be386b7fe138b82cd5243a1f501b35e02308babbf94059a0",
+      "size_bytes": 2752
+    },
+    {
+      "path": "docs/PERFORMANCE_STAGE_34_REVIEW_ITERATION_1_2026-10-29.md",
+      "sha256": "5962527e536f20e8f5c3f26fd33512bb116ab8e9fd659023d66cbb80e8c8bf73",
+      "size_bytes": 1140
+    },
+    {
+      "path": "docs/PERFORMANCE_STAGE_34_REVIEW_ITERATION_2_2026-10-29.md",
+      "sha256": "42e5a066855bd66253fbc7f1de9610875f7dc7a3a3cfd7f528dab04bd43ffccc",
+      "size_bytes": 1253
+    },
+    {
+      "path": "docs/PERFORMANCE_STAGE_34_REVIEW_ITERATION_3_2026-10-29.md",
+      "sha256": "e57230063c4cebdcc351e65ec49f56ca4abf8aa6dd3804e2b0e3d1bb7c16386b",
+      "size_bytes": 1340
+    },
+    {
+      "path": "docs/PERFORMANCE_STAGE_34_CTEST_LOG_2026-10-29.txt",
+      "sha256": "58a545aff7a3be5975713b43c859b763ee59ef90bc563b4a66b9c15ee85a220a",
+      "size_bytes": 7806
+    },
+    {
+      "path": "docs/PERFORMANCE_STAGE_34_CTEST_TIMEOUTS_2026-10-29.json",
+      "sha256": "40bd2ee5f73b1bd5f5d6659cd8915d5d05d58dfe27dd618aa422e7e3a7f7e722",
+      "size_bytes": 7212
+    },
+    {
+      "path": "docs/PERFORMANCE_STAGE_34_TEST_RESULTS_2026-10-29.json",
+      "sha256": "bf166b3192cebeac9438b0e332f1ff6b3696486f95789e26e03c67d039f5c550",
+      "size_bytes": 9407
+    },
+    {
+      "path": "docs/PERFORMANCE_STAGE_34_PROCESS_CLEANUP_2026-10-29.json",
+      "sha256": "f805b27b5a3b7c1cbac6cd0d7185eff1557d5e3217f316f111c22919a3b70852",
+      "size_bytes": 269
+    },
+    {
+      "path": "artifacts/stage34/README.md",
+      "sha256": "1e8936375ef7d1f27bb2d1b4e4c6ac9a74af4f2fa6eb866d592e9601279fc268",
+      "size_bytes": 1092
+    },
+    {
+      "path": "artifacts/stage34/ann-quality-benchmark.json",
+      "sha256": "57ff54aa369a2f34917ae7cc5bc41a08a911957fbae0cef8ed4ab6587c83d046",
+      "size_bytes": 23875
+    },
+    {
+      "path": "artifacts/stage34/ann-quality-corpus-manifest.json",
+      "sha256": "799108701d854f9eff2df7bf7cc9498d0653a0e6eb5d767f3021457c6e32faa4",
+      "size_bytes": 2501363
+    },
+    {
+      "path": "artifacts/stage34/ann-quality-verification.json",
+      "sha256": "e2a17405f7f98e9acb22140157c8c01c58f988c130628bd40431be6415cd6b5c",
+      "size_bytes": 5709
+    },
+    {
+      "path": "artifacts/stage34/ann-quality-fixtures.tar.gz",
+      "sha256": "309a8a26bdfa33d241231336e8b2a7cb068e5a771421320f049f3c07bb1996ae",
+      "size_bytes": 131416
+    }
+  ],
+  "full_ctest": {
+    "exit_code": 0,
+    "failed": 0,
+    "passed": 58,
+    "total_time_seconds": 274.73
+  },
+  "generated_utc": "2026-10-28T19:19:29.919203+00:00",
+  "payload_file_count": 20,
+  "schema_version": 1,
+  "stage": 34,
+  "title": "ASGEND Performance Audit \u2014 ANN Retrieval Quality & Performance"
+}

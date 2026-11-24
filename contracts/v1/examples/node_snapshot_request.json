@@ -1,0 +1,16 @@
+{
+  "state": "waiting_input",
+  "core_task_id": "k3v9q2m7xa",
+  "last_seq": 4,
+  "attempts": 1,
+  "question": {
+    "text": "Which test framework should be used?",
+    "options": [
+      "Unity",
+      "CMocka",
+      "plain assert"
+    ]
+  },
+  "result_summary": null,
+  "error": null
+}

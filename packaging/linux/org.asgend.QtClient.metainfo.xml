@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>org.asgend.QtClient</id>
+  <name>ASGEND</name>
+  <summary>Task orchestration and execution-node client</summary>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <description>
+    <p>ASGEND provides a native desktop interface for monitoring tasks, answering questions, managing retry and cancellation operations, and downloading task artifacts.</p>
+  </description>
+  <launchable type="desktop-id">org.asgend.QtClient.desktop</launchable>
+  <url type="homepage">https://github.com/asgend/asgend</url>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="1.0.0" date="2026-10-22"/>
+    <release version="0.9.9" date="2026-10-21"/>
+  </releases>
+</component>

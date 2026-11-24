@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://asgend.invalid/contracts/v1/schemas/workspace.schema.json",
+  "title": "Workspace, User, RoleBinding",
+  "description": "Identity and RBAC objects (CONTRACT_SKETCH §4, §6: /v1/me, /v1/workspaces/{ws}/members).",
+  "$defs": {
+    "workspace": {
+      "type": "object",
+      "required": [ "workspace_id", "name", "created_at" ],
+      "properties": {
+        "workspace_id": { "$ref": "common.schema.json#/$defs/workspace_id" },
+        "name": { "$ref": "common.schema.json#/$defs/display_name" },
+        "created_at": { "$ref": "common.schema.json#/$defs/timestamp" }
+      }
+    },
+    "user": {
+      "type": "object",
+      "required": [ "user_id", "display_name" ],
+      "properties": {
+        "user_id": { "$ref": "common.schema.json#/$defs/user_id" },
+        "display_name": { "$ref": "common.schema.json#/$defs/display_name" },
+        "created_at": { "$ref": "common.schema.json#/$defs/timestamp" }
+      }
+    },
+    "workspace_membership": {
+      "description": "A workspace as seen by the calling user.",
+      "type": "object",
+      "required": [ "workspace_id", "name", "role" ],
+      "properties": {
+        "workspace_id": { "$ref": "common.schema.json#/$defs/workspace_id" },
+        "name": { "$ref": "common.schema.json#/$defs/display_name" },
+        "role": { "$ref": "common.schema.json#/$defs/role" }
+      }
+    },
+    "role_binding": {
+      "description": "Membership of a user in a workspace.",
+      "type": "object",
+      "required": [ "user_id", "workspace_id", "role" ],
+      "properties": {
+        "user_id": { "$ref": "common.schema.json#/$defs/user_id" },
+        "workspace_id": { "$ref": "common.schema.json#/$defs/workspace_id" },
+        "role": { "$ref": "common.schema.json#/$defs/role" },
+        "display_name": { "$ref": "common.schema.json#/$defs/display_name" },
+        "created_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "updated_at": { "$ref": "common.schema.json#/$defs/timestamp" }
+      }
+    },
+    "me_response": {
+      "description": "GET /v1/me.",
+      "type": "object",
+      "required": [ "api_version", "user", "workspaces" ],
+      "properties": {
+        "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+        "user": { "$ref": "#/$defs/user" },
+        "workspaces": { "type": "array", "items": { "$ref": "#/$defs/workspace_membership" } },
+        "device_name": { "description": "device_name given at pairing for the presenting token, if any.", "anyOf": [ { "$ref": "common.schema.json#/$defs/display_name" }, { "type": "null" } ] },
+        "token_expires_at": { "description": "Expiry of the presenting token; null = no fixed expiry (revocable).", "$ref": "common.schema.json#/$defs/timestamp_or_null" }
+      }
+    },
+    "members_response": {
+      "description": "GET and PUT /v1/workspaces/{ws}/members.",
+      "type": "object",
+      "required": [ "api_version", "members" ],
+      "properties": {
+        "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+        "members": { "type": "array", "items": { "$ref": "#/$defs/role_binding" } }
+      }
+    },
+    "member_binding_input": {
+      "description": "CLOSED (grant-shaping input): unknown fields -> 400 invalid_request.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "user_id", "role" ],
+      "properties": {
+        "user_id": { "$ref": "common.schema.json#/$defs/user_id" },
+        "role": { "$ref": "common.schema.json#/$defs/role" }
+      }
+    },
+    "members_put_request": {
+      "description": "PUT /v1/workspaces/{ws}/members: replaces the complete set of role bindings. CLOSED (grant-shaping input). Must keep at least one owner (else 409 conflict); unknown user_id -> 422 unprocessable; duplicate user_id -> 400. Removing or downgrading a member takes effect on that user's next request; tokens of a user removed from all workspaces are revoked.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "members" ],
+      "properties": {
+        "members": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1000,
+          "items": { "$ref": "#/$defs/member_binding_input" }
+        }
+      }
+    }
+  }
+}

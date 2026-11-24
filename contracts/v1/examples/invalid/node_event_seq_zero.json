@@ -1,0 +1,14 @@
+{
+  "events": [
+    {
+      "task_id": "rt_01JBZ9A0B1C2D3E4F5G6H7J8K9",
+      "seq": 0,
+      "type": "core_event",
+      "occurred_at": "2026-10-21T10:00:50.000Z",
+      "payload": {
+        "core_event_id": 1,
+        "core_type": "log"
+      }
+    }
+  ]
+}

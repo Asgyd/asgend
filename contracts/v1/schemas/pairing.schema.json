@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://asgend.invalid/contracts/v1/schemas/pairing.schema.json",
+  "title": "Pairing, enrollment and credential issuance",
+  "description": "Device pairing (user tokens ucp_), node enrollment (node tokens ncp_) and node token rotation. One-time codes are single use, stored as SHA-256 of the normalized code, and every invalid/used/expired code yields the same 404 not_found (no oracle) under a rate limit (429 rate_limited). Grant-shaping create requests are CLOSED (additionalProperties:false).",
+  "$defs": {
+    "pairing_code_create_request": {
+      "description": "POST /v1/workspaces/{ws}/pairing-codes (owner). CLOSED: an ignored future restricting field would widen the granted access.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "role" ],
+      "properties": {
+        "role": { "$ref": "common.schema.json#/$defs/role" }
+      }
+    },
+    "pairing_code_response": {
+      "type": "object",
+      "required": [ "api_version", "code", "expires_at" ],
+      "properties": {
+        "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+        "code": { "description": "Shown once to the owner; 10 Crockford base32 characters grouped as XXXXX-XXXXX.", "$ref": "common.schema.json#/$defs/one_time_code" },
+        "expires_at": { "description": "Creation + 600 s.", "$ref": "common.schema.json#/$defs/timestamp" },
+        "pairing_id": { "description": "Addition: audit/reference id of the code (never usable as the code).", "$ref": "common.schema.json#/$defs/pairing_id" },
+        "role": { "$ref": "common.schema.json#/$defs/role" },
+        "workspace_id": { "$ref": "common.schema.json#/$defs/workspace_id" }
+      }
+    },
+    "pairing_redeem_request": {
+      "description": "POST /v1/pairing/redeem (no auth, rate limited). Creates a new user principal for the device with the code's role in the code's workspace.",
+      "type": "object",
+      "required": [ "code", "device_name" ],
+      "properties": {
+        "code": { "$ref": "common.schema.json#/$defs/one_time_code" },
+        "device_name": { "$ref": "common.schema.json#/$defs/display_name" }
+      }
+    },
+    "pairing_redeem_response": {
+      "type": "object",
+      "required": [ "api_version", "token", "user_id", "workspace_id", "role" ],
+      "properties": {
+        "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+        "token": { "$ref": "common.schema.json#/$defs/user_token" },
+        "user_id": { "$ref": "common.schema.json#/$defs/user_id" },
+        "workspace_id": { "$ref": "common.schema.json#/$defs/workspace_id" },
+        "role": { "$ref": "common.schema.json#/$defs/role" }
+      }
+    },
+    "node_enrollment_create_request": {
+      "description": "POST /v1/workspaces/{ws}/node-enrollments (owner). CLOSED (grant-shaping input). If name/labels are set they take precedence over the values the node sends at enroll (labels: union).",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": { "$ref": "common.schema.json#/$defs/display_name" },
+        "labels": { "$ref": "common.schema.json#/$defs/labels" }
+      }
+    },
+    "node_enrollment_create_response": {
+      "type": "object",
+      "required": [ "api_version", "enrollment_code", "expires_at" ],
+      "properties": {
+        "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+        "enrollment_code": { "$ref": "common.schema.json#/$defs/one_time_code" },
+        "expires_at": { "description": "Creation + 900 s.", "$ref": "common.schema.json#/$defs/timestamp" },
+        "enrollment_id": { "description": "Addition: audit/reference id.", "$ref": "common.schema.json#/$defs/enrollment_id" },
+        "workspace_id": { "$ref": "common.schema.json#/$defs/workspace_id" }
+      }
+    },
+    "node_enroll_request": {
+      "description": "POST /v1/node/enroll (no bearer; the enrollment code is the credential).",
+      "type": "object",
+      "required": [ "enrollment_code", "name", "labels", "protocol_version" ],
+      "properties": {
+        "enrollment_code": { "$ref": "common.schema.json#/$defs/one_time_code" },
+        "name": { "$ref": "common.schema.json#/$defs/display_name" },
+        "labels": { "$ref": "common.schema.json#/$defs/labels" },
+        "protocol_version": { "description": "Must be 1; anything else -> 422 unprocessable with details.supported_protocol_versions.", "const": 1 },
+        "core_version": { "type": [ "string", "null" ], "maxLength": 64 }
+      }
+    },
+    "node_enroll_response": {
+      "type": "object",
+      "required": [ "api_version", "node_id", "workspace_id", "node_token", "heartbeat_interval_seconds", "lease_seconds" ],
+      "properties": {
+        "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+        "node_id": { "$ref": "common.schema.json#/$defs/node_id" },
+        "workspace_id": { "$ref": "common.schema.json#/$defs/workspace_id" },
+        "node_token": { "$ref": "common.schema.json#/$defs/node_token" },
+        "heartbeat_interval_seconds": { "description": "Default 15.", "type": "integer", "minimum": 1, "maximum": 300 },
+        "lease_seconds": { "description": "Default 45 (3 x heartbeat interval).", "type": "integer", "minimum": 3, "maximum": 900 }
+      }
+    },
+    "node_token_rotate_response": {
+      "description": "POST /v1/node/token/rotate. The previous token stays valid for 60 s (grace), then fails with 401.",
+      "type": "object",
+      "required": [ "api_version", "node_token" ],
+      "properties": {
+        "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+        "node_token": { "$ref": "common.schema.json#/$defs/node_token" },
+        "previous_token_expires_at": { "description": "Addition: end of the grace period of the presenting token.", "$ref": "common.schema.json#/$defs/timestamp" }
+      }
+    },
+    "logout_response": {
+      "description": "POST /v1/auth/logout: the presenting ucp_ token is revoked immediately.",
+      "type": "object",
+      "required": [ "api_version", "revoked" ],
+      "properties": {
+        "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+        "revoked": { "const": true }
+      }
+    }
+  }
+}

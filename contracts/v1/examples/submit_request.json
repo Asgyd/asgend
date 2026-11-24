@@ -1,0 +1,9 @@
+{
+  "node_id": "node_01JBZ8N1A2B3C4D5E6F7G8H9JK",
+  "task": "Write a C11 ring buffer with unit tests",
+  "agent": "generalist",
+  "session_id": "demo",
+  "priority": 5,
+  "idempotency_key": "qt-7f3c2a10-submit",
+  "ttl_seconds": 3600
+}

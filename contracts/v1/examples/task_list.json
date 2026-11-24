@@ -1,0 +1,56 @@
+{
+  "api_version": 1,
+  "tasks": [
+    {
+      "task_id": "rt_01JBZ9B7C8D9E0F1G2H3J4K5M6",
+      "workspace_id": "ws_01JBZ8K6X3M4N5P6Q7R8S9T0VW",
+      "node_id": "node_01JBZ8N1A2B3C4D5E6F7G8H9JK",
+      "core_task_id": null,
+      "title": "Benchmark the memory index",
+      "agent": "generalist",
+      "session_id": "demo",
+      "priority": 5,
+      "state": "delivery_failed",
+      "question": null,
+      "attempts": 0,
+      "created_at": "2026-10-21T10:00:00.000Z",
+      "updated_at": "2026-10-21T11:00:00.000Z",
+      "last_event_id": 1100,
+      "stale": false,
+      "idempotency_key": "android-4b1d-submit",
+      "result_summary": null,
+      "error": "submit command expired before delivery (ttl 3600 s)",
+      "delivery_expires_at": null
+    },
+    {
+      "task_id": "rt_01JBZ9A0B1C2D3E4F5G6H7J8K9",
+      "workspace_id": "ws_01JBZ8K6X3M4N5P6Q7R8S9T0VW",
+      "node_id": "node_01JBZ8N1A2B3C4D5E6F7G8H9JK",
+      "core_task_id": "k3v9q2m7xa",
+      "title": "Write a C11 ring buffer with unit tests",
+      "agent": "generalist",
+      "session_id": "demo",
+      "priority": 5,
+      "state": "waiting_input",
+      "question": {
+        "text": "Which test framework should be used?",
+        "options": [
+          "Unity",
+          "CMocka",
+          "plain assert"
+        ]
+      },
+      "attempts": 1,
+      "created_at": "2026-10-21T10:00:00.000Z",
+      "updated_at": "2026-10-21T10:00:20.000Z",
+      "last_event_id": 1009,
+      "stale": false,
+      "idempotency_key": "qt-7f3c2a10-submit",
+      "result_summary": null,
+      "error": null,
+      "delivery_expires_at": null,
+      "last_seq": 4
+    }
+  ],
+  "next_cursor": "eyJiZWZvcmUiOiJydF8wMUpCWjlBMEIxIn0"
+}

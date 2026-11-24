@@ -1,0 +1,56 @@
+{
+  "events": [
+    {
+      "task_id": "rt_01JBZ9A0B1C2D3E4F5G6H7J8K9",
+      "seq": 1,
+      "type": "state_changed",
+      "occurred_at": "2026-10-21T10:00:04.000Z",
+      "payload": {
+        "state": "running",
+        "previous_state": "delivered",
+        "attempts": 1
+      }
+    },
+    {
+      "task_id": "rt_01JBZ9A0B1C2D3E4F5G6H7J8K9",
+      "seq": 2,
+      "type": "core_event",
+      "occurred_at": "2026-10-21T10:00:06.000Z",
+      "payload": {
+        "core_event_id": 311,
+        "core_type": "plan",
+        "actor": "orchestrator",
+        "message": "decomposed into 3 subtasks",
+        "data": {
+          "steps": 3
+        }
+      }
+    },
+    {
+      "task_id": "rt_01JBZ9A0B1C2D3E4F5G6H7J8K9",
+      "seq": 3,
+      "type": "question",
+      "occurred_at": "2026-10-21T10:00:19.000Z",
+      "payload": {
+        "question": {
+          "text": "Which test framework should be used?",
+          "options": [
+            "Unity",
+            "CMocka",
+            "plain assert"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "rt_01JBZ9A0B1C2D3E4F5G6H7J8K9",
+      "seq": 4,
+      "type": "state_changed",
+      "occurred_at": "2026-10-21T10:00:19.000Z",
+      "payload": {
+        "state": "waiting_input",
+        "previous_state": "running"
+      }
+    }
+  ]
+}

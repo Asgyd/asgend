@@ -1,0 +1,4 @@
+# Required only for native Office file creation; llama-server inference has no Python ML dependencies.
+python-docx>=1.1,<2
+openpyxl>=3.1,<4
+python-pptx>=1.0,<2

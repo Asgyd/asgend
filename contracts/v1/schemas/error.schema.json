@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://asgend.invalid/contracts/v1/schemas/error.schema.json",
+  "title": "ErrorEnvelope",
+  "description": "Body of every non-2xx JSON response (CONTRACT_SKETCH §2). 'details' never contains tokens, secrets, prompt text or filesystem paths.",
+  "type": "object",
+  "required": [ "api_version", "error" ],
+  "properties": {
+    "api_version": { "$ref": "common.schema.json#/$defs/api_version" },
+    "error": {
+      "type": "object",
+      "required": [ "code", "message", "request_id", "details" ],
+      "properties": {
+        "code": { "$ref": "common.schema.json#/$defs/error_code" },
+        "message": { "description": "Human-readable, safe to display; not localized; not for parsing.", "type": "string", "maxLength": 1024 },
+        "request_id": { "$ref": "common.schema.json#/$defs/request_id" },
+        "details": {
+          "description": "Code-specific machine-readable details. Known keys: field, unknown_fields, retry_after_seconds, task_id, command_id, state, received, server_last_seq, checks.",
+          "type": "object"
+        }
+      }
+    }
+  }
+}

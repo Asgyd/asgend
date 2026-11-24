@@ -1,0 +1,136 @@
+name: Control Plane and Execution Node acceptance
+
+on:
+  workflow_call:
+  push:
+    paths:
+      - 'server/**'
+      - 'node_agent/**'
+      - 'src/**'
+      - 'include/**'
+      - 'tests/**'
+      - 'contracts/**'
+      - 'CMakeLists.txt'
+      - 'release/**'
+      - 'scripts/check_release_readiness.py'
+      - 'scripts/smoke_control_plane_load.py'
+      - 'tests/test_release_gate.py'
+      - 'server/tests/test_node_agent_c_core_e2e.py'
+      - '.github/workflows/control-plane-node-e2e.yml'
+  pull_request:
+    paths:
+      - 'server/**'
+      - 'node_agent/**'
+      - 'src/**'
+      - 'include/**'
+      - 'tests/**'
+      - 'contracts/**'
+      - 'CMakeLists.txt'
+      - 'release/**'
+      - 'scripts/check_release_readiness.py'
+      - 'scripts/smoke_control_plane_load.py'
+      - 'tests/test_release_gate.py'
+      - 'server/tests/test_node_agent_c_core_e2e.py'
+      - '.github/workflows/control-plane-node-e2e.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python-acceptance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Release version and gate metadata consistency
+        run: python scripts/check_release_readiness.py
+      - name: Release-gate tooling regression tests
+        run: python tests/test_release_gate.py
+      - name: Install API contract test dependencies
+        run: python -m pip install --disable-pip-version-check -r tests/contracts/requirements.txt
+      - name: Contract and runtime route parity tests
+        run: python tests/contracts/test_contracts.py
+      - name: Live Control Plane and NodeAgent tests
+        run: python -m unittest discover -s server/tests -p 'test_*.py' -v
+      - name: Node-agent resilience and protocol tests
+        run: python -m unittest discover -s node_agent/tests -p 'test_*.py' -v
+
+  core-release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install native dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential pkg-config libjson-c-dev libcurl4-openssl-dev libsqlite3-dev libssl-dev zlib1g-dev python3
+      - name: Configure Release
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build --parallel 2
+      - name: Fast regression suite (long-running integration excluded)
+        run: ctest --test-dir build --output-on-failure --timeout 60 -E '^integration$'
+
+  postgres-acceptance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: asgend_test
+          POSTGRES_USER: asgend
+          POSTGRES_PASSWORD: asgend_ci_only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U asgend -d asgend_test"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      ASGEND_TEST_POSTGRES_URL: postgresql://asgend:asgend_ci_only@127.0.0.1:5432/asgend_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install PostgreSQL driver and client tools
+        run: |
+          python -m pip install --disable-pip-version-check 'psycopg[binary]>=3.2,<4'
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+      - name: Live PostgreSQL migrations, restart and redelivery acceptance
+        run: python -m unittest discover -s server/tests -p 'test_postgres_acceptance.py' -v
+      - name: Live PostgreSQL pg_dump/pg_restore drill
+        run: python -m unittest discover -s server/tests -p 'test_postgres_backup_restore.py' -v
+
+  core-integration:
+    # The long scenario (MCP sandbox, TUI clients, scheduling, recovery) runs as the
+    # unprivileged runner user: as root the MCP sandbox drops to UID 65534 by design.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install native dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential pkg-config libjson-c-dev libcurl4-openssl-dev libsqlite3-dev libssl-dev zlib1g-dev python3
+      - name: Configure and build Release
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --parallel 2
+      - name: Long-running integration test
+        run: ctest --test-dir build --output-on-failure --timeout 900 -R '^integration$'
+
+  compose-drill:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compose deployment, backup, restore and readiness drill
+        run: sh server/scripts/compose_drill.sh

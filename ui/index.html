@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#101a2b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+  <meta name="asgend-ui-release" content="2026.11.12.1">
+  <title>ASGEND — управление задачами</title>
+  <link rel="stylesheet" href="/assets/style.css?v=20261112.1">
+  <script src="/assets/app.js?v=20261112.1" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><div class="eyebrow">LOCAL CONTROL PLANE</div><h1>ASGEND</h1><p>Задачи и диалоги оркестратора</p></div>
+    <div class="toolbar"><span class="pill ui-build" title="Версия загруженного интерфейса">WebUI 2026.11.12.1</span><span id="connection" class="pill muted">Не подключено</span><button id="themeButton" class="secondary" type="button">Светлая тема</button><button id="refresh" class="secondary">Обновить</button><button id="tokenButton" class="secondary">Токен доступа</button></div>
+  </header>
+  <nav class="tabbar" aria-label="Разделы приложения">
+    <button class="tab" data-view-target="dashboard">Все задачи</button>
+    <button class="tab active" data-view-target="chat">Рабочее пространство</button>
+    <button class="tab" data-view-target="cowork">Cowork</button>
+    <button class="tab" data-view-target="settings">Настройки</button>
+  </nav>
+  <main>
+    <div class="view" id="view-dashboard">
+      <section class="metrics" id="metrics">
+        <article><span>В очереди</span><strong id="m-queued">—</strong></article>
+        <article><span>Выполняются</span><strong id="m-running">—</strong></article>
+        <article><span>Завершены</span><strong id="m-completed">—</strong></article>
+        <article><span>Ошибки</span><strong id="m-failed">—</strong></article>
+        <article><span>Рабочие потоки</span><strong id="m-workers">—</strong></article>
+      </section>
+      <section class="panel">
+        <div class="section-heading"><div><h2>Новая задача</h2><p>Задача сохраняется в устойчивой очереди перед подтверждением.</p></div></div>
+        <form id="submitForm">
+          <label for="task">Описание задачи</label>
+          <textarea id="task" rows="3" required maxlength="100000" placeholder="Что нужно выполнить? Например: проанализировать модуль и подготовить исправления…"></textarea>
+          <div class="form-row">
+            <div><label for="session">Сессия <small>(необязательно)</small></label><input id="session" maxlength="128" placeholder="project-a"></div>
+            <div><label for="priority">Приоритет</label><select id="priority"><option value="0">0 · Фоновый</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5" selected>5 · Обычный</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9 · Срочный</option></select></div>
+          </div>
+          <div class="actions"><button id="submitButton" type="submit">Отправить в очередь</button><span id="submitMessage" role="status"></span></div>
+        </form>
+      </section>
+      <section class="panel">
+        <div class="section-heading"><div><h2>Очередь задач</h2><p>Приоритеты 0–9; старые задачи постепенно повышают эффективный приоритет.</p></div><select id="statusFilter" aria-label="Фильтр по статусу"><option value="">Все статусы</option><option>queued</option><option>running</option><option>waiting_input</option><option>completed</option><option>completed_without_model</option><option>failed</option><option>cancelled</option></select></div>
+        <div class="table-wrap"><table><thead><tr><th>Задача</th><th>Статус</th><th>Приоритет / эффективный</th><th>Попытки</th><th>Создана</th><th>Действия</th></tr></thead><tbody id="tasksBody"><tr><td colspan="6" class="empty">Загрузка…</td></tr></tbody></table></div>
+        <p class="footnote">Показываются последние 100 задач. Для отмены выполняемой задачи используется кооперативная отмена на границе этапа.</p>
+      </section>
+    </div>
+
+    <div class="view active" id="view-chat">
+      <div class="workspace-layout" id="taskWorkspaceGrid">
+        <aside class="workspace-sidebar panel" aria-label="Список задач">
+          <div class="workspace-pane-heading"><div><p class="eyebrow">ASGEND</p><h2>Задачи</h2></div><button id="workspaceNewTask" class="icon-button" type="button" title="Новая задача" aria-label="Новая задача">+</button></div>
+          <div id="workspaceTaskList" class="workspace-task-list"><p class="empty">Загрузка задач…</p></div>
+          <button id="workspaceRefreshTasks" class="secondary workspace-refresh" type="button">Обновить список</button>
+        </aside>
+
+        <section class="panel task-chat-panel" id="detailPanel">
+          <div class="section-heading chat-heading">
+            <div class="chat-title-block">
+              <p class="eyebrow">ДИАЛОГ ЗАДАЧИ</p>
+              <h2 id="chatTaskTitle">Выберите задачу</h2>
+              <p id="detailId" class="chat-task-id"></p>
+              <p id="workspacePath" class="workspace-path">Рабочая папка: —</p>
+              <span id="taskChatStatus" class="status queued">—</span>
+            </div>
+            <div class="chat-controls">
+              <button id="cancelChatTask" class="secondary hidden">Отменить задачу</button>
+              <button id="closeDetail" class="secondary">← К списку</button>
+            </div>
+          </div>
+          <p id="taskChatSummary" class="chat-summary">Сообщения, этапы выполнения, вызовы инструментов и ответы будут показаны здесь.</p>
+          <div id="chatEmpty" class="chat-empty">Откройте задачу из списка или создайте новую.</div>
+          <div id="taskChatEvents" class="chat-timeline" aria-live="polite" aria-relevant="additions text"></div>
+          <form id="taskFollowupForm" class="task-followup">
+            <label for="taskFollowupText">Продолжить диалог</label>
+            <textarea id="taskFollowupText" rows="2" maxlength="100000" placeholder="Напишите уточнение или следующую задачу…"></textarea>
+            <div class="actions"><button id="taskFollowupSubmit" type="submit">Отправить</button><span class="footnote">Продолжение создаст задачу в той же сессии.</span></div>
+          </form>
+        </section>
+
+        <aside class="workspace-files panel" aria-label="Файлы рабочей папки">
+          <div class="workspace-pane-heading"><div><p class="eyebrow">РАБОЧАЯ ПАПКА</p><h2>Файлы</h2></div><button id="workspaceRefreshFiles" class="icon-button" type="button" title="Обновить файлы" aria-label="Обновить файлы">↻</button></div>
+          <div class="workspace-file-location"><code id="workspaceFilePath">/</code><button id="workspaceFolderUp" class="secondary small-button" type="button" disabled>Вверх</button></div>
+          <div class="workspace-file-actions"><input id="workspaceNewFileName" maxlength="255" placeholder="имя нового файла" aria-label="Имя нового файла"><button id="workspaceCreateFile" class="secondary small-button" type="button">Создать</button></div>
+          <div id="workspaceFiles" class="workspace-file-list"><p class="empty">Выберите задачу для просмотра файлов.</p></div>
+          <div id="workspaceEditorPanel" class="workspace-editor-panel hidden">
+            <div class="workspace-editor-heading"><strong id="workspaceEditorName">Файл</strong><span id="workspaceEditorState" class="pill muted">Не выбран</span></div>
+            <textarea id="workspaceFileEditor" class="workspace-editor" spellcheck="false" aria-label="Содержимое файла"></textarea>
+            <div class="workspace-save-row"><span id="workspaceFileMessage" class="footnote" role="status"></span><button id="workspaceSaveFile" type="button" disabled>Сохранить</button></div>
+          </div>
+          <section class="workspace-plan" aria-label="Список задач и целей">
+            <div class="workspace-pane-heading"><div><p class="eyebrow">ПЛАН РАБОТЫ</p><h2>To-do и Goals</h2></div><button id="refreshPlan" class="icon-button" type="button" title="Обновить план" aria-label="Обновить план">↻</button></div>
+            <div class="plan-section">
+              <h3>To-do</h3>
+              <form id="todoForm" class="plan-add-form"><input id="todoTitle" maxlength="160" required placeholder="Новый пункт…" aria-label="Новый пункт To-do"><button class="secondary small-button" type="submit">+</button></form>
+              <div id="todoItems" class="plan-items"><p class="empty">Загрузка…</p></div>
+            </div>
+            <div class="plan-section">
+              <h3>Goals</h3>
+              <form id="goalForm" class="plan-add-form"><input id="goalTitle" maxlength="160" required placeholder="Новая цель…" aria-label="Новая цель"><button class="secondary small-button" type="submit">+</button></form>
+              <div id="goalItems" class="plan-items"><p class="empty">Загрузка…</p></div>
+            </div>
+            <p class="footnote" id="planScopeLabel">Общий план</p>
+          </section>
+          <p class="footnote workspace-safety-note">Текстовые файлы до 1 МиБ. Ссылки и пути за пределами рабочей папки недоступны.</p>
+        </aside>
+      </div>
+    </div>
+
+    <div class="view" id="view-cowork">
+      <section class="cowork-shell" aria-label="Совместная работа с агентом">
+        <section class="panel cowork-dialog-panel">
+          <header class="cowork-heading">
+            <div><p class="eyebrow">ASGEND COWORK</p><h2>Совместная работа</h2><p class="footnote">Голосовой посредник собирает контекст и готовит отчёт. Главная очередь не вызывается до подтверждения.</p></div>
+            <span id="coworkSessionState" class="pill muted">Сессия не создана</span>
+          </header>
+          <div id="coworkDialogue" class="cowork-dialogue" aria-live="polite"><p class="empty">Начните с текста, выделения или голосового сообщения. Отчёт будет обновляться после каждого сообщения.</p></div>
+          <div class="cowork-selection-row">
+            <button id="coworkAddSelection" class="secondary small-button" type="button">＋ Добавить выделенное</button>
+            <span id="coworkSelectionStatus" class="footnote">Можно выделить текст или код в любой панели.</span>
+          </div>
+          <form id="coworkForm" class="cowork-compose">
+            <label for="coworkText">Сообщение агенту-посреднику</label>
+            <textarea id="coworkText" rows="3" maxlength="50000" placeholder="Опишите, что нужно изменить. Можно дополнить ранее выделенный фрагмент…"></textarea>
+            <div class="cowork-compose-tools">
+              <div class="cowork-media-tools">
+                <button id="coworkRecord" class="secondary" type="button">🎙 Начать запись</button>
+                <label class="secondary cowork-file-label" for="coworkMediaFiles">Добавить аудио / фото / видео</label>
+                <input id="coworkMediaFiles" class="visually-hidden" type="file" accept="audio/*,image/png,image/jpeg,image/webp,image/gif,video/mp4,video/webm,video/quicktime" multiple>
+              </div>
+              <button id="coworkSendTurn" type="submit">Обновить отчёт</button>
+            </div>
+            <p id="coworkComposeStatus" class="footnote" role="status">Поддерживаемые вложения: аудио, изображения и видео. Документы и код открывайте в правой рабочей области.</p>
+          </form>
+          <section id="coworkReportPanel" class="cowork-report-panel hidden">
+            <div class="cowork-report-header"><div><p class="eyebrow">ОТЧЁТ ПОСЛЕДНЕЙ РЕВИЗИИ</p><h3 id="coworkReportTitle">Отчёт</h3><span id="coworkReportRevision" class="pill muted">v0</span></div><button id="coworkConfirm" type="button">Подтвердить и отправить</button></div>
+            <div id="coworkReport" class="cowork-report-body"></div>
+            <p class="footnote">Любое новое сообщение или выделение создаёт новую ревизию и делает предыдущую неподтверждаемой.</p>
+          </section>
+          <audio id="coworkSpeechReply" class="cowork-speech-reply" controls hidden></audio>
+        </section>
+        <aside class="panel cowork-workspace-panel">
+          <header class="cowork-heading"><div><p class="eyebrow">АГЕНТСКОЕ РАБОЧЕЕ ПРОСТРАНСТВО</p><h2>Проект</h2><p class="footnote">Просмотр файлов текущей задачи, кода и интерфейсов.</p></div><button id="coworkRefreshFiles" class="secondary small-button" type="button">Обновить</button></header>
+          <nav class="cowork-workspace-tabs" aria-label="Тип представления">
+            <button class="active" type="button" data-cowork-pane="office">Office / PDF</button>
+            <button type="button" data-cowork-pane="site">Сайты</button>
+            <button type="button" data-cowork-pane="ui">UI</button>
+            <button type="button" data-cowork-pane="mobile">Mobile</button>
+            <button type="button" data-cowork-pane="code">Код</button>
+          </nav>
+          <div class="cowork-project-toolbar"><span id="coworkProjectLabel" class="footnote">Текущая задача: не выбрана</span><span id="coworkProjectPath" class="footnote"></span></div>
+          <div id="coworkProjectFiles" class="cowork-project-files"><p class="empty">Выберите задачу во вкладке «Рабочее пространство», чтобы просмотреть её файлы здесь.</p></div>
+          <div class="cowork-preview-heading"><strong id="coworkPreviewTitle">Предпросмотр</strong><span id="coworkPreviewMeta" class="footnote">—</span></div>
+          <div id="coworkPreview" class="cowork-preview"><p class="empty">Выберите файл проекта. HTML отображается в изолированном iframe, код — в текстовом виде.</p></div>
+          <textarea id="coworkProjectEditor" class="cowork-project-editor hidden" spellcheck="false" aria-label="Редактор выбранного файла"></textarea>
+          <div class="cowork-project-actions"><button id="coworkSaveProjectFile" class="secondary small-button" type="button" disabled>Сохранить файл</button><button id="coworkAttachProjectSelection" class="secondary small-button" type="button" disabled>Добавить выделенное</button></div>
+          <p class="footnote cowork-workspace-note">Доступ к содержимому ограничен рабочей папкой выбранной задачи и существующими правами Control Plane. Выполнение кода в предпросмотре отключено.</p>
+        </aside>
+      </section>
+    </div>
+
+    <div class="view" id="view-settings">
+      <nav class="settings-subnav" aria-label="Разделы настроек">
+        <button class="tab active" type="button" data-settings-target="nodes">Nodes и модели</button>
+        <button class="tab" type="button" data-settings-target="agents">Профили исполнения</button>
+        <button class="tab" type="button" data-settings-target="resources">Ресурсы и инструкции</button>
+      </nav>
+      <div class="settings-view active" id="settings-nodes">
+      <section class="panel">
+        <div class="section-heading"><div><h2>Nodes</h2><p>Точки размещения моделей: локальное устройство, локальная сеть или удалённый endpoint.</p></div><button id="refreshNodes" class="secondary">Обновить</button></div>
+        <div class="actions"><button id="addNode" class="secondary">+ Node</button><button id="addModel" class="secondary">+ LLM</button><button id="addDecisionModel" class="secondary">+ Decision-модель</button></div>
+        <div id="nodesList" class="node-grid"><p class="empty">Загрузка nodes…</p></div>
+        <p class="footnote">Для каждого узла задайте endpoint и api_type: openai_compatible или systemone. System One использует типизированный контракт /v1/systemone. Удалённые узлы рекомендуется подключать только через HTTPS, с проверенными TLS-сертификатами и секретами вне репозитория.</p>
+      </section>
+      <section class="panel" id="modelPanel">
+        <div class="section-heading"><div><h2>Модели на узлах</h2><p>Decision-модель — отдельный процесс оркестратора. Для старта/остановки и включения/выключения используются независимые действия.</p></div><button id="refreshModels" class="secondary">Обновить модели</button></div>
+        <p id="modelDefaults" class="footnote">LLM по умолчанию: — · Decision: —</p>
+        <p id="modelRestartNote" class="footnote hidden">Конфигурация на диске отличается от активной конфигурации. Для изменения профилей выполните перезапуск.</p>
+        <div id="modelsList" class="model-grid"><p class="empty">Загрузка конфигурации моделей…</p></div>
+      </section>
+      <section class="panel" id="nodeConfigPanel">
+        <div class="section-heading"><div><h2>Конфигурация Nodes и моделей</h2><p>Редактируется config/models.json. Nodes и привязки моделей сохраняются в одном реестре.</p></div><span id="nodesConfigState" class="pill muted">Не загружено</span></div>
+        <div class="editor-field"><label for="modelsConfigEditor">Nodes, LLM и decision_models · config/models.json</label><textarea id="modelsConfigEditor" class="json-editor" spellcheck="false" rows="24"></textarea></div>
+        <div class="config-toolbar"><button id="reloadConfigs" class="secondary">Перезагрузить из файлов</button><button id="saveConfigs">Сохранить конфигурации</button></div>
+        <p id="configMessage" class="config-message" role="status"></p>
+      </section>
+    </div>
+
+      <div class="settings-view" id="settings-agents">
+      <section class="panel" id="configPanel">
+        <div class="section-heading"><div><h2>Профили исполнения и конфигурация сервера</h2><p>Пользовательские профили описывают инструкции и разрешения; встроенных ролей coder/planner/reviewer нет. Системные настройки — в config/config.json.</p></div><span id="configState" class="pill muted">Не загружено</span></div>
+        <div class="config-toolbar"><button id="addAgent" class="secondary">+ Профиль</button><button id="removeAgent" class="secondary">− Профиль</button></div>
+        <div class="config-editor">
+          <div class="editor-field"><label for="mainConfigEditor">Сервер и пути · config/config.json</label><textarea id="mainConfigEditor" class="json-editor" spellcheck="false" rows="24"></textarea></div>
+          <div class="editor-field"><label for="agentsConfigEditor">Пользовательские профили · config/agents/*.json</label><textarea id="agentsConfigEditor" class="json-editor" spellcheck="false" rows="24"></textarea><p class="footnote">Поле model_id привязывает профиль к модели в Nodes. Не добавляйте инструменты в allow-list без соответствующей проверки доступа.</p></div>
+        </div>
+        <div class="config-toolbar"><button id="saveConfigsAgents">Сохранить конфигурации</button></div>
+        <p class="footnote">Сохранённые настройки загружаются после перезапуска сервера. Файлы инструкций селекторов находятся в ~/.config/asgend/instructions/ и читаются заново для каждого задания.</p>
+      </section>
+    </div>
+
+      <div class="settings-view" id="settings-resources">
+      <section class="panel">
+        <div class="section-heading"><div><h2>Dynamic resource selection</h2><p>Для каждого задания decision-модель параллельно классифицирует актуальные Markdown-файлы четырьмя независимыми инструкциями.</p></div><button id="refreshResources" class="secondary">Обновить каталог</button></div>
+        <p id="resourceDecisionModel" class="footnote">Decision model: —</p>
+        <div id="resourceDirectories" class="resource-paths"></div>
+        <div id="resourceGroups" class="resource-grid"><p class="empty">Загрузка каталога ресурсов…</p></div>
+        <p class="footnote">Содержимое каталогов перечитывается на каждом запросе классификации: добавленные Markdown-файлы становятся доступными без перезапуска. Если decision-модель выключена или ответ невалиден, применяется ограниченный fallback к настройкам профиля исполнения.</p>
+      </section>
+      <section class="panel"><h2>Instructions</h2><p>Эти файлы определяют только собственную классификационную задачу и не содержат фиксированный список ресурсов.</p><pre>~/.config/asgend/instructions/select_skills.md
+~/.config/asgend/instructions/select_system_prompts.md
+~/.config/asgend/instructions/select_tools.md
+~/.config/asgend/instructions/select_knowledge.md</pre><p class="footnote">Шаблоны используют динамические placeholders: {{TASK}}, {{AGENT}}, {{RESOURCE_TYPE}}, {{FILES}}. При первом запуске создаются только отсутствующие файлы; пользовательские инструкции не перезаписываются.</p></section>
+    </div>
+    </div>
+    <div id="toast" role="status" aria-live="polite"></div>
+  </main>
+  <dialog id="questionDialog" class="question-dialog">
+    <form id="questionDialogForm">
+      <p class="eyebrow">ТРЕБУЕТСЯ ВАШ ОТВЕТ</p><h2 id="questionTitle">Уточнение по задаче</h2><p id="questionContext" class="footnote"></p>
+      <div id="questionList" class="question-list"></div>
+      <div class="actions"><button id="answerSubmit" type="submit">Ответить и продолжить</button><button id="answerDismiss" class="secondary" type="button">Позже</button></div>
+    </form>
+  </dialog>
+  <dialog id="modelDialog" class="model-dialog">
+    <form id="modelDialogForm">
+      <p class="eyebrow">КОНФИГУРАЦИЯ МОДЕЛИ</p><h2 id="modelDialogTitle">Добавить LLM</h2>
+      <p class="footnote">Заполните поля профиля. API-ключ сохраняется в конфигурации; для production предпочтительна переменная окружения.</p>
+      <div id="modelFormFields" class="model-form-fields"></div>
+      <div class="actions"><button id="modelFormSave" type="submit">Добавить в конфигурацию</button><button id="modelFormCancel" class="secondary" type="button">Отмена</button></div>
+    </form>
+  </dialog>
+  <footer>Asgend · локальная панель управления · API защищён токеном</footer>
+</body>
+</html>

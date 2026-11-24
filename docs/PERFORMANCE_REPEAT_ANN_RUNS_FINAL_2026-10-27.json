@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "benchmark": "repeat_3x_memory_ann_synthetic_fixture",
+  "run_count": 3,
+  "sample_count_per_mode_per_run": 5,
+  "corpus": {
+    "documents": 5200,
+    "dimensions": 128,
+    "top_k": 5
+  },
+  "per_run": [
+    {
+      "ann_candidates": 251,
+      "ann_latency_ms": {
+        "max": 53.364,
+        "mean": 51.249,
+        "median": 50.984,
+        "min": 48.663,
+        "p50": 50.984,
+        "p95": null,
+        "p99": null,
+        "samples": 5,
+        "tail_percentile_status": {
+          "p95": "not_reported_requires_20_samples",
+          "p99": "not_reported_requires_100_samples"
+        }
+      },
+      "benchmark": "memory_ann_synthetic_fixture",
+      "candidate_ratio": 0.0483,
+      "correct_top_result": true,
+      "dimensions": 128,
+      "documents": 5200,
+      "exact_latency_ms": {
+        "max": 271.701,
+        "mean": 255.455,
+        "median": 256.753,
+        "min": 235.145,
+        "p50": 256.753,
+        "p95": null,
+        "p99": null,
+        "samples": 5,
+        "tail_percentile_status": {
+          "p95": "not_reported_requires_20_samples",
+          "p99": "not_reported_requires_100_samples"
+        }
+      },
+      "latency_scope": "end-to-end CLI wall time including process startup and local mock embedding HTTP round trip",
+      "measured_pairs": 5,
+      "median_paired_speedup": 5.036,
+      "path_recall_at_5": 0.6,
+      "top_k": 5,
+      "warmup_per_mode": 1
+    },
+    {
+      "ann_candidates": 251,
+      "ann_latency_ms": {
+        "max": 69.581,
+        "mean": 61.865,
+        "median": 62.174,
+        "min": 52.506,
+        "p50": 62.174,
+        "p95": null,
+        "p99": null,
+        "samples": 5,
+        "tail_percentile_status": {
+          "p95": "not_reported_requires_20_samples",
+          "p99": "not_reported_requires_100_samples"
+        }
+      },
+      "benchmark": "memory_ann_synthetic_fixture",
+      "candidate_ratio": 0.0483,
+      "correct_top_result": true,
+      "dimensions": 128,
+      "documents": 5200,
+      "exact_latency_ms": {
+        "max": 290.391,
+        "mean": 267.148,
+        "median": 275.494,
+        "min": 230.74,
+        "p50": 275.494,
+        "p95": null,
+        "p99": null,
+        "samples": 5,
+        "tail_percentile_status": {
+          "p95": "not_reported_requires_20_samples",
+          "p99": "not_reported_requires_100_samples"
+        }
+      },
+      "latency_scope": "end-to-end CLI wall time including process startup and local mock embedding HTTP round trip",
+      "measured_pairs": 5,
+      "median_paired_speedup": 4.253,
+      "path_recall_at_5": 0.6,
+      "top_k": 5,
+      "warmup_per_mode": 1
+    },
+    {
+      "ann_candidates": 251,
+      "ann_latency_ms": {
+        "max": 51.777,
+        "mean": 49.302,
+        "median": 49.019,
+        "min": 46.851,
+        "p50": 49.019,
+        "p95": null,
+        "p99": null,
+        "samples": 5,
+        "tail_percentile_status": {
+          "p95": "not_reported_requires_20_samples",
+          "p99": "not_reported_requires_100_samples"
+        }
+      },
+      "benchmark": "memory_ann_synthetic_fixture",
+      "candidate_ratio": 0.0483,
+      "correct_top_result": true,
+      "dimensions": 128,
+      "documents": 5200,
+      "exact_latency_ms": {
+        "max": 242.923,
+        "mean": 228.973,
+        "median": 226.233,
+        "min": 221.678,
+        "p50": 226.233,
+        "p95": null,
+        "p99": null,
+        "samples": 5,
+        "tail_percentile_status": {
+          "p95": "not_reported_requires_20_samples",
+          "p99": "not_reported_requires_100_samples"
+        }
+      },
+      "latency_scope": "end-to-end CLI wall time including process startup and local mock embedding HTTP round trip",
+      "measured_pairs": 5,
+      "median_paired_speedup": 4.692,
+      "path_recall_at_5": 0.6,
+      "top_k": 5,
+      "warmup_per_mode": 1
+    }
+  ],
+  "summary": {
+    "exact_latency_ms_run_medians_ms": {
+      "values": [
+        256.753,
+        275.494,
+        226.233
+      ],
+      "median": 256.753,
+      "min": 226.233,
+      "max": 275.494,
+      "spread": 49.261,
+      "relative_spread_percent": 19.19
+    },
+    "ann_latency_ms_run_medians_ms": {
+      "values": [
+        50.984,
+        62.174,
+        49.019
+      ],
+      "median": 50.984,
+      "min": 49.019,
+      "max": 62.174,
+      "spread": 13.155,
+      "relative_spread_percent": 25.8
+    },
+    "paired_speedup": {
+      "values": [
+        5.036,
+        4.253,
+        4.692
+      ],
+      "median": 4.692,
+      "min": 4.253,
+      "max": 5.036
+    },
+    "ann_candidates": [
+      251,
+      251,
+      251
+    ],
+    "candidate_ratio": [
+      0.0483,
+      0.0483,
+      0.0483
+    ],
+    "path_recall_at_5": [
+      0.6,
+      0.6,
+      0.6
+    ]
+  },
+  "caveat": "Each run builds an independent synthetic database and uses a local mock embedding endpoint. Times include CLI startup and local HTTP round trip; not production latency. p95/p99 omitted for per-run groups of five samples."
+}

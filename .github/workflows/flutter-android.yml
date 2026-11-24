@@ -1,0 +1,108 @@
+name: Flutter Android client
+
+on:
+  workflow_call:
+  push:
+    paths:
+      - 'clients/asgend_flutter/**'
+      - '.github/workflows/flutter-android.yml'
+      - 'src/**'
+      - 'include/**'
+      - 'server/**'
+      - 'contracts/**'
+      - 'tests/contracts/**'
+      - 'tests/test_core_rpc_contract_inventory.py'
+      - 'tests/test_core_rpc_runtime_contract.py'
+      - 'tests/test_core_rpc_state_transitions.py'
+      - 'docs/API_CONTRACT.md'
+      - 'docs/PROTOCOL.md'
+      - 'docs/REMOTE_CONTROL_PLANE.md'
+      - 'CMakeLists.txt'
+  pull_request:
+    paths:
+      - 'clients/asgend_flutter/**'
+      - '.github/workflows/flutter-android.yml'
+      - 'src/**'
+      - 'include/**'
+      - 'server/**'
+      - 'contracts/**'
+      - 'tests/contracts/**'
+      - 'tests/test_core_rpc_contract_inventory.py'
+      - 'tests/test_core_rpc_runtime_contract.py'
+      - 'tests/test_core_rpc_state_transitions.py'
+      - 'docs/API_CONTRACT.md'
+      - 'docs/PROTOCOL.md'
+      - 'docs/REMOTE_CONTROL_PLANE.md'
+      - 'CMakeLists.txt'
+permissions:
+  contents: read
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: clients/asgend_flutter
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install shared API and artifact-workspace test dependencies
+        working-directory: ${{ github.workspace }}
+        run: |
+          python -m pip install --disable-pip-version-check -r tests/contracts/requirements.txt -r tools/artifact_workspace/requirements.txt
+          sudo apt-get update
+          sudo apt-get install -y libreoffice-writer libreoffice-calc libreoffice-impress poppler-utils
+      - name: Run MCP artifact workspace and Office visual-preview tests
+        working-directory: ${{ github.workspace }}
+        run: python -m unittest discover -s tests/artifact_workspace -v
+      - name: Validate shared API/OpenAPI and client route contracts
+        working-directory: ${{ github.workspace }}
+        run: python tests/contracts/test_contracts.py
+      - name: Validate Flutter Cowork responsive layout contract
+        working-directory: ${{ github.workspace }}
+        run: python tests/contracts/test_flutter_workspace_layout.py
+      - name: Validate Flutter voice, secure gateway and native screenshot contract
+        working-directory: ${{ github.workspace }}
+        run: python tests/contracts/test_flutter_voice_contract.py
+      - name: Install native dependencies for live Core RPC tests
+        working-directory: ${{ github.workspace }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential pkg-config libjson-c-dev libcurl4-openssl-dev libsqlite3-dev libssl-dev zlib1g-dev
+      - name: Build Core service for live RPC tests
+        working-directory: ${{ github.workspace }}
+        run: |
+          cmake -S . -B build-core-ci -DCMAKE_BUILD_TYPE=Release
+          cmake --build build-core-ci --target agent-orchestrator --parallel 2
+      - name: Run Core RPC inventory, runtime contract and state transitions
+        working-directory: ${{ github.workspace }}
+        run: ctest --test-dir build-core-ci --output-on-failure --timeout 75 -R '^(core_rpc_contract_inventory|core_rpc_runtime_contract|core_rpc_state_transitions)$'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.29.3'
+          channel: stable
+          cache: true
+          cache-key: flutter-3.29.3
+      - name: Resolve dependencies
+        run: flutter pub get
+      - name: Analyze Dart sources
+        run: flutter analyze --no-pub
+      - name: Run unit and widget tests
+        run: flutter test --no-pub
+      - name: Bootstrap generated Gradle wrapper files
+        run: ./scripts/bootstrap_android_wrapper.sh
+      - name: Build unsigned release APK
+        run: flutter build apk --release --no-pub
+      - uses: actions/upload-artifact@v4
+        with:
+          name: asgend-android-apk
+          path: clients/asgend_flutter/build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+          retention-days: 14

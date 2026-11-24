@@ -1,0 +1,12 @@
+{
+  "members": [
+    {
+      "user_id": "usr_01JBZ8K6X3M4N5P6Q7R8S9T0AA",
+      "role": "owner"
+    },
+    {
+      "user_id": "usr_01JBZ8M2C4D5E6F7G8H9J0K1MN",
+      "role": "viewer"
+    }
+  ]
+}

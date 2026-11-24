@@ -1,0 +1,11 @@
+{
+  "api_version": 1,
+  "error": {
+    "code": "rate_limited",
+    "message": "too many pairing attempts",
+    "request_id": "req-01JBZ9F6G7H8",
+    "details": {
+      "retry_after_seconds": 30
+    }
+  }
+}

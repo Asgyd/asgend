@@ -1,0 +1,96 @@
+name: Native Android
+
+on:
+  workflow_call:
+  push:
+    paths:
+      - 'clients/asgend_android/**'
+      - 'docs/ANDROID_NATIVE_*.md'
+      - '.github/workflows/native-android.yml'
+      - 'src/**'
+      - 'include/**'
+      - 'server/**'
+      - 'contracts/**'
+      - 'tests/contracts/**'
+      - 'tests/test_core_rpc_contract_inventory.py'
+      - 'tests/test_core_rpc_runtime_contract.py'
+      - 'tests/test_core_rpc_state_transitions.py'
+      - 'docs/API_CONTRACT.md'
+      - 'docs/PROTOCOL.md'
+      - 'docs/REMOTE_CONTROL_PLANE.md'
+      - 'CMakeLists.txt'
+  pull_request:
+    paths:
+      - 'clients/asgend_android/**'
+      - 'docs/ANDROID_NATIVE_*.md'
+      - '.github/workflows/native-android.yml'
+      - 'src/**'
+      - 'include/**'
+      - 'server/**'
+      - 'contracts/**'
+      - 'tests/contracts/**'
+      - 'tests/test_core_rpc_contract_inventory.py'
+      - 'tests/test_core_rpc_runtime_contract.py'
+      - 'tests/test_core_rpc_state_transitions.py'
+      - 'docs/API_CONTRACT.md'
+      - 'docs/PROTOCOL.md'
+      - 'docs/REMOTE_CONTROL_PLANE.md'
+      - 'CMakeLists.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install shared API contract test dependencies
+        working-directory: ${{ github.workspace }}
+        run: python -m pip install --disable-pip-version-check -r tests/contracts/requirements.txt
+      - name: Validate shared API/OpenAPI and client route contracts
+        working-directory: ${{ github.workspace }}
+        run: python tests/contracts/test_contracts.py
+      - name: Install native dependencies for live Core RPC tests
+        working-directory: ${{ github.workspace }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential pkg-config libjson-c-dev libcurl4-openssl-dev libsqlite3-dev libssl-dev zlib1g-dev
+      - name: Build Core service for live RPC tests
+        working-directory: ${{ github.workspace }}
+        run: |
+          cmake -S . -B build-core-ci -DCMAKE_BUILD_TYPE=Release
+          cmake --build build-core-ci --target agent-orchestrator --parallel 2
+      - name: Run Core RPC inventory, runtime contract and state transitions
+        working-directory: ${{ github.workspace }}
+        run: ctest --test-dir build-core-ci --output-on-failure --timeout 75 -R '^(core_rpc_contract_inventory|core_rpc_runtime_contract|core_rpc_state_transitions)$'
+      - name: Verify native Android source contracts
+        working-directory: ${{ github.workspace }}
+        run: python clients/asgend_android/tools/verify_native_source.py
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.6.0'
+      - name: Install Android 17 SDK
+        run: sdkmanager --install 'platforms;android-37' 'build-tools;36.0.0'
+      - name: Run unit tests and assemble APKs
+        working-directory: clients/asgend_android
+        run: |
+          gradle --no-daemon testDebugUnitTest
+          gradle --no-daemon assembleDebug assembleRelease
+      - name: Check unsigned APK output
+        run: test -s clients/asgend_android/app/build/outputs/apk/release/app-release-unsigned.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: asgend-native-android-unsigned-apk
+          path: clients/asgend_android/app/build/outputs/apk/release/app-release-unsigned.apk
+          if-no-files-found: error

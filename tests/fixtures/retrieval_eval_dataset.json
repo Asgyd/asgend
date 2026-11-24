@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "queries": [
+    {
+      "query": "refresh expired authentication session token",
+      "relevant_paths": ["docs/security/authentication.md"],
+      "k": 3
+    },
+    {
+      "query": "authorization role permissions private access control",
+      "relevant_paths": ["docs/security/authorization.md"],
+      "k": 3
+    },
+    {
+      "query": "SQLite database backup snapshots restore integrity",
+      "relevant_paths": ["docs/operations/database-backup.md"],
+      "k": 3
+    },
+    {
+      "query": "embedding vectors cosine similarity semantic retrieval",
+      "relevant_paths": ["src/memory/embedding.c"],
+      "k": 3
+    }
+  ]
+}

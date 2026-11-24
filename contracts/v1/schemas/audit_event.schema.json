@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://asgend.invalid/contracts/v1/schemas/audit_event.schema.json",
+  "title": "AuditEvent",
+  "description": "Append-only audit record (CONTRACT_SKETCH §5). details never contains tokens, codes, prompt/answer text or file contents. Known actions (v1): auth.logout, auth.denied, pairing.create, pairing.redeem, members.update, node.enrollment_create, node.enroll, node.revoke, node.token_rotate, task.submit, task.answer, task.cancel, task.retry, command.expire, artifact.reject, artifact.download_ticket, artifact.download. New actions may be added in a minor revision.",
+  "type": "object",
+  "required": [ "audit_id", "workspace_id", "actor", "action", "target", "result", "request_id", "at", "details" ],
+  "properties": {
+    "audit_id": { "$ref": "common.schema.json#/$defs/audit_id" },
+    "workspace_id": { "$ref": "common.schema.json#/$defs/workspace_id" },
+    "actor": { "$ref": "common.schema.json#/$defs/actor" },
+    "action": { "type": "string", "pattern": "^[a-z][a-z0-9_]{0,31}\\.[a-z][a-z0-9_]{0,31}$" },
+    "target": { "description": "Id of the affected object (rt_, cmd_, art_, node_, usr_, ws_, pair_, enr_).", "type": "string", "maxLength": 128 },
+    "result": { "type": "string", "enum": [ "ok", "denied", "error" ] },
+    "request_id": { "description": "null for actions performed by background jobs (actor=system).", "anyOf": [ { "$ref": "common.schema.json#/$defs/request_id" }, { "type": "null" } ] },
+    "at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "details": { "type": "object" }
+  }
+}

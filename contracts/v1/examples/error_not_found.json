@@ -1,0 +1,9 @@
+{
+  "api_version": 1,
+  "error": {
+    "code": "not_found",
+    "message": "task not found",
+    "request_id": "req-01JBZ9F6G7H8",
+    "details": {}
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "enrollment_code": "R2D7Q-9MXKT-4HV8N",
+  "name": "build-box-01",
+  "labels": [
+    "linux",
+    "gpu:rtx4090"
+  ],
+  "protocol_version": 1,
+  "core_version": "0.9.9"
+}

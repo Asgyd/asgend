@@ -1,0 +1,844 @@
+{
+  "generated_utc": "2026-10-28T12:59:21.302324+00:00",
+  "build_type": "Release",
+  "ctest_command": "ctest --test-dir /mnt/data/asgend-stage31-build --output-on-failure --timeout 300",
+  "exit_code": 0,
+  "status": "PASS",
+  "observed_final_run": {
+    "tests": 54,
+    "passed": 54,
+    "failed": 0,
+    "timeout": 0,
+    "not_run": 0,
+    "skipped": 0,
+    "total_seconds": 270.3,
+    "exit_code": 0,
+    "summary_line": "100% tests passed, 0 tests failed out of 54"
+  },
+  "test_count": 54,
+  "timeout_range_seconds": [
+    10.0,
+    300.0
+  ],
+  "all_timeouts_positive_finite": true,
+  "all_registered_tests_observed": true,
+  "invalid_timeouts": [],
+  "tests": [
+    {
+      "name": "integration",
+      "timeout_seconds": 300.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/integration.py",
+        "/mnt/data/asgend-stage31-build/agent-orchestrator",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 133.15,
+        "test_number": 1
+      }
+    },
+    {
+      "name": "node_agent_c_core_e2e",
+      "timeout_seconds": 30.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/server/tests/test_node_agent_c_core_e2e.py",
+        "/mnt/data/asgend-stage31-build/agent-orchestrator"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 1.24,
+        "test_number": 2
+      }
+    },
+    {
+      "name": "release_gate_smoke",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_release_gate.py"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.81,
+        "test_number": 3
+      }
+    },
+    {
+      "name": "performance_inventory",
+      "timeout_seconds": 10.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_performance_inventory.py"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.8,
+        "test_number": 4
+      }
+    },
+    {
+      "name": "performance_benchmark_methodology",
+      "timeout_seconds": 10.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_benchmark_memory_vectors.py"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.81,
+        "test_number": 5
+      }
+    },
+    {
+      "name": "performance_load_probe_smoke",
+      "timeout_seconds": 15.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_smoke_control_plane_load.py"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 1.41,
+        "test_number": 6
+      }
+    },
+    {
+      "name": "performance_core_rpc_lifecycle_smoke",
+      "timeout_seconds": 90.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_benchmark_core_rpc_lifecycle.py",
+        "/mnt/data/asgend-stage31-build/agent-orchestrator",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 4.31,
+        "test_number": 7
+      }
+    },
+    {
+      "name": "performance_sqlite_artifacts_smoke",
+      "timeout_seconds": 90.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_benchmark_sqlite_artifacts.py",
+        "/mnt/data/asgend-stage31-build/agent-orchestrator",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 2.47,
+        "test_number": 8
+      }
+    },
+    {
+      "name": "performance_task_list_sql_ab_smoke",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_task_list_sql_ab.py",
+        "/mnt/data/asgend-stage31-build/test-task-list-reference",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 1.93,
+        "test_number": 9
+      }
+    },
+    {
+      "name": "performance_task_list_index_cost_smoke",
+      "timeout_seconds": 90.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_task_list_index_cost.py"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 2.51,
+        "test_number": 10
+      }
+    },
+    {
+      "name": "release_workflow_coverage",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_release_workflow_coverage.py"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.98,
+        "test_number": 11
+      }
+    },
+    {
+      "name": "client_workflow_contract_triggers",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_client_workflow_contract_triggers.py"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 1.08,
+        "test_number": 12
+      }
+    },
+    {
+      "name": "client_workflow_test_coverage",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_client_workflow_test_coverage.py"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 1.09,
+        "test_number": 13
+      }
+    },
+    {
+      "name": "core_rpc_contract_inventory",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_core_rpc_contract_inventory.py",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 1.16,
+        "test_number": 14
+      }
+    },
+    {
+      "name": "core_rpc_runtime_contract",
+      "timeout_seconds": 45.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_core_rpc_runtime_contract.py",
+        "/mnt/data/asgend-stage31-build/agent-orchestrator",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 1.07,
+        "test_number": 15
+      }
+    },
+    {
+      "name": "core_rpc_state_transitions",
+      "timeout_seconds": 75.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_core_rpc_state_transitions.py",
+        "/mnt/data/asgend-stage31-build/agent-orchestrator",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 7.31,
+        "test_number": 16
+      }
+    },
+    {
+      "name": "core_artifacts",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_core_artifacts.py",
+        "/mnt/data/asgend-stage31-build/agent-orchestrator",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 1.22,
+        "test_number": 17
+      }
+    },
+    {
+      "name": "core_db_atomicity",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_core_db_atomicity.py",
+        "/mnt/data/asgend-stage31-build/agent-orchestrator",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.85,
+        "test_number": 18
+      }
+    },
+    {
+      "name": "core_db_fault_injection",
+      "timeout_seconds": 10.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/mnt/data/asgend-stage31-build/test-core-db-faults"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.08,
+        "test_number": 19
+      }
+    },
+    {
+      "name": "performance_task_list_c_api_smoke",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_task_list_c_api_benchmark.py",
+        "/mnt/data/asgend-stage31-build/test-task-list-c-api-benchmark",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.95,
+        "test_number": 20
+      }
+    },
+    {
+      "name": "core_shutdown_idle_client",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_core_shutdown.py",
+        "/mnt/data/asgend-stage31-build/agent-orchestrator",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.85,
+        "test_number": 21
+      }
+    },
+    {
+      "name": "core_config_strings",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_core_config_strings.py",
+        "/mnt/data/asgend-stage31-build/agent-orchestrator",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.88,
+        "test_number": 22
+      }
+    },
+    {
+      "name": "core_config_safe_update",
+      "timeout_seconds": 20.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_core_config_safe_update.py",
+        "/mnt/data/asgend-stage31-build/agent-orchestrator",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.87,
+        "test_number": 23
+      }
+    },
+    {
+      "name": "core_provider_error_privacy",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_core_provider_error_privacy.py",
+        "/mnt/data/asgend-stage31-build/agent-orchestrator",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 4.44,
+        "test_number": 24
+      }
+    },
+    {
+      "name": "core_llm_sse_watchdog",
+      "timeout_seconds": 90.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_core_llm_sse_watchdog.py",
+        "/mnt/data/asgend-stage31-build/agent-orchestrator",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 39.78,
+        "test_number": 25
+      }
+    },
+    {
+      "name": "core_http_status_mapping",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_core_http_status_mapping.py",
+        "/mnt/data/asgend-stage31-build/agent-orchestrator",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.92,
+        "test_number": 26
+      }
+    },
+    {
+      "name": "core_mcp_launcher_smoke",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_core_mcp_launcher.py",
+        "/mnt/data/asgend-stage31-build/agent-orchestrator",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 21.01,
+        "test_number": 27
+      }
+    },
+    {
+      "name": "ui_asset_upgrade",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_ui_asset_upgrade.py"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.88,
+        "test_number": 28
+      }
+    },
+    {
+      "name": "tui_library_smoke",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/mnt/data/asgend-stage31-build/test-asgend-tui"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.0,
+        "test_number": 29
+      }
+    },
+    {
+      "name": "tui_terminal_layout",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_tui_terminal_layout.py",
+        "/mnt/data/asgend-stage31-build/test-asgend-tui"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.82,
+        "test_number": 30
+      }
+    },
+    {
+      "name": "cli_terminal_layout",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_cli_terminal_layout.py",
+        "/mnt/data/asgend-stage31-build/asgend-cli"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.89,
+        "test_number": 31
+      }
+    },
+    {
+      "name": "cli_stream_state_contract",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_cli_stream_state_contract.py",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.89,
+        "test_number": 32
+      }
+    },
+    {
+      "name": "cli_watch_reliability",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_cli_watch_reliability.py",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.74,
+        "test_number": 33
+      }
+    },
+    {
+      "name": "cli_rpc_timeout_contract",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_cli_rpc_timeout_contract.py",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.69,
+        "test_number": 34
+      }
+    },
+    {
+      "name": "cli_preview_stream_state_contract",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_cli_preview_stream_state_contract.py",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.73,
+        "test_number": 35
+      }
+    },
+    {
+      "name": "cli_secret_input_contract",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_cli_secret_input_contract.py",
+        "/mnt/data/asgend-stage31-build/asgend-cli",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.68,
+        "test_number": 36
+      }
+    },
+    {
+      "name": "cli_stream_event_contract",
+      "timeout_seconds": 40.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_cli_stream_event_contract.py",
+        "/mnt/data/asgend-stage31-build/agent-orchestrator",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 3.66,
+        "test_number": 37
+      }
+    },
+    {
+      "name": "cli_session_contract",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_cli_session_contract.py",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.77,
+        "test_number": 38
+      }
+    },
+    {
+      "name": "cli_orchestrator_group_contract",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_cli_orchestrator_group_contract.py",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.74,
+        "test_number": 39
+      }
+    },
+    {
+      "name": "tui_visual_contract",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_tui_visual_contract.py",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.92,
+        "test_number": 40
+      }
+    },
+    {
+      "name": "memory_index_smoke",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_memory_index.py",
+        "/mnt/data/asgend-stage31-build/asgend-memory"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 1.28,
+        "test_number": 41
+      }
+    },
+    {
+      "name": "memory_pipeline_smoke",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_memory_pipeline.py",
+        "/mnt/data/asgend-stage31-build/asgend-memory"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 2.12,
+        "test_number": 42
+      }
+    },
+    {
+      "name": "memory_embedding_smoke",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_memory_embedding.py",
+        "/mnt/data/asgend-stage31-build/asgend-memory"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 1.77,
+        "test_number": 43
+      }
+    },
+    {
+      "name": "memory_graph_smoke",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_memory_graph.py",
+        "/mnt/data/asgend-stage31-build/asgend-memory"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.97,
+        "test_number": 44
+      }
+    },
+    {
+      "name": "memory_chunk_query_smoke",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_memory_chunk_query.py",
+        "/mnt/data/asgend-stage31-build/asgend-memory"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.89,
+        "test_number": 45
+      }
+    },
+    {
+      "name": "memory_rerank_smoke",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_memory_rerank.py",
+        "/mnt/data/asgend-stage31-build/asgend-memory"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 1.53,
+        "test_number": 46
+      }
+    },
+    {
+      "name": "memory_query_plan_smoke",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_memory_query_plan.py",
+        "/mnt/data/asgend-stage31-build/asgend-memory"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 1.42,
+        "test_number": 47
+      }
+    },
+    {
+      "name": "retrieval_quality_smoke",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_retrieval_eval.py",
+        "/mnt/data/asgend-stage31-build/asgend-memory",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 1.58,
+        "test_number": 48
+      }
+    },
+    {
+      "name": "query_plan_eval_smoke",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_query_plan_eval.py",
+        "/mnt/data/asgend-stage31-build/asgend-memory",
+        "/mnt/data/asgend-stage31-work/asgend-android-work"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 2.01,
+        "test_number": 49
+      }
+    },
+    {
+      "name": "memory_ann_smoke",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_memory_ann.py",
+        "/mnt/data/asgend-stage31-build/asgend-memory"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 5.11,
+        "test_number": 50
+      }
+    },
+    {
+      "name": "memory_gc_smoke",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_memory_gc.py",
+        "/mnt/data/asgend-stage31-build/asgend-memory"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 0.98,
+        "test_number": 51
+      }
+    },
+    {
+      "name": "memory_pdf_smoke",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_memory_pdf.py",
+        "/mnt/data/asgend-stage31-build/asgend-memory"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 1.02,
+        "test_number": 52
+      }
+    },
+    {
+      "name": "memory_ooxml_smoke",
+      "timeout_seconds": 60.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_memory_ooxml.py",
+        "/mnt/data/asgend-stage31-build/asgend-memory"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 1.21,
+        "test_number": 53
+      }
+    },
+    {
+      "name": "performance_memory_scan_timeout_guard",
+      "timeout_seconds": 10.0,
+      "timeout_positive_finite": true,
+      "command": [
+        "/opt/pyvenv/bin/python3",
+        "/mnt/data/asgend-stage31-work/asgend-android-work/tests/test_memory_scan_timeout.py"
+      ],
+      "observed": {
+        "result": "passed",
+        "seconds": 1.96,
+        "test_number": 54
+      }
+    }
+  ]
+}

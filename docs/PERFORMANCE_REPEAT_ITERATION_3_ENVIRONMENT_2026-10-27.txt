@@ -1,0 +1,12 @@
+ASGEND repeated performance audit — iteration 3 (final)
+Date: 2026-10-27
+Platform/toolchain: Linux x86_64, GCC 14.2.0, CMake 3.31.6, Python 3.13.5, Ninja
+Build: clean Release, --parallel 3
+Configure: 4.59 s wall; max RSS 95,444 KiB; exit 0
+Build: 9.02 s wall; max RSS 81,368 KiB; exit 0
+Full CTest: 48/48 PASS, 256.35 s wall; exit 0; max RSS 130,188 KiB; -j1; --timeout 300; executed as unprivileged user
+Long tests: integration 134.13 s; core_llm_sse_watchdog 39.78 s; core_mcp_launcher_smoke 21.08 s; memory_ann_smoke 4.62 s
+Generated CTest JSON: 48 tests; 48/48 have positive finite TIMEOUT properties
+Install smoke: cmake --install succeeded; installed asgend-memory-benchmark-vectors --help succeeded; scripts/performance_metrics.py installed into bin/
+Synthetic ANN: 3 independent runs, 5 measured pairs per mode/run, corpus 5,200 vectors x 128 dimensions, local mock endpoint; speed-up range 4.253x-5.036x; Recall@5 0.60; p95/p99 omitted for n=5
+Limitation: timings include CLI process startup/local mock HTTP round-trip; not production API latency or product SLO. No live PostgreSQL/Control Plane/provider load test or Android/Flutter/Qt device profiling was performed.

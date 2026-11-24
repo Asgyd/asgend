@@ -1,0 +1,8 @@
+{
+  "api_version": 1,
+  "artifact_id": "art_01JBZ9C3D4E5F6G7H8J9K0M1N2",
+  "upload_url": "/v1/node/artifacts/art_01JBZ9C3D4E5F6G7H8J9K0M1N2/content",
+  "chunk_size": 8388608,
+  "received": 0,
+  "state": "uploading"
+}

@@ -1,0 +1,17 @@
+{
+  "events": [
+    {
+      "task_id": "rt_01JBZ9A0B1C2D3E4F5G6H7J8K9",
+      "seq": 5,
+      "type": "artifact_available",
+      "occurred_at": "2026-10-21T10:00:50.000Z",
+      "payload": {
+        "artifact_id": "art_01JBZ9C3D4E5F6G7H8J9K0M1N2",
+        "name": "x",
+        "mime": "text/plain",
+        "size": 1,
+        "sha256": "5891b5b522d5df086d0ff0b110fbd9d21bb4fc7163af34d08286a2e846f6be03"
+      }
+    }
+  ]
+}

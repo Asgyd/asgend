@@ -1,0 +1,16 @@
+{
+  "api_version": 1,
+  "user": {
+    "user_id": "usr_01JBZ8K6X3M4N5P6Q7R8S9T0AA",
+    "display_name": "Pixel 8 (owner)"
+  },
+  "workspaces": [
+    {
+      "workspace_id": "ws_01JBZ8K6X3M4N5P6Q7R8S9T0VW",
+      "name": "home-lab",
+      "role": "owner"
+    }
+  ],
+  "device_name": "Pixel 8",
+  "token_expires_at": null
+}
